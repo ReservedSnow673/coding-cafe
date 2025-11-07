@@ -1,8 +1,8 @@
 # Import all models here for Alembic to detect them
 from app.models.user import User, UserRole
 from app.models.otp import OTPRequest
-from app.models.location import Location, LocationVisibility
-from app.models.chat import ChatGroup, ChatMessage, ChatGroupType
+from app.models.location import Location, VisibilityLevel
+from app.models.chat import ChatGroup, ChatMessage
 from app.models.announcement import Announcement, AnnouncementCategory
 from app.models.issue import Issue, IssueComment, IssueCategory, IssueStatus
 from app.models.team import Team, TeamMember
@@ -14,10 +14,9 @@ __all__ = [
     "UserRole",
     "OTPRequest",
     "Location",
-    "LocationVisibility",
+    "VisibilityLevel",
     "ChatGroup",
     "ChatMessage",
-    "ChatGroupType",
     "Announcement",
     "AnnouncementCategory",
     "Issue",

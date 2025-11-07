@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { AuthProvider, LocationProvider, ChatProvider } from '@/contexts'
+import DevModeToggle from '@/components/DevModeToggle'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,8 +17,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} bg-gray-950 text-gray-100`}>
+        <AuthProvider>
+          <LocationProvider>
+            <ChatProvider>
+              {children}
+              <DevModeToggle />
+            </ChatProvider>
+          </LocationProvider>
+        </AuthProvider>
+      </body>
     </html>
   )
 }

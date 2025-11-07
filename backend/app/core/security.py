@@ -2,11 +2,14 @@ from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.config import settings
 import secrets
 import string
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+security = HTTPBearer()
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -51,3 +54,32 @@ def generate_otp(length: int = 6) -> str:
 def generate_secure_token(length: int = 32) -> str:
     """Generate a secure random token"""
     return secrets.token_urlsafe(length)
+
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    """
+    Dependency to get current authenticated user from JWT token
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        token = credentials.credentials
+        payload = decode_access_token(token)
+        
+        if payload is None:
+            raise credentials_exception
+        
+        user_id: str = payload.get("sub")
+        email: str = payload.get("email")
+        
+        if user_id is None:
+            raise credentials_exception
+        
+        return {"user_id": user_id, "email": email}
+    
+    except JWTError:
+        raise credentials_exception

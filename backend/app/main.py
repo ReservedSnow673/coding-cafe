@@ -28,8 +28,9 @@ async def health_check():
     return {"status": "healthy"}
 
 
-# Import and register routers here when they are created
-# from app.routers import auth, users, location, chat, announcements, issues, teams, mess_review, challenges
-# app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
-# app.include_router(users.router, prefix="/api/users", tags=["users"])
-# etc...
+# Import and register routers
+from app.routers import auth, location, chat
+
+app.include_router(auth.router, prefix="/api")
+app.include_router(location.router, prefix="/api")
+app.include_router(chat.router)
