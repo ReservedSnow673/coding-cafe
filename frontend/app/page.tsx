@@ -30,8 +30,8 @@ export default function Home() {
   const features = [
     { icon: FiMapPin, title: 'Location', description: 'Share your location', color: 'from-blue-500 to-cyan-500', route: '/location' },
     { icon: FiMessageCircle, title: 'Chat', description: 'Group conversations', color: 'from-green-500 to-emerald-500', route: '/chat' },
-    { icon: FiMic, title: 'Announcements', description: 'Campus updates', color: 'from-purple-500 to-pink-500', route: null },
-    { icon: FiAlertCircle, title: 'Issues', description: 'Report problems', color: 'from-orange-500 to-red-500', route: null },
+    { icon: FiMic, title: 'Announcements', description: 'Campus updates', color: 'from-purple-500 to-pink-500', route: '/announcements' },
+    { icon: FiAlertCircle, title: 'Issues', description: 'Report problems', color: 'from-orange-500 to-red-500', route: '/issues' },
     { icon: FiUsers, title: 'Teams', description: 'Join or create teams', color: 'from-indigo-500 to-blue-500', route: null },
     { icon: FiStar, title: 'Mess Reviews', description: 'Rate meals', color: 'from-yellow-500 to-orange-500', route: null },
     { icon: FiTarget, title: 'Challenges', description: 'Campus activities', color: 'from-pink-500 to-rose-500', route: null },

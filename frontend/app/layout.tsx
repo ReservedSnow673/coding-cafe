@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { AuthProvider, LocationProvider, ChatProvider } from '@/contexts'
+import { AuthProvider, LocationProvider, ChatProvider, AnnouncementProvider, IssueProvider } from '@/contexts'
 import DevModeToggle from '@/components/DevModeToggle'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,8 +22,12 @@ export default function RootLayout({
         <AuthProvider>
           <LocationProvider>
             <ChatProvider>
-              {children}
-              <DevModeToggle />
+              <AnnouncementProvider>
+                <IssueProvider>
+                  {children}
+                  <DevModeToggle />
+                </IssueProvider>
+              </AnnouncementProvider>
             </ChatProvider>
           </LocationProvider>
         </AuthProvider>

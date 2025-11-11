@@ -22,7 +22,7 @@ export default function DevModeToggle() {
 
   const toggleDevMode = async () => {
     try {
-      // This is a visual indicator only
+      // temp
       // To actually toggle, user needs to edit /lib/devMode.ts manually
       setShowSettings(true);
     } catch (err) {
@@ -94,11 +94,19 @@ export default function DevModeToggle() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-400">✓</span>
-                    <span>Mock location sharing with sample users</span>
+                    <span>Location sharing with 3 sample nearby users</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-400">✓</span>
-                    <span>Test UI without API dependencies</span>
+                    <span>Group chat with sample conversations</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-400">✓</span>
+                    <span>Announcements with 4 sample posts</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-400">✓</span>
+                    <span>Issue reporting with 5 sample issues</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-400">✓</span>
