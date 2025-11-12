@@ -110,6 +110,10 @@ export default function DevModeToggle() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-400">✓</span>
+                    <span>Teams with 5 sample teams (projects, study, sports)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-400">✓</span>
                     <span>Simulated network delays (500ms)</span>
                   </li>
                 </ul>
