@@ -100,16 +100,16 @@ export default function AnnouncementsPage() {
   const isAdmin = user?.role === "admin";
 
   return (
-    <div className="min-h-screen bg-gray-950 px-4 py-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-dark">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl">
-              <FiMic className="text-2xl text-purple-400" />
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-dark-secondary flex items-center justify-center">
+              <FiMic className="text-2xl text-accent-lime" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold text-white">
                 Announcements
               </h1>
               <p className="text-gray-400 text-sm mt-1">
@@ -121,7 +121,7 @@ export default function AnnouncementsPage() {
           {isAdmin && (
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl font-medium transition-all shadow-lg hover:shadow-purple-500/50"
+              className="flex items-center gap-2 px-6 py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all"
             >
               <FiPlus className="text-lg" />
               New Announcement
@@ -137,8 +137,8 @@ export default function AnnouncementsPage() {
               onClick={() => setSelectedCategory(cat.value)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium whitespace-nowrap transition-all ${
                 selectedCategory === cat.value
-                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-                  : "bg-gray-800/50 text-gray-400 hover:bg-gray-800"
+                  ? "bg-accent-lime text-dark"
+                  : "bg-dark-secondary/50 text-gray-400 hover:bg-dark-secondary"
               }`}
             >
               <cat.icon className="text-lg" />
@@ -157,18 +157,18 @@ export default function AnnouncementsPage() {
         {/* Loading State */}
         {loading && announcements.length === 0 && (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-lime"></div>
           </div>
         )}
 
         {/* Empty State */}
         {!loading && announcements.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
-            <div className="p-6 bg-gray-900/50 rounded-full mb-6">
+            <div className="p-6 bg-dark-secondary/50 rounded-full mb-6">
               <FiMic className="text-6xl text-gray-600" />
             </div>
-            <h2 className="text-2xl font-semibold text-gray-300 mb-2">No announcements</h2>
-            <p className="text-gray-500 mb-6 text-center max-w-md">
+            <h2 className="text-2xl font-semibold text-white mb-2">No announcements</h2>
+            <p className="text-gray-400 mb-6 text-center max-w-md">
               {selectedCategory ? "No announcements in this category yet" : "No announcements posted yet"}
             </p>
           </div>
@@ -181,7 +181,7 @@ export default function AnnouncementsPage() {
               <div
                 key={announcement.id}
                 onClick={() => router.push(`/announcements/${announcement.id}`)}
-                className="group cursor-pointer bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl p-6 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all"
+                className="group cursor-pointer bg-dark-secondary/50 backdrop-blur-xl border border-dark-secondary rounded-2xl p-6 hover:border-accent-lime/30 hover:bg-dark-secondary transition-all"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
@@ -189,25 +189,25 @@ export default function AnnouncementsPage() {
                       <span
                         className={`text-xs font-semibold uppercase px-2 py-1 rounded ${getPriorityColor(
                           announcement.priority
-                        )} bg-gray-800/50`}
+                        )} bg-dark-secondary`}
                       >
                         {announcement.priority}
                       </span>
-                      <span className="text-xs text-gray-500 uppercase px-2 py-1 rounded bg-gray-800/50">
+                      <span className="text-xs text-gray-500 uppercase px-2 py-1 rounded bg-dark-secondary">
                         {announcement.category}
                       </span>
                       {announcement.target_year && (
-                        <span className="text-xs text-blue-400 px-2 py-1 rounded bg-blue-500/10">
+                        <span className="text-xs text-accent-lime px-2 py-1 rounded bg-accent-lime/10">
                           Year {announcement.target_year}
                         </span>
                       )}
                       {announcement.target_branch && (
-                        <span className="text-xs text-cyan-400 px-2 py-1 rounded bg-cyan-500/10">
+                        <span className="text-xs text-accent-lime px-2 py-1 rounded bg-accent-lime/10">
                           {announcement.target_branch}
                         </span>
                       )}
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-100 group-hover:text-purple-400 transition-colors mb-2">
+                    <h3 className="text-xl font-semibold text-white group-hover:text-accent-lime transition-colors mb-2">
                       {announcement.title}
                     </h3>
                     <p className="text-gray-400 line-clamp-2 mb-3">{announcement.content}</p>
@@ -229,12 +229,12 @@ export default function AnnouncementsPage() {
         {/* Create Announcement Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-dark-secondary border border-dark-secondary rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-100">Create Announcement</h2>
+                <h2 className="text-2xl font-bold text-white">Create Announcement</h2>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                  className="p-2 hover:bg-dark rounded-lg transition-colors"
                 >
                   <FiX className="text-xl text-gray-400" />
                 </button>
@@ -252,7 +252,7 @@ export default function AnnouncementsPage() {
                     placeholder="Announcement title"
                     required
                     maxLength={255}
-                    className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-gray-100 placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+                    className="w-full px-4 py-3 bg-dark border border-dark-secondary rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-accent-lime transition-colors"
                   />
                 </div>
 
@@ -267,7 +267,7 @@ export default function AnnouncementsPage() {
                     required
                     maxLength={5000}
                     rows={6}
-                    className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-gray-100 placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-dark border border-dark-secondary rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-accent-lime transition-colors resize-none"
                   />
                 </div>
 
@@ -346,14 +346,14 @@ export default function AnnouncementsPage() {
                   <button
                     type="button"
                     onClick={() => setShowCreateModal(false)}
-                    className="flex-1 px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-xl font-medium transition-colors"
+                    className="flex-1 px-4 py-3 bg-dark-secondary/50 hover:bg-dark-secondary rounded-xl font-medium text-gray-300 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={creating || !title.trim() || !content.trim()}
-                    className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {creating ? "Creating..." : "Create Announcement"}
                   </button>

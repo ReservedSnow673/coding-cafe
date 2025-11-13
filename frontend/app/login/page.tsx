@@ -54,10 +54,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-dark">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <div className="w-16 h-16 rounded-full bg-accent-lime mx-auto mb-4 flex items-center justify-center">
+            <span className="text-dark font-bold text-2xl">P</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 text-white">
             PlakshaConnect
           </h1>
           <p className="text-gray-400 text-sm md:text-base">
@@ -65,11 +68,11 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="glass rounded-2xl p-6 md:p-8 shadow-2xl">
+        <div className="bg-dark-secondary/50 backdrop-blur-xl border border-dark-secondary rounded-2xl p-6 md:p-8">
           {step === 'email' ? (
             <form onSubmit={handleRequestOTP} className="space-y-6">
               <div>
-                <h2 className="text-xl md:text-2xl font-semibold mb-2">Welcome back</h2>
+                <h2 className="text-xl md:text-2xl font-semibold mb-2 text-white">Welcome back</h2>
                 <p className="text-gray-400 text-sm">Enter your email to get started</p>
               </div>
 
@@ -83,7 +86,7 @@ export default function LoginPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your.email@plaksha.edu.in"
                     required
-                    className="w-full pl-10 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm md:text-base"
+                    className="w-full pl-10 pr-4 py-3 bg-dark border border-dark-secondary rounded-xl focus:outline-none focus:border-accent-lime transition-all text-sm md:text-base text-white placeholder-gray-500"
                   />
                 </div>
               </div>
@@ -97,7 +100,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
+                className="w-full py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
               >
                 {loading ? 'Sending...' : 'Continue'}
                 <FiArrowRight />
@@ -109,20 +112,20 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setStep('email')}
-                  className="text-sm text-gray-400 hover:text-gray-300 mb-4"
+                  className="text-sm text-gray-400 hover:text-accent-lime mb-4 transition-colors"
                 >
                   ← Change email
                 </button>
-                <h2 className="text-xl md:text-2xl font-semibold mb-2">Enter OTP</h2>
+                <h2 className="text-xl md:text-2xl font-semibold mb-2 text-white">Enter OTP</h2>
                 <p className="text-gray-400 text-sm">
-                  We sent a code to <span className="text-blue-400">{email}</span>
+                  We sent a code to <span className="text-accent-lime">{email}</span>
                 </p>
               </div>
 
               {devOTP && (
-                <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                <div className="p-3 bg-accent-lime/10 border border-accent-lime/20 rounded-lg">
                   <p className="text-xs text-gray-400 mb-1">Development OTP:</p>
-                  <p className="text-blue-400 font-mono text-lg">{devOTP}</p>
+                  <p className="text-accent-lime font-mono text-lg">{devOTP}</p>
                 </div>
               )}
 
@@ -137,7 +140,7 @@ export default function LoginPage() {
                     placeholder="000000"
                     required
                     maxLength={6}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-2xl tracking-widest font-mono"
+                    className="w-full pl-10 pr-4 py-3 bg-dark border border-dark-secondary rounded-xl focus:outline-none focus:border-accent-lime transition-all text-center text-2xl tracking-widest font-mono text-white"
                   />
                 </div>
               </div>
@@ -151,7 +154,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || otp.length !== 6}
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
+                className="w-full py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
               >
                 {loading ? 'Verifying...' : 'Verify OTP'}
                 <FiCheck />

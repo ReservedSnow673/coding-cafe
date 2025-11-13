@@ -1,14 +1,17 @@
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   * {
-    @apply border-gray-800;
+    @apply border-[#303030];
   }
   
   body {
-    @apply bg-gray-950 text-gray-100;
+    @apply bg-[#040404] text-white;
+    font-family: 'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 }
 
@@ -19,6 +22,35 @@
   
   .glass-hover {
     @apply hover:bg-white/10 transition-all duration-200;
+  }
+  
+  .accent-lime {
+    @apply text-[#f4ff0c];
+  }
+  
+  .bg-accent-lime {
+    @apply bg-[#f4ff0c];
+  }
+  
+  .border-accent-lime {
+    @apply border-[#f4ff0c];
+  }
+  
+  .bg-dark {
+    @apply bg-[#040404];
+  }
+  
+  .bg-dark-secondary {
+    @apply bg-[#303030];
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 

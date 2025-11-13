@@ -97,17 +97,17 @@ export default function TeamsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-blue-950 to-purple-950">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-dark">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl backdrop-blur-sm border border-white/10">
-                <FiUsers className="text-3xl text-blue-400" />
+              <div className="w-14 h-14 rounded-2xl bg-dark-secondary flex items-center justify-center">
+                <FiUsers className="text-2xl text-accent-lime" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold text-white">
                   Teams
                 </h1>
                 <p className="text-gray-400 mt-1">
@@ -118,7 +118,7 @@ export default function TeamsPage() {
 
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-xl font-medium transition-all shadow-lg hover:shadow-blue-500/50"
+              className="flex items-center gap-2 px-6 py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all"
             >
               <FiPlus className="text-lg" />
               Create Team

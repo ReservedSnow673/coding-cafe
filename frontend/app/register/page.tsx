@@ -54,10 +54,13 @@ function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-dark">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <div className="w-16 h-16 rounded-full bg-accent-lime mx-auto mb-4 flex items-center justify-center">
+            <span className="text-dark font-bold text-2xl">P</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 text-white">
             Complete Your Profile
           </h1>
           <p className="text-gray-400 text-sm md:text-base">
@@ -65,7 +68,7 @@ function RegisterForm() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="glass rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+        <form onSubmit={handleSubmit} className="bg-dark-secondary/50 backdrop-blur-xl border border-dark-secondary rounded-2xl p-6 md:p-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2 space-y-2">
               <label className="text-sm font-medium text-gray-300">Full Name *</label>
@@ -179,7 +182,7 @@ function RegisterForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading ? 'Creating your account...' : 'Complete Registration'}
             <FiCheck />

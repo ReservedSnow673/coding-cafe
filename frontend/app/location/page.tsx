@@ -132,26 +132,31 @@ export default function LocationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
+    <div className="min-h-screen bg-dark">
       {/* Header */}
-      <header className="glass border-b border-white/10">
+      <header className="bg-dark-secondary/30 backdrop-blur-xl border-b border-dark-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push('/')}
-                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+                className="p-2 rounded-lg hover:bg-dark-secondary transition-colors"
               >
-                <FiArrowLeft className="w-5 h-5" />
+                <FiArrowLeft className="w-5 h-5 text-gray-400" />
               </button>
-              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                Location Sharing
-              </h1>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-dark-secondary flex items-center justify-center">
+                  <FiMapPin className="text-lg text-accent-lime" />
+                </div>
+                <h1 className="text-xl md:text-2xl font-bold text-white">
+                  Location Sharing
+                </h1>
+              </div>
             </div>
             <button
               onClick={() => setShowSettings(!showSettings)}
               className={`p-2 rounded-lg transition-colors ${
-                showSettings ? 'bg-blue-500/20 text-blue-400' : 'hover:bg-white/5'
+                showSettings ? 'bg-accent-lime/20 text-accent-lime' : 'hover:bg-dark-secondary text-gray-400'
               }`}
             >
               <FiSettings className="w-5 h-5" />
@@ -256,7 +261,7 @@ export default function LocationPage() {
                   <button
                     onClick={handleStartSharing}
                     disabled={loading}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 transition-all disabled:opacity-50"
+                    className="px-6 py-3 rounded-xl bg-accent-lime hover:bg-accent-lime/90 text-dark font-semibold transition-all disabled:opacity-50"
                   >
                     {loading ? 'Starting...' : 'Start Sharing Location'}
                   </button>

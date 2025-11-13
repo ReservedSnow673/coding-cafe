@@ -95,20 +95,25 @@ export default function IssuesPage() {
   const statuses: Array<IssueStatus | 'all'> = ['all', 'open', 'in_progress', 'resolved', 'closed'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-dark">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
-                Issue Reporting
-              </h1>
-              <p className="text-gray-400 mt-2">Report and track campus issues</p>
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-dark-secondary flex items-center justify-center">
+                <FiAlertCircle className="text-2xl text-accent-lime" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold text-white">
+                  Issue Reporting
+                </h1>
+                <p className="text-gray-400 mt-2">Report and track campus issues</p>
+              </div>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-6 py-3 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white rounded-xl hover:opacity-90 transition flex items-center gap-2"
+              className="px-6 py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition flex items-center gap-2"
             >
               <FiPlus className="w-5 h-5" />
               Report Issue

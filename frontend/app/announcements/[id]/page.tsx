@@ -121,7 +121,7 @@ export default function AnnouncementDetailPage() {
         </div>
 
         {/* Announcement Card */}
-        <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl p-8">
+        <div className="bg-dark-secondary/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl p-8">
           {/* Priority and Category */}
           <div className="flex items-center gap-3 mb-4">
             <span
