@@ -29,7 +29,7 @@ async def health_check():
 
 
 # Import and register routers
-from app.routers import auth, location, chat, announcement, issue, team
+from app.routers import auth, location, chat, announcement, issue, team, mess_reviews, challenges
 
 app.include_router(auth.router, prefix="/api")
 app.include_router(location.router, prefix="/api")
@@ -37,3 +37,5 @@ app.include_router(chat.router)
 app.include_router(announcement.router)
 app.include_router(issue.router)
 app.include_router(team.router)
+app.include_router(mess_reviews.router)
+app.include_router(challenges.router)

@@ -86,35 +86,45 @@ export default function DevModeToggle() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="font-semibold text-sm text-gray-400">Features in Dev Mode:</h3>
+                <h3 className="font-semibold text-sm text-gray-400">
+                  {devMode ? 'Features in Dev Mode:' : 'Backend Required For:'}
+                </h3>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-400">✓</span>
-                    <span>Mock authentication (no backend needed)</span>
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Authentication & user management</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-400">✓</span>
-                    <span>Location sharing with 3 sample nearby users</span>
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Location sharing with real-time tracking</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-400">✓</span>
-                    <span>Group chat with sample conversations</span>
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Group chat with persistent messages</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-400">✓</span>
-                    <span>Announcements with 4 sample posts</span>
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Announcements from campus admins</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-400">✓</span>
-                    <span>Issue reporting with 5 sample issues</span>
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Issue reporting & tracking system</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-400">✓</span>
-                    <span>Teams with 5 sample teams (projects, study, sports)</span>
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Teams & collaboration spaces</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-400">✓</span>
-                    <span>Simulated network delays (500ms)</span>
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Mess reviews & meal ratings</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Challenges with password verification</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className={devMode ? "text-green-400" : "text-blue-400"}>✓</span>
+                    <span>Dashboard with feature previews</span>
                   </li>
                 </ul>
               </div>
