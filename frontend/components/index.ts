@@ -1,4 +1,3 @@
-// Component exports for easy importing
 export { default as CampusMap } from './CampusMap';
 export { default as DevModeToggle } from './DevModeToggle';
 export { default as NotificationBell } from './NotificationBell';

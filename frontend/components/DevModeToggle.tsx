@@ -8,7 +8,6 @@ export default function DevModeToggle() {
   const [devMode, setDevMode] = useState(false);
 
   useEffect(() => {
-    // Check if dev mode is enabled
     const checkDevMode = async () => {
       try {
         const module = await import('@/lib/devMode');
@@ -22,8 +21,6 @@ export default function DevModeToggle() {
 
   const toggleDevMode = async () => {
     try {
-      // temp
-      // To actually toggle, user needs to edit /lib/devMode.ts manually
       setShowSettings(true);
     } catch (err) {
       console.error('Failed to toggle dev mode:', err);

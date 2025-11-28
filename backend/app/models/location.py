@@ -27,6 +27,5 @@ class Location(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False, index=True)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
-    # Relationships
-    user = relationship("User", backref="locations")
+    user = relationship("User", backref="location")
     building = relationship("Building", backref="locations")

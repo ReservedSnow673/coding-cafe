@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useIssues, type IssueCategory, type IssueStatus, type IssuePriority } from '@/contexts/IssueContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { getPriorityColor, getStatusColor } from '@/lib/utils';
 import { FiAlertCircle, FiX, FiPlus, FiFilter } from 'react-icons/fi';
 
 export default function IssuesPage() {
@@ -47,36 +48,6 @@ export default function IssuesPage() {
       setShowCreateModal(false);
     } catch (error) {
       console.error('Error creating issue:', error);
-    }
-  };
-
-  const getPriorityColor = (priority: IssuePriority) => {
-    switch (priority) {
-      case 'critical':
-        return 'bg-red-500/20 text-red-400 border-red-500/50';
-      case 'high':
-        return 'bg-orange-500/20 text-orange-400 border-orange-500/50';
-      case 'medium':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
-      case 'low':
-        return 'bg-green-500/20 text-green-400 border-green-500/50';
-      default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
-    }
-  };
-
-  const getStatusColor = (status: IssueStatus) => {
-    switch (status) {
-      case 'open':
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/50';
-      case 'in_progress':
-        return 'bg-purple-500/20 text-purple-400 border-purple-500/50';
-      case 'resolved':
-        return 'bg-green-500/20 text-green-400 border-green-500/50';
-      case 'closed':
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
-      default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
     }
   };
 

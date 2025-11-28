@@ -2,7 +2,6 @@
  * Shared TypeScript type definitions for the application
  */
 
-// Common types
 export interface ApiResponse<T = any> {
   success: boolean;
   message: string;
@@ -24,7 +23,6 @@ export interface PaginatedResponse<T = any> {
   };
 }
 
-// User types
 export interface User {
   id: string;
   email: string;
@@ -42,7 +40,6 @@ export interface User {
   updated_at: string;
 }
 
-// Location types
 export interface Location {
   id: string;
   user_id: string;
@@ -65,7 +62,6 @@ export interface NearbyUser {
   address?: string;
 }
 
-// Announcement types
 export interface Announcement {
   id: string;
   title: string;
@@ -84,7 +80,6 @@ export interface Announcement {
   updated_at: string;
 }
 
-// Chat types
 export interface ChatGroup {
   id: string;
   name: string;
@@ -116,7 +111,6 @@ export interface ChatMember {
   joined_at: string;
 }
 
-// Issue types
 export interface Issue {
   id: string;
   title: string;
@@ -134,7 +128,6 @@ export interface Issue {
   resolved_at?: string;
 }
 
-// Team types
 export interface Team {
   id: string;
   name: string;
@@ -160,7 +153,6 @@ export interface TeamMember {
   joined_at: string;
 }
 
-// Mess Review types
 export interface MessReview {
   id: string;
   user_id: string;
@@ -181,7 +173,6 @@ export interface DailyAverage {
   review_count: number;
 }
 
-// Challenge types
 export interface Challenge {
   id: string;
   title: string;
@@ -197,7 +188,6 @@ export interface Challenge {
   completions?: number;
 }
 
-// Notification types
 export interface Notification {
   id: string;
   user_id: string;
@@ -217,7 +207,6 @@ export interface NotificationStats {
   by_type: Record<string, number>;
 }
 
-// Building types
 export interface Building {
   id: string;
   name: string;
@@ -232,7 +221,6 @@ export interface Building {
   updated_at: string;
 }
 
-// Form types
 export interface FormErrors {
   [key: string]: string;
 }
@@ -244,7 +232,6 @@ export interface FormState<T> {
   isValid: boolean;
 }
 
-// Filter types
 export interface FilterOptions {
   category?: string;
   status?: string;
@@ -255,7 +242,6 @@ export interface FilterOptions {
   sortOrder?: 'asc' | 'desc';
 }
 
-// Context types
 export interface LoadingState {
   loading: boolean;
   error: string | null;

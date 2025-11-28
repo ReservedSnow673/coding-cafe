@@ -23,7 +23,6 @@ class ChatGroup(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False, index=True)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
-    # Relationships
     creator = relationship("User", backref="created_chat_groups")
     messages = relationship("ChatMessage", back_populates="group", cascade="all, delete-orphan")
     members = relationship("ChatMember", back_populates="group", cascade="all, delete-orphan")
@@ -40,7 +39,6 @@ class ChatMessage(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False, index=True)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
-    # Relationships
     group = relationship("ChatGroup", back_populates="messages")
     user = relationship("User", backref="sent_messages")
 
@@ -54,6 +52,5 @@ class ChatMember(Base):
     role = Column(SQLEnum(MemberRole, name='member_role'), default=MemberRole.MEMBER, nullable=False)
     joined_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False, index=True)
 
-    # Relationships
     group = relationship("ChatGroup", back_populates="members")
     user = relationship("User", backref="chat_memberships")

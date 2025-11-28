@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useAnnouncements, useAuth } from "@/contexts";
 import type { Announcement } from "@/contexts/AnnouncementContext";
+import { formatDate, getPriorityColor } from "@/lib/utils";
 import {
   FiArrowLeft,
   FiEdit,
@@ -39,32 +40,6 @@ export default function AnnouncementDetailPage() {
     const success = await deleteAnnouncement(announcementId);
     if (success) {
       router.push("/announcements");
-    }
-  };
-
-  const formatDate = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "urgent":
-        return "text-red-400 bg-red-500/10";
-      case "high":
-        return "text-orange-400 bg-orange-500/10";
-      case "normal":
-        return "text-blue-400 bg-blue-500/10";
-      case "low":
-        return "text-gray-400 bg-gray-500/10";
-      default:
-        return "text-gray-400 bg-gray-500/10";
     }
   };
 
