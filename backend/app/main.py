@@ -1,23 +1,31 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
+from starlette.middleware.base import BaseHTTPMiddleware
 from pathlib import Path
-from app.core.config import settings
 
+from app.core.config import settings
+from app.middleware import error_handler_middleware, validation_exception_handler
+
+# Initialize FastAPI application
 app = FastAPI(
     title="PlakshaConnect API",
     description="Campus networking and collaboration platform for Plaksha University",
-    version="0.1.0",
+    version="1.0.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json"
 )
 
 # Create uploads directory if it doesn't exist
 UPLOADS_DIR = Path("uploads")
 UPLOADS_DIR.mkdir(exist_ok=True)
 
-# Serve uploaded files
+# Serve static files
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-# CORS middleware
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -26,28 +34,61 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Add error handling middleware
+app.middleware("http")(error_handler_middleware)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
-@app.get("/")
+
+# Health check endpoints
+@app.get("/", tags=["Health"])
 async def root():
-    return {"message": "PlakshaConnect API", "status": "running"}
+    """Root endpoint - API status check"""
+    return {
+        "message": "PlakshaConnect API",
+        "status": "running",
+        "version": "1.0.0",
+        "docs": "/api/docs"
+    }
 
 
-@app.get("/health")
+@app.get("/health", tags=["Health"])
 async def health_check():
-    return {"status": "healthy"}
+    """Health check endpoint for monitoring"""
+    return {
+        "status": "healthy",
+        "service": "PlakshaConnect API"
+    }
 
 
-# Import and register routers
-from app.routers import auth, users, location, building, notifications, chat, announcement, issue, team, mess_reviews, challenges
+# Import routers
+from app.routers import (
+    auth,
+    users,
+    location,
+    building,
+    notifications,
+    chat,
+    announcement,
+    issue,
+    team,
+    mess_reviews,
+    challenges
+)
 
-app.include_router(auth.router, prefix="/api")
-app.include_router(users.router)
-app.include_router(location.router, prefix="/api")
-app.include_router(building.router)
-app.include_router(notifications.router)
-app.include_router(chat.router)
-app.include_router(announcement.router)
-app.include_router(issue.router)
-app.include_router(team.router)
-app.include_router(mess_reviews.router)
-app.include_router(challenges.router)
+# Register API routers
+routers = [
+    (auth.router, {"prefix": "/api"}),
+    (users.router, {}),
+    (location.router, {"prefix": "/api"}),
+    (building.router, {}),
+    (notifications.router, {}),
+    (chat.router, {}),
+    (announcement.router, {}),
+    (issue.router, {}),
+    (team.router, {}),
+    (mess_reviews.router, {}),
+    (challenges.router, {}),
+]
+
+for router, config in routers:
+    app.include_router(router, **config)

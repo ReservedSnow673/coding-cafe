@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 from uuid import UUID
 
-from app.database import get_db
+from app.core.database import get_db
+from app.utils.dependencies import get_current_user, get_current_admin_user
 from app.models.user import User
-from app.routers.auth import get_current_user
 from app.services.announcement_service import AnnouncementService
 from app.schemas.announcement import (
     AnnouncementCreate,
@@ -16,21 +16,11 @@ from app.schemas.announcement import (
 router = APIRouter(prefix="/api/announcements", tags=["announcements"])
 
 
-def check_admin(current_user: User = Depends(get_current_user)) -> User:
-    """Check if current user is admin"""
-    if current_user.role != "admin":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can perform this action"
-        )
-    return current_user
-
-
 @router.post("/", response_model=AnnouncementResponse, status_code=status.HTTP_201_CREATED)
 async def create_announcement(
     announcement_data: AnnouncementCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(check_admin)
+    current_user: User = Depends(get_current_admin_user)
 ):
     """
     Create a new announcement (admin only).
@@ -121,7 +111,7 @@ async def update_announcement(
     announcement_id: UUID,
     update_data: AnnouncementUpdate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(check_admin)
+    current_user: User = Depends(get_current_admin_user)
 ):
     """
     Update an announcement (admin only).
@@ -158,7 +148,7 @@ async def update_announcement(
 async def delete_announcement(
     announcement_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(check_admin)
+    current_user: User = Depends(get_current_admin_user)
 ):
     """
     Delete (deactivate) an announcement (admin only).
