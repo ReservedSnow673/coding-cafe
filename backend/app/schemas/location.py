@@ -3,6 +3,7 @@ from typing import Optional
 from datetime import datetime
 from uuid import UUID
 from enum import Enum
+from app.schemas.building import BuildingResponse
 
 
 class VisibilityEnum(str, Enum):
@@ -58,6 +59,7 @@ class LocationResponse(BaseModel):
     """Schema for location response"""
     id: UUID
     user_id: UUID
+    building_id: Optional[UUID]
     latitude: float
     longitude: float
     address: Optional[str]
@@ -65,6 +67,7 @@ class LocationResponse(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+    building: Optional[BuildingResponse] = None
 
     class Config:
         from_attributes = True
@@ -72,15 +75,45 @@ class LocationResponse(BaseModel):
             "example": {
                 "id": "123e4567-e89b-12d3-a456-426614174000",
                 "user_id": "123e4567-e89b-12d3-a456-426614174001",
+                "building_id": "123e4567-e89b-12d3-a456-426614174002",
                 "latitude": 30.7333,
                 "longitude": 76.7794,
                 "address": "Plaksha University, Mohali, Punjab",
                 "visibility": "friends",
                 "is_active": True,
                 "created_at": "2024-01-01T00:00:00Z",
-                "updated_at": "2024-01-01T00:00:00Z"
+                "updated_at": "2024-01-01T00:00:00Z",
+                "building": None
             }
         }
+
+
+class UserInfo(BaseModel):
+    """Basic user information"""
+    id: UUID
+    full_name: str
+    email: str
+    profile_picture: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
+
+
+class LocationWithUser(BaseModel):
+    """Location with user and building information"""
+    id: UUID
+    user_id: UUID
+    building_id: Optional[UUID]
+    latitude: float
+    longitude: float
+    address: Optional[str]
+    visibility: str
+    is_active: bool
+    user: UserInfo
+    building: Optional[BuildingResponse] = None
+    
+    class Config:
+        from_attributes = True
 
 
 class NearbyUserResponse(BaseModel):

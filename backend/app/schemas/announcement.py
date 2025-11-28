@@ -32,6 +32,9 @@ class AnnouncementCreate(BaseModel):
     priority: AnnouncementPriority = Field(default=AnnouncementPriority.NORMAL, description="Priority level")
     target_year: Optional[int] = Field(None, ge=1, le=4, description="Target specific year (1-4), null for all")
     target_branch: Optional[str] = Field(None, max_length=50, description="Target specific branch, null for all")
+    is_pinned: bool = Field(default=False, description="Pin to top of announcements")
+    scheduled_at: Optional[datetime] = Field(None, description="When to publish (null for immediate)")
+    expires_at: Optional[datetime] = Field(None, description="When to expire/hide (null for never)")
 
     class Config:
         json_schema_extra = {
@@ -41,7 +44,10 @@ class AnnouncementCreate(BaseModel):
                 "category": "academic",
                 "priority": "high",
                 "target_year": 2,
-                "target_branch": "CSE"
+                "target_branch": "CSE",
+                "is_pinned": True,
+                "scheduled_at": None,
+                "expires_at": "2025-11-26T00:00:00Z"
             }
         }
 
@@ -55,6 +61,9 @@ class AnnouncementUpdate(BaseModel):
     target_year: Optional[int] = Field(None, ge=1, le=4)
     target_branch: Optional[str] = Field(None, max_length=50)
     is_active: Optional[bool] = None
+    is_pinned: Optional[bool] = None
+    scheduled_at: Optional[datetime] = None
+    expires_at: Optional[datetime] = None
 
     class Config:
         json_schema_extra = {
@@ -77,6 +86,9 @@ class AnnouncementResponse(BaseModel):
     target_year: Optional[int]
     target_branch: Optional[str]
     is_active: bool
+    is_pinned: bool
+    scheduled_at: Optional[datetime]
+    expires_at: Optional[datetime]
     created_at: datetime
     updated_at: datetime
 

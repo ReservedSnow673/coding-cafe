@@ -5,11 +5,16 @@ from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 import secrets
 import uuid
+import logging
 
 from app.models.user import User
 from app.models.otp import OTPRequest
 from app.core.security import create_access_token, generate_otp
 from app.schemas.auth import UserRegister, UserResponse, Token
+from app.services.email_service import EmailService
+from app.core.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class AuthService:
@@ -32,13 +37,23 @@ class AuthService:
         db.add(otp_request)
         db.commit()
         
-        # TODO: Send OTP via email
-        # For development, return OTP in response
-        return {
+        # Send OTP via email
+        email_sent = EmailService.send_otp_email(email, otp_code)
+        
+        if not email_sent:
+            logger.warning(f"Failed to send OTP email to {email}, but OTP stored in DB")
+        
+        # Return response based on environment
+        response = {
             "message": "OTP sent to email",
-            "otp": otp_code,  # Remove this in production
             "user_exists": user is not None
         }
+        
+        # In development mode, include OTP in response
+        if settings.ENVIRONMENT == "development" or settings.DEBUG:
+            response["otp"] = otp_code
+        
+        return response
     
     @staticmethod
     async def verify_otp(email: str, otp_code: str, db: Session) -> dict:
@@ -118,6 +133,12 @@ class AuthService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="User registration failed"
             )
+        
+        # Send welcome email (async, don't block on failure)
+        try:
+            EmailService.send_welcome_email(new_user.email, new_user.full_name)
+        except Exception as e:
+            logger.warning(f"Failed to send welcome email to {new_user.email}: {str(e)}")
         
         # Create access token
         access_token = create_access_token(data={"sub": str(new_user.id), "email": new_user.email})

@@ -2,12 +2,14 @@
 from app.models.user import User, UserRole
 from app.models.otp import OTPRequest
 from app.models.location import Location, VisibilityLevel
-from app.models.chat import ChatGroup, ChatMessage
+from app.models.building import Building, BuildingType
+from app.models.notification import Notification, NotificationType
+from app.models.chat import ChatGroup, ChatMessage, ChatMember, MemberRole
 from app.models.announcement import Announcement, AnnouncementCategory
 from app.models.issue import Issue, IssueComment, IssueCategory, IssueStatus
 from app.models.team import Team, TeamMember
 from app.models.mess_review import MessReview, MealType
-from app.models.challenge import Challenge, ChallengeCompletion
+from app.models.challenge import Challenge, ChallengeParticipant, ChallengeType, DifficultyLevel
 
 __all__ = [
     "User",
@@ -15,8 +17,14 @@ __all__ = [
     "OTPRequest",
     "Location",
     "VisibilityLevel",
+    "Building",
+    "BuildingType",
+    "Notification",
+    "NotificationType",
     "ChatGroup",
     "ChatMessage",
+    "ChatMember",
+    "MemberRole",
     "Announcement",
     "AnnouncementCategory",
     "Issue",
@@ -28,5 +36,7 @@ __all__ = [
     "MessReview",
     "MealType",
     "Challenge",
-    "ChallengeCompletion",
+    "ChallengeParticipant",
+    "ChallengeType",
+    "DifficultyLevel",
 ]

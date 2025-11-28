@@ -1,13 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, WebSocket, WebSocketDisconnect
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
 from uuid import UUID
+import json
+import logging
 
 from app.database import get_db
+from app.core.database import get_db as get_sync_db
+from app.core.security import decode_access_token
 from app.models.user import User
 from app.routers.auth import get_current_user
 from app.services.chat_service import ChatService
+from app.services.websocket_manager import manager
 from app.schemas.chat import (
     ChatGroupCreate,
     ChatGroupUpdate,
@@ -17,6 +23,8 @@ from app.schemas.chat import (
     ChatMessageResponse,
     ChatMemberAdd
 )
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
@@ -232,3 +240,149 @@ async def get_messages(
     )
     
     return messages
+
+
+@router.websocket("/ws/{group_id}")
+async def websocket_endpoint(
+    websocket: WebSocket,
+    group_id: UUID,
+    token: str = Query(..., description="JWT authentication token")
+):
+    """
+    WebSocket endpoint for real-time chat
+    
+    Connect to this endpoint to send and receive real-time messages.
+    
+    **Authentication**: Pass JWT token as query parameter
+    
+    **Message Format (Client -> Server)**:
+    ```json
+    {
+        "type": "message",
+        "content": "Hello world"
+    }
+    ```
+    or
+    ```json
+    {
+        "type": "typing",
+        "is_typing": true
+    }
+    ```
+    
+    **Message Format (Server -> Client)**:
+    ```json
+    {
+        "type": "message",
+        "id": "uuid",
+        "user_id": "uuid",
+        "user_name": "John Doe",
+        "content": "Hello world",
+        "created_at": "2025-11-18T12:00:00Z"
+    }
+    ```
+    """
+    # Verify JWT token
+    payload = decode_access_token(token)
+    if not payload:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return
+    
+    user_id = payload.get("sub")
+    if not user_id:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return
+    
+    # Get database session
+    db = next(get_sync_db())
+    
+    try:
+        # Verify user is member of the group
+        from app.models.chat import ChatMember
+        member = db.query(ChatMember).filter(
+            ChatMember.group_id == group_id,
+            ChatMember.user_id == UUID(user_id)
+        ).first()
+        
+        if not member:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return
+        
+        # Get user info
+        user = db.query(User).filter(User.id == UUID(user_id)).first()
+        if not user:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return
+        
+        # Connect to group
+        await manager.connect(websocket, str(group_id), user_id)
+        
+        try:
+            while True:
+                # Receive message from client
+                data = await websocket.receive_text()
+                message_data = json.loads(data)
+                
+                message_type = message_data.get("type")
+                
+                if message_type == "message":
+                    # Save message to database
+                    from app.models.chat import ChatMessage
+                    from datetime import datetime
+                    import uuid as uuid_lib
+                    
+                    new_message = ChatMessage(
+                        id=uuid_lib.uuid4(),
+                        group_id=group_id,
+                        user_id=UUID(user_id),
+                        content=message_data.get("content", ""),
+                        created_at=datetime.utcnow(),
+                        updated_at=datetime.utcnow()
+                    )
+                    db.add(new_message)
+                    db.commit()
+                    db.refresh(new_message)
+                    
+                    # Broadcast to all group members
+                    await manager.broadcast_to_group(
+                        str(group_id),
+                        {
+                            "type": "message",
+                            "id": str(new_message.id),
+                            "user_id": str(user_id),
+                            "user_name": user.full_name,
+                            "user_year": user.year,
+                            "user_branch": user.branch,
+                            "content": new_message.content,
+                            "created_at": new_message.created_at.isoformat()
+                        }
+                    )
+                
+                elif message_type == "typing":
+                    # Broadcast typing indicator
+                    is_typing = message_data.get("is_typing", False)
+                    await manager.send_typing_indicator(
+                        str(group_id),
+                        user_id,
+                        is_typing,
+                        websocket
+                    )
+        
+        except WebSocketDisconnect:
+            manager.disconnect(websocket)
+            # Notify group that user left
+            await manager.broadcast_to_group(
+                str(group_id),
+                {
+                    "type": "user_left",
+                    "user_id": user_id,
+                    "user_name": user.full_name
+                }
+            )
+        
+        except Exception as e:
+            logger.error(f"WebSocket error: {str(e)}")
+            manager.disconnect(websocket)
+    
+    finally:
+        db.close()

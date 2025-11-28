@@ -1,16 +1,27 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { AuthProvider, LocationProvider, ChatProvider, AnnouncementProvider, IssueProvider, TeamProvider } from '@/contexts'
-import { MessReviewProvider } from '@/contexts/MessReviewContext'
-import { ChallengesProvider } from '@/contexts/ChallengesContext'
-import DevModeToggle from '@/components/DevModeToggle'
+import { Providers } from '@/components/Providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'PlakshaConnect - Connecting Plaksha Together',
   description: 'Campus networking and collaboration platform for Plaksha University',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'PlakshaConnect',
+  },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#3b82f6',
 }
 
 export default function RootLayout({
@@ -20,25 +31,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-gray-950 text-gray-100`}>
-        <AuthProvider>
-          <LocationProvider>
-            <ChatProvider>
-              <AnnouncementProvider>
-                <IssueProvider>
-                  <TeamProvider>
-                    <MessReviewProvider>
-                      <ChallengesProvider>
-                        {children}
-                        <DevModeToggle />
-                      </ChallengesProvider>
-                    </MessReviewProvider>
-                  </TeamProvider>
-                </IssueProvider>
-              </AnnouncementProvider>
-            </ChatProvider>
-          </LocationProvider>
-        </AuthProvider>
+      <body className={`${inter.className} bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors`}>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   )

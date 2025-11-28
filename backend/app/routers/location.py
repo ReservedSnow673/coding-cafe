@@ -1,16 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
+from sqlalchemy import select
 from typing import List
 
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.user import User
+from app.models.location import Location
 from app.schemas.location import (
     LocationCreate,
     LocationUpdate,
     LocationResponse,
     NearbyUserResponse,
-    LocationShareRequest
+    LocationShareRequest,
+    LocationWithUser
 )
 from app.services.location_service import LocationService
 
@@ -158,3 +162,27 @@ async def toggle_location_sharing(
         )
     
     return location
+
+
+@router.get("/all", response_model=List[LocationWithUser])
+async def get_all_active_locations(
+    radius: float = Query(10000, description="Maximum distance in meters"),
+    limit: int = Query(100, description="Maximum number of results"),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get all active user locations for map display.
+    
+    - Returns locations with user and building information
+    - Includes profile pictures for map markers
+    - Default radius is 10km (covers entire campus)
+    """
+    result = await db.execute(
+        select(Location)
+        .options(joinedload(Location.user), joinedload(Location.building))
+        .where(Location.is_active == True)
+        .limit(limit)
+    )
+    locations = result.unique().scalars().all()
+    
+    return locations

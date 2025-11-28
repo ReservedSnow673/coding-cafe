@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
+from sqlalchemy.orm import Session
 from typing import List, Optional
 from uuid import UUID
 from datetime import datetime
@@ -8,6 +9,7 @@ from math import radians, cos, sin, asin, sqrt
 from app.models.location import Location, VisibilityLevel
 from app.models.user import User
 from app.schemas.location import LocationCreate, LocationUpdate, NearbyUserResponse
+from app.services.building_service import auto_assign_building_to_location
 
 
 class LocationService:

@@ -1,9 +1,15 @@
-from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Boolean
+from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Boolean, Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
 import uuid
+import enum
+
+
+class MemberRole(str, enum.Enum):
+    ADMIN = "admin"
+    MEMBER = "member"
 
 
 class ChatGroup(Base):
@@ -20,6 +26,7 @@ class ChatGroup(Base):
     # Relationships
     creator = relationship("User", backref="created_chat_groups")
     messages = relationship("ChatMessage", back_populates="group", cascade="all, delete-orphan")
+    members = relationship("ChatMember", back_populates="group", cascade="all, delete-orphan")
 
 
 class ChatMessage(Base):
@@ -36,3 +43,17 @@ class ChatMessage(Base):
     # Relationships
     group = relationship("ChatGroup", back_populates="messages")
     user = relationship("User", backref="sent_messages")
+
+
+class ChatMember(Base):
+    __tablename__ = "chat_members"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    group_id = Column(UUID(as_uuid=True), ForeignKey("chat_groups.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    role = Column(SQLEnum(MemberRole, name='member_role'), default=MemberRole.MEMBER, nullable=False)
+    joined_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False, index=True)
+
+    # Relationships
+    group = relationship("ChatGroup", back_populates="members")
+    user = relationship("User", backref="chat_memberships")

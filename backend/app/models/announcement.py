@@ -25,6 +25,9 @@ class Announcement(Base):
     category = Column(SQLEnum(AnnouncementCategory, name='announcement_category'), default=AnnouncementCategory.GENERAL, nullable=False, index=True)
     posted_by = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     is_active = Column(Boolean, default=True, nullable=False, index=True)
+    is_pinned = Column(Boolean, default=False, nullable=False, index=True)
+    scheduled_at = Column(DateTime(timezone=True), nullable=True, index=True)  # When to publish
+    expires_at = Column(DateTime(timezone=True), nullable=True, index=True)  # When to hide
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False, index=True)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 

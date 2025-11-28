@@ -54,3 +54,20 @@
   }
 }
 
+/* Leaflet map styles */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+.custom-div-icon {
+  background: transparent;
+  border: none;
+}
+
+.custom-user-icon {
+  background: transparent;
+  border: none;
+}
+

@@ -13,15 +13,7 @@ from app.core.database import Base
 from app.core.config import settings
 
 # Import all models to ensure they are registered with SQLAlchemy
-from app.models.user import User
-from app.models.otp import OTPRequest
-from app.models.location import Location
-from app.models.chat import ChatGroup, ChatMessage
-from app.models.announcement import Announcement
-from app.models.issue import Issue, IssueComment
-from app.models.team import Team, TeamMember
-from app.models.mess_review import MessReview
-from app.models.challenge import Challenge, ChallengeCompletion
+from app.models import *  # This imports all models from __init__.py
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -18,6 +18,7 @@ class Location(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    building_id = Column(UUID(as_uuid=True), ForeignKey("buildings.id", ondelete="SET NULL"), nullable=True, index=True)
     latitude = Column(Numeric(precision=10, scale=8), nullable=False)
     longitude = Column(Numeric(precision=11, scale=8), nullable=False)
     address = Column(Text, nullable=True)
@@ -26,5 +27,6 @@ class Location(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False, index=True)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
-    # Relationship
+    # Relationships
     user = relationship("User", backref="locations")
+    building = relationship("Building", backref="locations")
