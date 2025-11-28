@@ -10,8 +10,8 @@ export default function DevModeToggle() {
   useEffect(() => {
     const checkDevMode = async () => {
       try {
-        const module = await import('@/lib/devMode');
-        setDevMode(module.DEV_MODE.useMockData);
+        const devModeModule = await import('@/lib/devMode');
+        setDevMode(devModeModule.DEV_MODE.useMockData);
       } catch (err) {
         console.error('Failed to load dev mode config:', err);
       }

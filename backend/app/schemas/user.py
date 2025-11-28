@@ -1,6 +1,27 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
+from datetime import datetime
 import uuid
+
+
+class UserResponse(BaseModel):
+    id: uuid.UUID
+    email: EmailStr
+    full_name: str
+    phone_number: Optional[str] = None
+    role: str
+    year: Optional[int] = None
+    branch: Optional[str] = None
+    hostel: Optional[str] = None
+    profile_picture: Optional[str] = None
+    bio: Optional[str] = None
+    is_active: bool
+    is_verified: bool
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
 
 
 class UserUpdate(BaseModel):

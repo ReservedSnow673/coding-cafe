@@ -195,7 +195,7 @@ export default function Home() {
                           </div>
                           <div>
                             <h3 className="text-2xl font-bold">ICG Chat</h3>
-                            <p className="text-sm text-gray-400">Jaden isn't a discuss this tom...</p>
+                            <p className="text-sm text-gray-400">Jaden isn&apos;t a discuss this tom...</p>
                           </div>
                         </div>
                       </div>

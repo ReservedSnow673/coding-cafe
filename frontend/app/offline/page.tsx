@@ -9,10 +9,10 @@ export default function OfflinePage() {
       <div className="text-center max-w-md">
         <div className="text-6xl mb-4">📡</div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          You're Offline
+          You&apos;re Offline
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          It looks like you've lost your internet connection. Some features may not be available until you're back online.
+          It looks like you&apos;ve lost your internet connection. Some features may not be available until you&apos;re back online.
         </p>
         <Link
           href="/"

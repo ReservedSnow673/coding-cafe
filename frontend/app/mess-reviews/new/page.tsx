@@ -88,7 +88,7 @@ export default function NewReviewPage() {
             Back to Reviews
           </Link>
           <h1 className="text-4xl font-bold mb-2">Write a Review</h1>
-          <p className="text-gray-400">Share your feedback about today's meal</p>
+          <p className="text-gray-400">Share your feedback about today&apos;s meal</p>
         </div>
 
         {/* Form */}

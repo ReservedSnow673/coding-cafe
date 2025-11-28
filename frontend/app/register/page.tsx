@@ -64,7 +64,7 @@ function RegisterForm() {
             Complete Your Profile
           </h1>
           <p className="text-gray-400 text-sm md:text-base">
-            Let's get to know you better
+            Let&apos;s get to know you better
           </p>
         </div>
 

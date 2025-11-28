@@ -203,7 +203,7 @@ export default function AnnouncementsPage() {
                     <FiUser className="text-base" />
                     <span>{announcement.author_name}</span>
                   </div>
-                  <span className="text-gray-500">{formatTimestamp(announcement.created_at)}</span>
+                  <span className="text-gray-500">{formatTime(announcement.created_at)}</span>
                 </div>
               </div>
             ))}

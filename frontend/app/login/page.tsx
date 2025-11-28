@@ -166,14 +166,14 @@ export default function LoginPage() {
                 disabled={loading}
                 className="w-full text-sm text-gray-400 hover:text-gray-300 transition-colors"
               >
-                Didn't receive the code? Resend
+                Didn&apos;t receive the code? Resend
               </button>
             </form>
           )}
         </div>
 
         <p className="text-center text-xs text-gray-500 mt-6">
-          By continuing, you agree to PlakshaConnect's Terms of Service and Privacy Policy
+          By continuing, you agree to PlakshaConnect&apos;s Terms of Service and Privacy Policy
         </p>
       </div>
     </div>
