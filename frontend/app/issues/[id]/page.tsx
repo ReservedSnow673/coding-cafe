@@ -1,14 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useIssues, type Issue, type IssueStatus } from '@/contexts/IssueContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { getPriorityColor, getStatusColor } from '@/lib/utils';
 import { FiArrowLeft, FiClock, FiUser, FiMapPin, FiEdit } from 'react-icons/fi';
 
-export default function IssueDetailPage({ params }: { params: { id: string } }) {
+export default function IssueDetailPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
   const { getIssueById, updateIssueStatus } = useIssues();
   const { user } = useAuth();
   const [issue, setIssue] = useState<Issue | null>(null);
@@ -18,11 +20,11 @@ export default function IssueDetailPage({ params }: { params: { id: string } }) 
 
   useEffect(() => {
     loadIssue();
-  }, [params.id]);
+  }, [id]);
 
   const loadIssue = async () => {
     setLoading(true);
-    const issueData = await getIssueById(params.id);
+    const issueData = await getIssueById(id);
     if (issueData) {
       setIssue(issueData);
       setNewStatus(issueData.status);

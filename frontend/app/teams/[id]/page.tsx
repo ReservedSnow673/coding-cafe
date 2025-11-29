@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useTeams, type Team } from '@/contexts/TeamContext';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -16,8 +16,10 @@ import {
   FiMail,
 } from 'react-icons/fi';
 
-export default function TeamDetailPage({ params }: { params: { id: string } }) {
+export default function TeamDetailPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
   const { getTeamById, deleteTeam, requestToJoin, leaveTeam } = useTeams();
   const { user } = useAuth();
   const [team, setTeam] = useState<Team | null>(null);
@@ -26,11 +28,11 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     loadTeam();
-  }, [params.id]);
+  }, [id]);
 
   const loadTeam = async () => {
     setLoading(true);
-    const teamData = await getTeamById(params.id);
+    const teamData = await getTeamById(id);
     if (teamData) {
       setTeam(teamData);
     }
@@ -41,7 +43,7 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
     if (!confirm('Are you sure you want to delete this team?')) return;
 
     try {
-      await deleteTeam(params.id);
+      await deleteTeam(id);
       router.push('/teams');
     } catch (error) {
       console.error('Error deleting team:', error);
@@ -52,7 +54,7 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
   const handleJoin = async () => {
     setActionLoading(true);
     try {
-      await requestToJoin(params.id);
+      await requestToJoin(id);
       alert('Join request sent successfully!');
       await loadTeam();
     } catch (error: any) {
@@ -67,7 +69,7 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
 
     setActionLoading(true);
     try {
-      await leaveTeam(params.id);
+      await leaveTeam(id);
       router.push('/teams');
     } catch (error: any) {
       alert(error.message || 'Failed to leave team');
