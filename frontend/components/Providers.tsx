@@ -12,7 +12,9 @@ import {
   NotificationProvider,
   ThemeProvider,
 } from '@/contexts';
-import { DevModeToggle, ThemeToggle, PWAInstaller } from '@/components';
+import DevModeToggle from './DevModeToggle';
+import ThemeToggle from './ThemeToggle';
+import PWAInstaller from './PWAInstaller';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (

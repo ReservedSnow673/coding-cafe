@@ -1,0 +1,8 @@
+
+
+## From project root:
+cd backend && python3 -m uvicorn app.main:app --reload
+
+
+# Server will run on: http://localhost:8000
+# API Documentation: http://localhost:8000/api/docs
