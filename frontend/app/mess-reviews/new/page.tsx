@@ -29,7 +29,7 @@ const StarSelector = ({ rating, onChange }: { rating: number; onChange: (rating:
           onMouseLeave={() => setHoverRating(0)}
           className="text-3xl transition-all hover:scale-110"
         >
-          <span className={star <= (hoverRating || rating) ? "text-accent-lime" : "text-dark-secondary"}>★</span>
+          <span className={star <= (hoverRating || rating) ? "text-primary dark:text-secondary" : "text-gray-300 dark:text-gray-700"}>★</span>
         </button>
       ))}
     </div>
@@ -79,23 +79,23 @@ export default function NewReviewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-dark text-white p-6">
+    <div className="min-h-screen bg-white dark:bg-black animate-fade-in p-6">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/mess-reviews" className="text-accent-lime hover:text-accent-lime/80 mb-4 inline-flex items-center gap-2">
+          <Link href="/mess-reviews" className="text-primary dark:text-secondary hover:opacity-80 mb-4 inline-flex items-center gap-2">
             <FiArrowLeft className="w-4 h-4" />
             Back to Reviews
           </Link>
-          <h1 className="text-4xl font-bold mb-2">Write a Review</h1>
-          <p className="text-gray-400">Share your feedback about today&apos;s meal</p>
+          <h1 className="text-4xl font-bold mb-2 text-black dark:text-white">Write a Review</h1>
+          <p className="text-gray-600 dark:text-gray-400">Share your feedback about today&apos;s meal</p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-dark-secondary rounded-lg p-8 border border-dark-secondary">
+        <form onSubmit={handleSubmit} className="card p-8">
           {/* Meal Type Selection */}
           <div className="mb-8">
-            <label className="text-lg font-semibold mb-4 block">Select Meal Type</label>
+            <label className="text-lg font-semibold mb-4 block text-black dark:text-white">Select Meal Type</label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {mealTypes.map((meal) => {
                 const Icon = mealTypeIcons[meal];
@@ -106,12 +106,12 @@ export default function NewReviewPage() {
                     onClick={() => setMealType(meal)}
                     className={`p-4 rounded-lg transition-all text-center ${
                       mealType === meal
-                        ? "bg-accent-lime text-dark border-2 border-accent-lime"
-                        : "bg-dark border-2 border-dark-secondary hover:border-accent-lime"
+                        ? "bg-primary text-white border-2 border-primary shadow-glow-primary"
+                        : "bg-gray-50 dark:bg-dark-card border-2 border-gray-200 dark:border-gray-800 hover:border-primary dark:hover:border-secondary"
                     }`}
                   >
-                    <Icon className={`w-8 h-8 mx-auto mb-2 ${mealType === meal ? "text-dark" : "text-accent-lime"}`} />
-                    <div className={`text-sm font-semibold capitalize ${mealType === meal ? "text-dark" : "text-white"}`}>
+                    <Icon className={`w-8 h-8 mx-auto mb-2 ${mealType === meal ? "text-white" : "text-primary dark:text-secondary"}`} />
+                    <div className={`text-sm font-semibold capitalize ${mealType === meal ? "text-white" : "text-black dark:text-white"}`}>
                       {meal}
                     </div>
                   </button>
@@ -122,21 +122,21 @@ export default function NewReviewPage() {
 
           {/* Overall Rating */}
           <div className="mb-8">
-            <label className="text-lg font-semibold mb-4 block">Overall Rating *</label>
+            <label className="text-lg font-semibold mb-4 block text-black dark:text-white">Overall Rating *</label>
             <div className="flex items-center gap-4">
               <StarSelector rating={rating} onChange={setRating} />
-              <span className="text-3xl font-bold text-accent-lime">{rating > 0 ? rating : "-"}/5</span>
+              <span className="text-3xl font-bold text-primary dark:text-secondary">{rating > 0 ? rating : "-"}/5</span>
             </div>
           </div>
 
           {/* Review Text */}
           <div className="mb-8">
-            <label className="text-lg font-semibold mb-4 block">Your Review (Optional)</label>
+            <label className="text-lg font-semibold mb-4 block text-black dark:text-white">Your Review (Optional)</label>
             <textarea
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
               placeholder="Share your thoughts about the meal..."
-              className="w-full bg-dark border border-dark-secondary rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:border-accent-lime resize-none"
+              className="input-field resize-none"
               rows={4}
             />
           </div>
@@ -146,7 +146,7 @@ export default function NewReviewPage() {
             <button
               type="button"
               onClick={() => setShowDetailedRatings(!showDetailedRatings)}
-              className="text-accent-lime hover:text-accent-lime/80 font-semibold flex items-center gap-2"
+              className="text-primary dark:text-secondary hover:opacity-80 font-semibold flex items-center gap-2"
             >
               {showDetailedRatings ? "− Hide" : "+ Add"} Detailed Ratings
             </button>
@@ -154,40 +154,40 @@ export default function NewReviewPage() {
 
           {/* Detailed Ratings */}
           {showDetailedRatings && (
-            <div className="mb-8 space-y-6 bg-dark rounded-lg p-6 border border-dark-secondary">
+            <div className="mb-8 space-y-6 bg-gray-50 dark:bg-dark-card rounded-lg p-6 border border-gray-200 dark:border-gray-800">
               {/* Taste */}
               <div>
-                <label className="text-sm font-semibold mb-3 block">Taste</label>
+                <label className="text-sm font-semibold mb-3 block text-black dark:text-white">Taste</label>
                 <div className="flex items-center gap-4">
                   <StarSelector rating={tasteRating} onChange={setTasteRating} />
-                  <span className="text-xl font-bold text-accent-lime w-12">{tasteRating > 0 ? tasteRating : "-"}/5</span>
+                  <span className="text-xl font-bold text-primary dark:text-secondary w-12">{tasteRating > 0 ? tasteRating : "-"}/5</span>
                 </div>
               </div>
 
               {/* Quantity */}
               <div>
-                <label className="text-sm font-semibold mb-3 block">Quantity</label>
+                <label className="text-sm font-semibold mb-3 block text-black dark:text-white">Quantity</label>
                 <div className="flex items-center gap-4">
                   <StarSelector rating={quantityRating} onChange={setQuantityRating} />
-                  <span className="text-xl font-bold text-accent-lime w-12">{quantityRating > 0 ? quantityRating : "-"}/5</span>
+                  <span className="text-xl font-bold text-primary dark:text-secondary w-12">{quantityRating > 0 ? quantityRating : "-"}/5</span>
                 </div>
               </div>
 
               {/* Hygiene */}
               <div>
-                <label className="text-sm font-semibold mb-3 block">Hygiene</label>
+                <label className="text-sm font-semibold mb-3 block text-black dark:text-white">Hygiene</label>
                 <div className="flex items-center gap-4">
                   <StarSelector rating={hygieneRating} onChange={setHygieneRating} />
-                  <span className="text-xl font-bold text-accent-lime w-12">{hygieneRating > 0 ? hygieneRating : "-"}/5</span>
+                  <span className="text-xl font-bold text-primary dark:text-secondary w-12">{hygieneRating > 0 ? hygieneRating : "-"}/5</span>
                 </div>
               </div>
 
               {/* Variety */}
               <div>
-                <label className="text-sm font-semibold mb-3 block">Variety</label>
+                <label className="text-sm font-semibold mb-3 block text-black dark:text-white">Variety</label>
                 <div className="flex items-center gap-4">
                   <StarSelector rating={varietyRating} onChange={setVarietyRating} />
-                  <span className="text-xl font-bold text-accent-lime w-12">{varietyRating > 0 ? varietyRating : "-"}/5</span>
+                  <span className="text-xl font-bold text-primary dark:text-secondary w-12">{varietyRating > 0 ? varietyRating : "-"}/5</span>
                 </div>
               </div>
             </div>
@@ -198,13 +198,13 @@ export default function NewReviewPage() {
             <button
               type="submit"
               disabled={rating === 0}
-              className="flex-1 bg-accent-lime hover:bg-accent-lime/90 text-dark font-bold py-4 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary flex-1 font-bold py-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Submit Review
             </button>
             <Link
               href="/mess-reviews"
-              className="px-8 py-4 bg-dark border border-dark-secondary hover:border-accent-lime rounded-lg font-semibold transition-all text-center"
+              className="btn-secondary px-8 py-4 font-semibold text-center"
             >
               Cancel
             </Link>
@@ -212,7 +212,7 @@ export default function NewReviewPage() {
         </form>
 
         {/* Help Text */}
-        <div className="mt-6 text-center text-sm text-gray-400">
+        <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
           <p>Your review helps improve the mess service for everyone!</p>
         </div>
       </div>

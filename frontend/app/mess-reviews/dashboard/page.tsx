@@ -68,27 +68,27 @@ export default function MessReviewDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (!analytics) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <p className="text-gray-600 dark:text-gray-400">Failed to load analytics</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+    <div className="min-h-screen bg-white dark:bg-black animate-fade-in p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
-            <FaUtensils className="text-blue-600" />
+          <h1 className="text-3xl font-bold text-black dark:text-white mb-2 flex items-center gap-3">
+            <FaUtensils className="text-primary dark:text-secondary" />
             Mess Review Dashboard
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
@@ -102,10 +102,10 @@ export default function MessReviewDashboard() {
             <button
               key={days}
               onClick={() => setPeriod(days)}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`px-4 py-2 rounded-button font-medium transition ${
                 period === days
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  ? 'bg-primary text-white shadow-glow-primary'
+                  : 'bg-gray-100 dark:bg-dark-card text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-hover'
               }`}
             >
               {days} Days
@@ -115,19 +115,19 @@ export default function MessReviewDashboard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Total Reviews
               </h3>
-              <FaChartLine className="text-blue-600" />
+              <FaChartLine className="text-primary dark:text-secondary" />
             </div>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+            <p className="text-3xl font-bold text-black dark:text-white">
               {analytics.total_reviews}
             </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Overall Rating
@@ -138,18 +138,18 @@ export default function MessReviewDashboard() {
               <p className={`text-3xl font-bold ${getRatingColor(analytics.overall_average)}`}>
                 {analytics.overall_average.toFixed(1)}
               </p>
-              <span className="text-gray-500">/5.0</span>
+              <span className="text-gray-500 dark:text-gray-500">/5.0</span>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Popular Dishes
               </h3>
-              <FaTrophy className="text-yellow-600" />
+              <FaTrophy className="text-yellow-600 dark:text-yellow-500" />
             </div>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+            <p className="text-3xl font-bold text-black dark:text-white">
               {popularDishes.length}
             </p>
           </div>
@@ -157,8 +157,8 @@ export default function MessReviewDashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Ratings by Meal Type */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="card p-6">
+            <h2 className="text-xl font-bold text-black dark:text-white mb-4">
               Ratings by Meal Type
             </h2>
             <div className="space-y-4">
@@ -166,7 +166,7 @@ export default function MessReviewDashboard() {
                 <div key={meal} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{getMealEmoji(meal)}</span>
-                    <span className="text-gray-900 dark:text-white capitalize font-medium">
+                    <span className="text-black dark:text-white capitalize font-medium">
                       {meal}
                     </span>
                   </div>
@@ -176,7 +176,7 @@ export default function MessReviewDashboard() {
                         <FaStar
                           key={star}
                           className={`text-lg ${
-                            star <= rating ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-600'
+                            star <= rating ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-700'
                           }`}
                         />
                       ))}
@@ -191,8 +191,8 @@ export default function MessReviewDashboard() {
           </div>
 
           {/* Rating Distribution */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="card p-6">
+            <h2 className="text-xl font-bold text-black dark:text-white mb-4">
               Rating Distribution
             </h2>
             <div className="space-y-3">
@@ -209,9 +209,9 @@ export default function MessReviewDashboard() {
                       </span>
                       <FaStar className="text-yellow-500 text-sm" />
                     </div>
-                    <div className="flex-1 h-6 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div className="flex-1 h-6 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-blue-600 rounded-full transition-all"
+                        className="h-full bg-primary dark:bg-secondary rounded-full transition-all"
                         style={{ width: `${percentage}%` }}
                       ></div>
                     </div>
@@ -226,14 +226,14 @@ export default function MessReviewDashboard() {
         </div>
 
         {/* Daily Trends */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="card p-6 mb-8">
+          <h2 className="text-xl font-bold text-black dark:text-white mb-4">
             Daily Rating Trends
           </h2>
           <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
+                <tr className="border-b border-gray-200 dark:border-gray-800">
                   <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">
                     Date
                   </th>
@@ -249,9 +249,9 @@ export default function MessReviewDashboard() {
                 {analytics.daily_trends.slice(-14).reverse().map((day) => (
                   <tr
                     key={day.date}
-                    className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750"
+                    className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-dark-hover"
                   >
-                    <td className="py-3 px-4 text-sm text-gray-900 dark:text-white">
+                    <td className="py-3 px-4 text-sm text-black dark:text-white">
                       {new Date(day.date).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -273,18 +273,18 @@ export default function MessReviewDashboard() {
         </div>
 
         {/* Popular Dishes */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="card p-6">
+          <h2 className="text-xl font-bold text-black dark:text-white mb-4">
             Most Popular Dishes
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {popularDishes.map((dish, index) => (
               <div
                 key={dish.dish_name}
-                className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:shadow-md transition"
+                className="bg-gray-50 dark:bg-dark-card rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-dark-hover transition border border-gray-200 dark:border-gray-800"
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex-1">
+                  <h3 className="text-sm font-semibold text-black dark:text-white flex-1">
                     {dish.dish_name}
                   </h3>
                   {index < 3 && (
