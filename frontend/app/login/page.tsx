@@ -54,30 +54,30 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-dark">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-white dark:bg-black">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-accent-lime mx-auto mb-4 flex items-center justify-center">
-            <span className="text-dark font-bold text-2xl">P</span>
+        <div className="text-center mb-8 animate-fade-in">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary mx-auto mb-4 flex items-center justify-center">
+            <span className="text-white font-bold text-2xl">P</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 text-white">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
             PlakshaConnect
           </h1>
-          <p className="text-gray-400 text-sm md:text-base">
+          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">
             Connect, collaborate, and grow together
           </p>
         </div>
 
-        <div className="bg-dark-secondary/50 backdrop-blur-xl border border-dark-secondary rounded-2xl p-6 md:p-8">
+        <div className="card animate-slide-up p-6 md:p-8">
           {step === 'email' ? (
             <form onSubmit={handleRequestOTP} className="space-y-6">
               <div>
-                <h2 className="text-xl md:text-2xl font-semibold mb-2 text-white">Welcome back</h2>
-                <p className="text-gray-400 text-sm">Enter your email to get started</p>
+                <h2 className="text-xl md:text-2xl font-semibold mb-2">Welcome back</h2>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Enter your email to get started</p>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Email address</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email address</label>
                 <div className="relative">
                   <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
@@ -86,13 +86,13 @@ export default function LoginPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your.email@plaksha.edu.in"
                     required
-                    className="w-full pl-10 pr-4 py-3 bg-dark border border-dark-secondary rounded-xl focus:outline-none focus:border-accent-lime transition-all text-sm md:text-base text-white placeholder-gray-500"
+                    className="input-field pl-10"
                   />
                 </div>
               </div>
 
               {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
                   {error}
                 </div>
               )}
@@ -100,7 +100,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
+                className="btn-primary w-full"
               >
                 {loading ? 'Sending...' : 'Continue'}
                 <FiArrowRight />
@@ -112,25 +112,25 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setStep('email')}
-                  className="text-sm text-gray-400 hover:text-accent-lime mb-4 transition-colors"
+                  className="text-sm text-primary dark:text-secondary hover:text-primary-light dark:hover:text-secondary-light mb-4 transition-colors"
                 >
                   ← Change email
                 </button>
-                <h2 className="text-xl md:text-2xl font-semibold mb-2 text-white">Enter OTP</h2>
-                <p className="text-gray-400 text-sm">
-                  We sent a code to <span className="text-accent-lime">{email}</span>
+                <h2 className="text-xl md:text-2xl font-semibold mb-2">Enter OTP</h2>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  We sent a code to <span className="text-primary dark:text-secondary font-medium">{email}</span>
                 </p>
               </div>
 
               {devOTP && (
-                <div className="p-3 bg-accent-lime/10 border border-accent-lime/20 rounded-lg">
-                  <p className="text-xs text-gray-400 mb-1">Development OTP:</p>
-                  <p className="text-accent-lime font-mono text-lg">{devOTP}</p>
+                <div className="p-3 bg-secondary/10 dark:bg-secondary/20 border border-secondary/30 rounded-lg">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Development OTP:</p>
+                  <p className="text-secondary font-mono text-lg">{devOTP}</p>
                 </div>
               )}
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">6-digit code</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">6-digit code</label>
                 <div className="relative">
                   <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
@@ -140,13 +140,13 @@ export default function LoginPage() {
                     placeholder="000000"
                     required
                     maxLength={6}
-                    className="w-full pl-10 pr-4 py-3 bg-dark border border-dark-secondary rounded-xl focus:outline-none focus:border-accent-lime transition-all text-center text-2xl tracking-widest font-mono text-white"
+                    className="input-field pl-10 text-center text-2xl tracking-widest font-mono"
                   />
                 </div>
               </div>
 
               {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
                   {error}
                 </div>
               )}
@@ -154,7 +154,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || otp.length !== 6}
-                className="w-full py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
+                className="btn-primary w-full"
               >
                 {loading ? 'Verifying...' : 'Verify OTP'}
                 <FiCheck />
@@ -164,7 +164,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleRequestOTP}
                 disabled={loading}
-                className="w-full text-sm text-gray-400 hover:text-gray-300 transition-colors"
+                className="w-full text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 transition-colors"
               >
                 Didn&apos;t receive the code? Resend
               </button>
@@ -172,7 +172,7 @@ export default function LoginPage() {
           )}
         </div>
 
-        <p className="text-center text-xs text-gray-500 mt-6">
+        <p className="text-center text-xs text-gray-500 dark:text-gray-500 mt-6">
           By continuing, you agree to PlakshaConnect&apos;s Terms of Service and Privacy Policy
         </p>
       </div>

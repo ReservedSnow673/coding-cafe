@@ -30,7 +30,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
                       <ChallengesProvider>
                         <PWAInstaller />
                         {children}
-                        <ThemeToggle />
                         <DevModeToggle />
                       </ChallengesProvider>
                     </MessReviewProvider>

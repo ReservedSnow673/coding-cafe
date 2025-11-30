@@ -80,20 +80,20 @@ export default function TeamDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-blue-950 to-purple-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (!team) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-blue-950 to-purple-950 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-400 text-lg mb-4">Team not found</p>
+          <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">Team not found</p>
           <button
             onClick={() => router.push('/teams')}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl"
+            className="btn-primary px-6 py-3"
           >
             Back to Teams
           </button>
@@ -107,13 +107,13 @@ export default function TeamDetailPage() {
   const isFull = team.current_members >= team.max_members;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-blue-950 to-purple-950">
+    <div className="min-h-screen bg-white dark:bg-black animate-fade-in">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => router.push('/teams')}
-            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-dark-card hover:bg-gray-200 dark:hover:bg-dark-hover text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
           >
             <FiArrowLeft className="text-lg" />
             Back
@@ -123,7 +123,7 @@ export default function TeamDetailPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleDelete}
-                className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg transition-colors"
               >
                 <FiTrash2 className="text-lg" />
                 Delete
@@ -136,25 +136,25 @@ export default function TeamDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Team Info Card */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+            <div className="card p-8">
               <div className="flex items-start gap-4 mb-6">
-                <div className="p-4 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl">
-                  <FiUsers className="text-4xl text-blue-400" />
+                <div className="p-4 bg-gradient-to-br from-primary/20 to-secondary/20 dark:from-primary/30 dark:to-secondary/30 rounded-2xl">
+                  <FiUsers className="text-4xl text-primary dark:text-secondary" />
                 </div>
                 <div className="flex-1">
-                  <h1 className="text-3xl font-bold text-white mb-2">{team.name}</h1>
+                  <h1 className="text-3xl font-bold text-black dark:text-white mb-2">{team.name}</h1>
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-primary/10 dark:bg-secondary/10 text-primary dark:text-secondary border border-primary/20 dark:border-secondary/20">
                       {team.category}
                     </span>
-                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-purple-500/10 text-purple-400 border border-purple-500/30">
+                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 dark:bg-dark-card text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
                       {team.status}
                     </span>
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium border ${
                         isFull
-                          ? 'bg-red-500/10 text-red-400 border-red-500/30'
-                          : 'bg-green-500/10 text-green-400 border-green-500/30'
+                          ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800'
+                          : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800'
                       }`}
                     >
                       {team.current_members}/{team.max_members} Members
@@ -165,18 +165,18 @@ export default function TeamDetailPage() {
 
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-lg font-semibold text-white mb-2">Description</h2>
-                  <p className="text-gray-300 leading-relaxed">{team.description}</p>
+                  <h2 className="text-lg font-semibold text-black dark:text-white mb-2">Description</h2>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{team.description}</p>
                 </div>
 
                 {team.tags && team.tags.length > 0 && (
                   <div>
-                    <h2 className="text-lg font-semibold text-white mb-2">Tags</h2>
+                    <h2 className="text-lg font-semibold text-black dark:text-white mb-2">Tags</h2>
                     <div className="flex flex-wrap gap-2">
                       {team.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-white/5 rounded-lg text-sm text-gray-300"
+                          className="px-3 py-1 bg-gray-100 dark:bg-dark-card rounded-lg text-sm text-gray-700 dark:text-gray-300"
                         >
                           #{tag}
                         </span>
@@ -185,19 +185,19 @@ export default function TeamDetailPage() {
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
-                  <div className="flex items-center gap-3 text-gray-400">
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                     <FiUser className="text-xl" />
                     <div>
-                      <div className="text-sm text-gray-500">Leader</div>
-                      <div className="text-white">{team.leader_name}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-500">Leader</div>
+                      <div className="text-black dark:text-white">{team.leader_name}</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-gray-400">
+                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                     <FiClock className="text-xl" />
                     <div>
-                      <div className="text-sm text-gray-500">Created</div>
-                      <div className="text-white">
+                      <div className="text-sm text-gray-500 dark:text-gray-500">Created</div>
+                      <div className="text-black dark:text-white">
                         {new Date(team.created_at).toLocaleDateString()}
                       </div>
                     </div>
@@ -208,30 +208,30 @@ export default function TeamDetailPage() {
 
             {/* Members List */}
             {team.members && team.members.length > 0 && (
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-                <h2 className="text-2xl font-bold text-white mb-6">Members</h2>
+              <div className="card p-8">
+                <h2 className="text-2xl font-bold text-black dark:text-white mb-6">Members</h2>
                 <div className="space-y-3">
                   {team.members.map((member) => (
                     <div
                       key={member.user_id}
-                      className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10"
+                      className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-card rounded-xl border border-gray-200 dark:border-gray-800"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">
                           {member.full_name.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <div className="font-semibold text-white">{member.full_name}</div>
-                          <div className="text-sm text-gray-400">{member.email}</div>
+                          <div className="font-semibold text-black dark:text-white">{member.full_name}</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">{member.email}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         {member.role === 'leader' && (
-                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/30">
+                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">
                             Leader
                           </span>
                         )}
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 dark:text-gray-500">
                           {new Date(member.joined_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -245,14 +245,14 @@ export default function TeamDetailPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Actions Card */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Actions</h2>
+            <div className="card p-6">
+              <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Actions</h2>
               <div className="space-y-3">
                 {!isMember && !isFull && !isLeader && (
                   <button
                     onClick={handleJoin}
                     disabled={actionLoading}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-xl font-medium transition-all disabled:opacity-50"
+                    className="btn-primary w-full flex items-center justify-center gap-2 px-4 py-3 font-medium disabled:opacity-50"
                   >
                     <FiUserPlus className="text-lg" />
                     Request to Join
@@ -263,7 +263,7 @@ export default function TeamDetailPage() {
                   <button
                     onClick={handleLeave}
                     disabled={actionLoading}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl font-medium transition-all disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl font-medium transition-all disabled:opacity-50"
                   >
                     <FiLogOut className="text-lg" />
                     Leave Team
@@ -271,30 +271,30 @@ export default function TeamDetailPage() {
                 )}
 
                 {isFull && !isMember && !isLeader && (
-                  <div className="text-center p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
-                    <p className="text-orange-400 text-sm">This team is currently full</p>
+                  <div className="text-center p-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-xl">
+                    <p className="text-orange-600 dark:text-orange-400 text-sm">This team is currently full</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Stats Card */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Team Stats</h2>
+            <div className="card p-6">
+              <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Team Stats</h2>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Total Members</span>
-                  <span className="text-white font-semibold">{team.current_members}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Total Members</span>
+                  <span className="text-black dark:text-white font-semibold">{team.current_members}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Available Spots</span>
-                  <span className="text-white font-semibold">
+                  <span className="text-gray-600 dark:text-gray-400">Available Spots</span>
+                  <span className="text-black dark:text-white font-semibold">
                     {team.max_members - team.current_members}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Visibility</span>
-                  <span className="text-white font-semibold">
+                  <span className="text-gray-600 dark:text-gray-400">Visibility</span>
+                  <span className="text-black dark:text-white font-semibold">
                     {team.is_public ? 'Public' : 'Private'}
                   </span>
                 </div>

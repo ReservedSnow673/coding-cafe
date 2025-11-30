@@ -107,20 +107,20 @@ export default function ChatRoomPage() {
 
   if (!activeGroup && loading) {
     return (
-      <div className="min-h-screen bg-dark flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-lime"></div>
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (!activeGroup) {
     return (
-      <div className="min-h-screen bg-dark flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-400 mb-4">Group not found</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Group not found</p>
           <button
             onClick={() => router.push("/chat")}
-            className="px-6 py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold"
+            className="btn-primary px-6 py-3 font-semibold"
           >
             Back to Groups
           </button>
@@ -130,29 +130,29 @@ export default function ChatRoomPage() {
   }
 
   return (
-    <div className="h-screen bg-dark flex flex-col">
+    <div className="h-screen bg-white dark:bg-black flex flex-col">
       {/* Header */}
-      <div className="bg-dark-secondary/30 backdrop-blur-xl border-b border-dark-secondary px-4 py-4">
+      <div className="bg-light-card dark:bg-dark-card/30 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 px-4 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4 flex-1">
             <button
               onClick={() => router.push("/chat")}
-              className="p-2 hover:bg-dark-secondary rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-dark-hover rounded-lg transition-colors"
             >
-              <FiArrowLeft className="text-xl text-gray-400" />
+              <FiArrowLeft className="text-xl text-gray-600 dark:text-gray-400" />
             </button>
             <div className="flex-1">
-              <h1 className="text-xl font-bold text-white">{activeGroup.name}</h1>
-              <p className="text-sm text-gray-400">
+              <h1 className="text-xl font-bold text-black dark:text-white">{activeGroup.name}</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {activeGroup.member_count} members
               </p>
             </div>
           </div>
           <button
             onClick={() => setShowInfo(!showInfo)}
-            className="p-2 hover:bg-dark-secondary rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-dark-hover rounded-lg transition-colors"
           >
-            <FiInfo className="text-xl text-gray-400" />
+            <FiInfo className="text-xl text-gray-600 dark:text-gray-400" />
           </button>
         </div>
       </div>
@@ -162,11 +162,11 @@ export default function ChatRoomPage() {
         {/* Messages Area */}
         <div className="flex-1 flex flex-col">
           {/* Messages List */}
-          <div className="flex-1 overflow-y-auto px-4 py-6">
+          <div className="flex-1 overflow-y-auto px-4 py-6 scrollbar-custom">
             <div className="max-w-4xl mx-auto space-y-6">
               {error && (
-                <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
-                  <p className="text-red-400">{error}</p>
+                <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-card">
+                  <p className="text-red-600 dark:text-red-400">{error}</p>
                 </div>
               )}
 
@@ -174,9 +174,9 @@ export default function ChatRoomPage() {
                 <div key={date}>
                   {/* Date Divider */}
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="flex-1 h-px bg-dark-secondary"></div>
-                    <span className="text-xs text-gray-500 font-medium">{date}</span>
-                    <div className="flex-1 h-px bg-dark-secondary"></div>
+                    <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800"></div>
+                    <span className="text-xs text-gray-500 dark:text-gray-500 font-medium">{date}</span>
+                    <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800"></div>
                   </div>
 
                   {/* Messages for this date */}
@@ -191,28 +191,28 @@ export default function ChatRoomPage() {
                           <div
                             className={`max-w-[70%] ${
                               isOwnMessage
-                                ? "bg-accent-lime text-dark"
-                                : "bg-dark-secondary"
-                            } rounded-2xl px-4 py-3`}
+                                ? "bg-primary text-white"
+                                : "bg-gray-100 dark:bg-dark-card"
+                            } rounded-2xl px-4 py-3 shadow-sm`}
                           >
                             {!isOwnMessage && (
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xs font-medium text-accent-lime">
+                                <span className="text-xs font-medium text-primary dark:text-secondary">
                                   {message.user_name}
                                 </span>
                                 {message.user_year && message.user_branch && (
-                                  <span className="text-xs text-gray-500">
+                                  <span className="text-xs text-gray-500 dark:text-gray-500">
                                     {message.user_branch} Y{message.user_year}
                                   </span>
                                 )}
                               </div>
                             )}
-                            <p className={`text-sm break-words ${isOwnMessage ? "text-dark" : "text-white"}`}>
+                            <p className={`text-sm break-words ${isOwnMessage ? "text-white" : "text-black dark:text-white"}`}>
                               {message.content}
                             </p>
                             <p
                               className={`text-xs mt-1 ${
-                                isOwnMessage ? "text-dark/70" : "text-gray-500"
+                                isOwnMessage ? "text-white/70" : "text-gray-500 dark:text-gray-500"
                               }`}
                             >
                               {formatMessageTime(message.created_at)}
@@ -227,7 +227,7 @@ export default function ChatRoomPage() {
 
               {messages.length === 0 && !loading && (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No messages yet. Start the conversation!</p>
+                  <p className="text-gray-500 dark:text-gray-500">No messages yet. Start the conversation!</p>
                 </div>
               )}
 
@@ -236,7 +236,7 @@ export default function ChatRoomPage() {
           </div>
 
           {/* Message Input */}
-          <div className="border-t border-dark-secondary px-4 py-4 bg-dark-secondary/30">
+          <div className="border-t border-gray-200 dark:border-gray-800 px-4 py-4 bg-light-card dark:bg-dark-card/30">
             <div className="max-w-4xl mx-auto">
               <form onSubmit={handleSendMessage} className="flex items-end gap-3">
                 <div className="flex-1">
@@ -252,13 +252,13 @@ export default function ChatRoomPage() {
                         handleSendMessage(e);
                       }
                     }}
-                    className="w-full px-4 py-3 bg-dark-secondary border border-dark-secondary rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-accent-lime transition-colors resize-none"
+                    className="input-field resize-none"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={sending || !messageText.trim()}
-                  className="p-4 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-primary p-4"
                 >
                   <FiSend className="text-xl" />
                 </button>
@@ -269,54 +269,54 @@ export default function ChatRoomPage() {
 
         {/* Info Sidebar (Desktop) */}
         {showInfo && (
-          <div className="hidden lg:block w-80 border-l border-dark-secondary bg-dark-secondary/30 overflow-y-auto">
+          <div className="hidden lg:block w-80 border-l border-gray-200 dark:border-gray-800 bg-light-card dark:bg-dark-card/30 overflow-y-auto scrollbar-custom">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-white">Group Info</h2>
+                <h2 className="text-lg font-semibold text-black dark:text-white">Group Info</h2>
                 <button
                   onClick={() => setShowInfo(false)}
-                  className="p-2 hover:bg-dark-secondary rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-dark-hover rounded-lg transition-colors"
                 >
-                  <FiX className="text-xl text-gray-400" />
+                  <FiX className="text-xl text-gray-600 dark:text-gray-400" />
                 </button>
               </div>
 
               {/* Group Description */}
               {activeGroup.description && (
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-400 mb-2">Description</h3>
-                  <p className="text-gray-300 text-sm">{activeGroup.description}</p>
+                  <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Description</h3>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">{activeGroup.description}</p>
                 </div>
               )}
 
               {/* Members List */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-400 mb-3">
+                <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">
                   Members ({activeGroup.members.length})
                 </h3>
                 <div className="space-y-2">
                   {activeGroup.members.map((member) => (
                     <div
                       key={member.user_id}
-                      className="flex items-center gap-3 p-3 bg-dark-secondary rounded-lg"
+                      className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-dark-hover rounded-lg"
                     >
-                      <div className="w-10 h-10 rounded-full bg-accent-lime/10 flex items-center justify-center">
-                        <span className="text-accent-lime font-semibold text-sm">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-secondary/10 flex items-center justify-center">
+                        <span className="text-primary dark:text-secondary font-semibold text-sm">
                           {member.full_name.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">
+                        <p className="text-sm font-medium text-black dark:text-white truncate">
                           {member.full_name}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-gray-500">
                           {member.branch && member.year
                             ? `${member.branch} Year ${member.year}`
                             : member.email}
                         </p>
                       </div>
                       {member.role === "admin" && (
-                        <span className="text-xs px-2 py-1 bg-accent-lime/20 text-accent-lime rounded">
+                        <span className="text-xs px-2 py-1 bg-primary/20 dark:bg-secondary/20 text-primary dark:text-secondary rounded">
                           Admin
                         </span>
                       )}
@@ -328,7 +328,7 @@ export default function ChatRoomPage() {
               {/* Leave Group Button */}
               <button
                 onClick={handleLeaveGroup}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl font-medium transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-button font-medium transition-colors"
               >
                 <FiLogOut className="text-lg" />
                 Leave Group
@@ -339,53 +339,53 @@ export default function ChatRoomPage() {
 
         {/* Info Modal (Mobile) */}
         {showInfo && (
-          <div className="lg:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end">
-            <div className="bg-dark-secondary border-t border-dark-secondary rounded-t-3xl w-full max-h-[80vh] overflow-y-auto">
+          <div className="lg:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end animate-fade-in">
+            <div className="bg-white dark:bg-dark-card border-t border-gray-200 dark:border-gray-800 rounded-t-3xl w-full max-h-[80vh] overflow-y-auto scrollbar-custom animate-slide-up">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-semibold text-white">Group Info</h2>
+                  <h2 className="text-lg font-semibold text-black dark:text-white">Group Info</h2>
                   <button
                     onClick={() => setShowInfo(false)}
-                    className="p-2 hover:bg-dark rounded-lg transition-colors"
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-dark-hover rounded-lg transition-colors"
                   >
-                    <FiX className="text-xl text-gray-400" />
+                    <FiX className="text-xl text-gray-600 dark:text-gray-400" />
                   </button>
                 </div>
 
                 {activeGroup.description && (
                   <div className="mb-6">
-                    <h3 className="text-sm font-medium text-gray-400 mb-2">Description</h3>
-                    <p className="text-gray-300 text-sm">{activeGroup.description}</p>
+                    <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Description</h3>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm">{activeGroup.description}</p>
                   </div>
                 )}
 
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-400 mb-3">
+                  <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">
                     Members ({activeGroup.members.length})
                   </h3>
                   <div className="space-y-2">
                     {activeGroup.members.map((member) => (
                       <div
                         key={member.user_id}
-                        className="flex items-center gap-3 p-3 bg-dark rounded-lg"
+                        className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-dark-hover rounded-lg"
                       >
-                        <div className="w-10 h-10 rounded-full bg-accent-lime/10 flex items-center justify-center">
-                          <span className="text-accent-lime font-semibold text-sm">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-secondary/10 flex items-center justify-center">
+                          <span className="text-primary dark:text-secondary font-semibold text-sm">
                             {member.full_name.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-white truncate">
+                          <p className="text-sm font-medium text-black dark:text-white truncate">
                             {member.full_name}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 dark:text-gray-500">
                             {member.branch && member.year
                               ? `${member.branch} Year ${member.year}`
                               : member.email}
                           </p>
                         </div>
                         {member.role === "admin" && (
-                          <span className="text-xs px-2 py-1 bg-accent-lime/20 text-accent-lime rounded">
+                          <span className="text-xs px-2 py-1 bg-primary/20 dark:bg-secondary/20 text-primary dark:text-secondary rounded">
                             Admin
                           </span>
                         )}
@@ -396,7 +396,7 @@ export default function ChatRoomPage() {
 
                 <button
                   onClick={handleLeaveGroup}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl font-medium transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-button font-medium transition-colors"
                 >
                   <FiLogOut className="text-lg" />
                   Leave Group

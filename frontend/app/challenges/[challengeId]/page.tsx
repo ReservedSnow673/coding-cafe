@@ -50,10 +50,10 @@ export default function ChallengeDetailPage() {
 
   if (!challenge) {
     return (
-      <div className="min-h-screen bg-dark text-white flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4">Challenge Not Found</h1>
-          <Link href="/challenges" className="text-accent-lime hover:text-accent-lime/80">
+          <h1 className="text-3xl font-bold mb-4 text-black dark:text-white">Challenge Not Found</h1>
+          <Link href="/challenges" className="text-primary dark:text-secondary hover:opacity-80">
             ← Back to Challenges
           </Link>
         </div>
@@ -102,79 +102,79 @@ export default function ChallengeDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-dark text-white p-6">
+    <div className="min-h-screen bg-white dark:bg-black p-6 animate-fade-in">
       <div className="max-w-5xl mx-auto">
         {/* Back Button */}
         <Link
           href="/challenges"
-          className="text-accent-lime hover:text-accent-lime/80 mb-6 inline-flex items-center gap-2"
+          className="text-primary dark:text-secondary hover:opacity-80 mb-6 inline-flex items-center gap-2 animate-slide-up"
         >
           <FiArrowLeft className="w-4 h-4" />
           Back to Challenges
         </Link>
 
         {/* Challenge Header */}
-        <div className="bg-dark-secondary rounded-lg p-8 border border-dark-secondary mb-6">
+        <div className="card p-8 mb-6">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-start gap-4 flex-1">
-              <div className="w-16 h-16 rounded-lg bg-dark flex items-center justify-center">
-                <TypeIcon className="w-8 h-8 text-accent-lime" />
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                <TypeIcon className="w-8 h-8 text-white" />
               </div>
               <div className="flex-1">
-                <h1 className="text-4xl font-bold mb-3">{challenge.title}</h1>
+                <h1 className="text-4xl font-bold mb-3 text-black dark:text-white">{challenge.title}</h1>
                 <div className="flex flex-wrap items-center gap-3 mb-4">
                   <span className={`text-sm px-4 py-2 rounded-full border capitalize font-semibold ${difficultyColors[challenge.difficulty]}`}>
                     {challenge.difficulty}
                   </span>
-                  <span className="text-sm px-4 py-2 rounded-full bg-dark text-gray-400 capitalize flex items-center gap-2">
+                  <span className="text-sm px-4 py-2 rounded-full bg-gray-100 dark:bg-dark-card text-gray-600 dark:text-gray-400 capitalize flex items-center gap-2">
                     <TypeIcon className="w-4 h-4" />
                     {challenge.challenge_type}
                   </span>
-                  <span className="text-sm text-gray-500">Created by {challenge.creator_name}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-500">Created by {challenge.creator_name}</span>
                 </div>
               </div>
             </div>
-            <div className="text-center bg-dark rounded-lg p-4 border border-accent-lime/20">
-              <FiAward className="w-8 h-8 mx-auto mb-2 text-accent-lime" />
-              <div className="text-3xl font-bold text-accent-lime">{challenge.points}</div>
-              <div className="text-sm text-gray-400">Points</div>
+            <div className="text-center bg-primary/10 dark:bg-secondary/10 rounded-lg p-4 border border-primary/20 dark:border-secondary/20">
+              <FiAward className="w-8 h-8 mx-auto mb-2 text-primary dark:text-secondary" />
+              <div className="text-3xl font-bold text-primary dark:text-secondary">{challenge.points}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Points</div>
             </div>
           </div>
 
-          <p className="text-gray-300 text-lg mb-6">{challenge.description}</p>
+          <p className="text-gray-700 dark:text-gray-300 text-lg mb-6">{challenge.description}</p>
 
           {/* Challenge Info */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-dark rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2 text-gray-400">
+            <div className="bg-gray-50 dark:bg-dark-card rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2 text-gray-600 dark:text-gray-400">
                 <FiCalendar className="w-4 h-4" />
                 <span className="text-sm">Start Date</span>
               </div>
-              <div className="font-semibold">{startDate.toLocaleDateString()}</div>
+              <div className="font-semibold text-black dark:text-white">{startDate.toLocaleDateString()}</div>
             </div>
-            <div className="bg-dark rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2 text-gray-400">
+            <div className="bg-gray-50 dark:bg-dark-card rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2 text-gray-600 dark:text-gray-400">
                 <FiClock className="w-4 h-4" />
                 <span className="text-sm">Days Left</span>
               </div>
-              <div className="font-semibold">{daysLeft > 0 ? `${daysLeft} days` : "Ending today"}</div>
+              <div className="font-semibold text-black dark:text-white">{daysLeft > 0 ? `${daysLeft} days` : "Ending today"}</div>
             </div>
-            <div className="bg-dark rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2 text-gray-400">
+            <div className="bg-gray-50 dark:bg-dark-card rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2 text-gray-600 dark:text-gray-400">
                 <FiUsers className="w-4 h-4" />
                 <span className="text-sm">Participants</span>
               </div>
-              <div className="font-semibold">
+              <div className="font-semibold text-black dark:text-white">
                 {challenge.participant_count}
                 {challenge.max_participants ? ` / ${challenge.max_participants}` : ""}
               </div>
             </div>
-            <div className="bg-dark rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2 text-gray-400">
+            <div className="bg-gray-50 dark:bg-dark-card rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2 text-gray-600 dark:text-gray-400">
                 <FiTrendingUp className="w-4 h-4" />
                 <span className="text-sm">End Date</span>
               </div>
-              <div className="font-semibold">{endDate.toLocaleDateString()}</div>
+              <div className="font-semibold text-black dark:text-white">{endDate.toLocaleDateString()}</div>
             </div>
           </div>
 
@@ -184,12 +184,12 @@ export default function ChallengeDetailPage() {
               <button
                 onClick={handleJoin}
                 disabled={isFull}
-                className="flex-1 bg-accent-lime hover:bg-accent-lime/90 text-dark font-bold py-4 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary flex-1 font-bold py-4"
               >
                 {isFull ? "Challenge Full" : "Join Challenge"}
               </button>
             ) : isCompleted ? (
-              <div className="flex-1 bg-dark border border-green-400 text-green-400 font-bold py-4 rounded-lg flex items-center justify-center gap-2">
+              <div className="flex-1 bg-green-50 dark:bg-green-900/20 border border-green-400 text-green-600 dark:text-green-400 font-bold py-4 rounded-button flex items-center justify-center gap-2">
                 <FiCheckCircle className="w-5 h-5" />
                 Completed!
               </div>
@@ -202,12 +202,12 @@ export default function ChallengeDetailPage() {
                       value={completionPassword}
                       onChange={(e) => setCompletionPassword(e.target.value)}
                       placeholder="Enter completion password from organizer"
-                      className="flex-1 bg-dark border border-dark-secondary rounded-lg px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-accent-lime"
+                      className="input-field flex-1 py-4"
                     />
                     <button
                       onClick={handleComplete}
                       disabled={!completionPassword}
-                      className="px-6 py-4 bg-accent-lime hover:bg-accent-lime/90 text-dark font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="btn-primary px-6 py-4 font-bold"
                     >
                       Submit
                     </button>
@@ -216,7 +216,7 @@ export default function ChallengeDetailPage() {
                         setShowPasswordInput(false);
                         setCompletionPassword("");
                       }}
-                      className="px-6 py-4 bg-dark border border-dark-secondary hover:border-gray-400 text-gray-400 rounded-lg font-semibold transition-all"
+                      className="btn-secondary px-6 py-4 font-semibold"
                     >
                       Cancel
                     </button>
@@ -225,13 +225,13 @@ export default function ChallengeDetailPage() {
                   <>
                     <button
                       onClick={() => setShowPasswordInput(true)}
-                      className="flex-1 bg-accent-lime hover:bg-accent-lime/90 text-dark font-bold py-4 rounded-lg transition-all"
+                      className="btn-primary flex-1 font-bold py-4"
                     >
                       Mark as Complete
                     </button>
                     <button
                       onClick={handleLeave}
-                      className="px-6 py-4 bg-dark border border-red-400/50 hover:border-red-400 text-red-400 rounded-lg font-semibold transition-all"
+                      className="px-6 py-4 bg-red-50 dark:bg-red-900/20 border border-red-400/50 hover:border-red-400 text-red-600 dark:text-red-400 rounded-button font-semibold transition-all"
                     >
                       Leave
                     </button>
@@ -244,19 +244,19 @@ export default function ChallengeDetailPage() {
 
         {/* Progress Section (for joined users) */}
         {isJoined && !isCompleted && (
-          <div className="bg-dark-secondary rounded-lg p-6 border border-dark-secondary mb-6">
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-              <FiTrendingUp className="w-6 h-6 text-accent-lime" />
+          <div className="card p-6 mb-6">
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-black dark:text-white">
+              <FiTrendingUp className="w-6 h-6 text-primary dark:text-secondary" />
               Your Progress
             </h2>
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Current Progress</span>
-                <span className="text-lg font-bold text-accent-lime">{currentProgress}%</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Current Progress</span>
+                <span className="text-lg font-bold text-primary dark:text-secondary">{currentProgress}%</span>
               </div>
-              <div className="w-full h-4 bg-dark rounded-full overflow-hidden">
+              <div className="w-full h-4 bg-gray-200 dark:bg-dark-card rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-accent-lime transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300"
                   style={{ width: `${currentProgress}%` }}
                 />
               </div>
@@ -268,12 +268,12 @@ export default function ChallengeDetailPage() {
                 max="100"
                 value={localProgress}
                 onChange={(e) => setLocalProgress(parseInt(e.target.value) || 0)}
-                className="flex-1 bg-dark border border-dark-secondary rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-lime"
+                className="input-field flex-1 py-3"
                 placeholder="Enter progress (0-100)"
               />
               <button
                 onClick={handleProgressUpdate}
-                className="px-6 py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark font-semibold rounded-lg transition-all"
+                className="btn-primary px-6 py-3 font-semibold"
               >
                 Update Progress
               </button>
@@ -282,14 +282,14 @@ export default function ChallengeDetailPage() {
         )}
 
         {/* Participants Section */}
-        <div className="bg-dark-secondary rounded-lg p-6 border border-dark-secondary">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <FiUsers className="w-6 h-6 text-accent-lime" />
+        <div className="card p-6">
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-black dark:text-white">
+            <FiUsers className="w-6 h-6 text-primary dark:text-secondary" />
             Participants ({challenge.participants.length})
           </h2>
 
           {challenge.participants.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
+            <div className="text-center py-12 text-gray-600 dark:text-gray-400">
               <FiUsers className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>No participants yet. Be the first to join!</p>
             </div>
@@ -305,28 +305,28 @@ export default function ChallengeDetailPage() {
                 .map((participant, index) => (
                   <div
                     key={participant.user_id}
-                    className="flex items-center gap-4 p-4 bg-dark rounded-lg border border-dark-secondary"
+                    className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-dark-card rounded-lg"
                   >
-                    <div className="w-10 h-10 rounded-full bg-dark-secondary flex items-center justify-center font-bold text-gray-400">
+                    <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-dark-hover flex items-center justify-center font-bold text-gray-600 dark:text-gray-400">
                       #{index + 1}
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-dark-secondary flex items-center justify-center">
-                      <FiUser className="w-5 h-5 text-gray-400" />
+                    <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-dark-hover flex items-center justify-center">
+                      <FiUser className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-semibold">{participant.user_name}</div>
-                      <div className="text-sm text-gray-400">
+                      <div className="font-semibold text-black dark:text-white">{participant.user_name}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
                         Joined {new Date(participant.joined_at).toLocaleDateString()}
                       </div>
                     </div>
                     <div className="text-right min-w-[120px]">
                       {participant.completed ? (
-                        <div className="flex items-center gap-2 text-green-400 font-semibold">
+                        <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-semibold">
                           <FiCheckCircle className="w-5 h-5" />
                           Completed
                         </div>
                       ) : (
-                        <div className="text-gray-400 font-semibold">
+                        <div className="text-gray-600 dark:text-gray-400 font-semibold">
                           In Progress
                         </div>
                       )}

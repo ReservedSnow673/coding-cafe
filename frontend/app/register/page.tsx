@@ -54,26 +54,26 @@ function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-dark">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-white dark:bg-black animate-fade-in">
       <div className="w-full max-w-2xl">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-accent-lime mx-auto mb-4 flex items-center justify-center">
-            <span className="text-dark font-bold text-2xl">P</span>
+        <div className="text-center mb-8 animate-slide-up">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary mx-auto mb-4 flex items-center justify-center">
+            <span className="text-white font-bold text-2xl">P</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 text-white">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 text-black dark:text-white">
             Complete Your Profile
           </h1>
-          <p className="text-gray-400 text-sm md:text-base">
+          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">
             Let&apos;s get to know you better
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-dark-secondary/50 backdrop-blur-xl border border-dark-secondary rounded-2xl p-6 md:p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="card animate-slide-up p-6 md:p-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-medium text-gray-300">Full Name *</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Full Name *</label>
               <div className="relative">
-                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="full_name"
@@ -81,43 +81,43 @@ function RegisterForm() {
                   onChange={handleChange}
                   placeholder="John Doe"
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="input-field pl-10"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Email</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
               <input
                 type="email"
                 value={formData.email}
                 disabled
-                className="w-full px-4 py-3 bg-gray-900/30 border border-gray-700 rounded-xl text-gray-500"
+                className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-card border border-gray-200 dark:border-gray-800 rounded-input text-gray-500 dark:text-gray-600"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Phone Number</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
               <div className="relative">
-                <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                 <input
                   type="tel"
                   name="phone_number"
                   value={formData.phone_number}
                   onChange={handleChange}
                   placeholder="+91 98765 43210"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="input-field pl-10"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Year</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Year</label>
               <select
                 name="year"
                 value={formData.year}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="input-field"
               >
                 <option value="">Select year</option>
                 <option value="1">1st Year</option>
@@ -128,53 +128,53 @@ function RegisterForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Branch</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Branch</label>
               <div className="relative">
-                <FiBook className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiBook className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="branch"
                   value={formData.branch}
                   onChange={handleChange}
                   placeholder="Computer Science"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="input-field pl-10"
                 />
               </div>
             </div>
 
             <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-medium text-gray-300">Hostel</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Hostel</label>
               <div className="relative">
-                <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="hostel"
                   value={formData.hostel}
                   onChange={handleChange}
                   placeholder="Hostel A"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="input-field pl-10"
                 />
               </div>
             </div>
 
             <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-medium text-gray-300">Bio</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Bio</label>
               <div className="relative">
-                <FiEdit3 className="absolute left-3 top-3 text-gray-400" />
+                <FiEdit3 className="absolute left-3 top-3 text-gray-400 dark:text-gray-500" />
                 <textarea
                   name="bio"
                   value={formData.bio}
                   onChange={handleChange}
                   placeholder="Tell us about yourself..."
                   rows={3}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                  className="input-field pl-10 resize-none"
                 />
               </div>
             </div>
           </div>
 
           {error && (
-            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+            <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-lg text-red-600 dark:text-red-400 text-sm">
               {error}
             </div>
           )}
@@ -182,14 +182,14 @@ function RegisterForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-accent-lime hover:bg-accent-lime/90 text-dark rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="btn-primary w-full py-3 font-semibold flex items-center justify-center gap-2"
           >
             {loading ? 'Creating your account...' : 'Complete Registration'}
             <FiCheck />
           </button>
         </form>
 
-        <p className="text-center text-xs text-gray-500 mt-6">
+        <p className="text-center text-xs text-gray-500 dark:text-gray-500 mt-6">
           All fields except name are optional. You can update them later.
         </p>
       </div>
@@ -200,8 +200,8 @@ function RegisterForm() {
 export default function RegisterPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
-        <div className="text-gray-400">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
       </div>
     }>
       <RegisterForm />

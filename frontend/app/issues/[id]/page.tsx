@@ -46,20 +46,20 @@ export default function IssueDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (!issue) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-400 text-lg mb-4">Issue not found</p>
+          <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">Issue not found</p>
           <button
             onClick={() => router.push('/issues')}
-            className="px-6 py-3 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white rounded-xl hover:opacity-90 transition"
+            className="btn-primary px-6 py-3"
           >
             Back to Issues
           </button>
@@ -71,23 +71,23 @@ export default function IssueDetailPage() {
   const isAdmin = user?.role === 'admin';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-white dark:bg-black animate-fade-in">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Back Button */}
         <button
           onClick={() => router.push('/issues')}
-          className="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition"
+          className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-secondary mb-6 transition"
         >
           <FiArrowLeft className="w-5 h-5" />
           <span>Back to Issues</span>
         </button>
 
         {/* Issue Card */}
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+        <div className="card p-8">
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-white mb-4">{issue.title}</h1>
+              <h1 className="text-3xl font-bold text-black dark:text-white mb-4">{issue.title}</h1>
               <div className="flex flex-wrap gap-2">
                 <span
                   className={`px-4 py-2 rounded-full text-sm font-medium border ${getPriorityColor(
@@ -103,7 +103,7 @@ export default function IssueDetailPage() {
                 >
                   {issue.status.replace('_', ' ').toUpperCase()}
                 </span>
-                <span className="px-4 py-2 rounded-full text-sm font-medium bg-white/5 text-gray-400 border border-white/10">
+                <span className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 dark:bg-dark-card text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
                   {issue.category.charAt(0).toUpperCase() + issue.category.slice(1)}
                 </span>
               </div>
@@ -112,7 +112,7 @@ export default function IssueDetailPage() {
             {isAdmin && (
               <button
                 onClick={() => setShowStatusUpdate(true)}
-                className="ml-4 p-3 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white rounded-xl hover:opacity-90 transition"
+                className="ml-4 p-3 btn-primary"
               >
                 <FiEdit className="w-5 h-5" />
               </button>
@@ -121,35 +121,35 @@ export default function IssueDetailPage() {
 
           {/* Description */}
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-white mb-3">Description</h2>
-            <p className="text-gray-300 whitespace-pre-wrap">{issue.description}</p>
+            <h2 className="text-xl font-semibold text-black dark:text-white mb-3">Description</h2>
+            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{issue.description}</p>
           </div>
 
           {/* Meta Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="flex items-center gap-3 text-gray-400">
+            <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
               <FiUser className="w-5 h-5" />
               <div>
-                <div className="text-sm text-gray-500">Reported by</div>
-                <div className="text-white">{issue.reporter_name}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-500">Reported by</div>
+                <div className="text-black dark:text-white">{issue.reporter_name}</div>
               </div>
             </div>
 
             {issue.location && (
-              <div className="flex items-center gap-3 text-gray-400">
+              <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                 <FiMapPin className="w-5 h-5" />
                 <div>
-                  <div className="text-sm text-gray-500">Location</div>
-                  <div className="text-white">{issue.location}</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-500">Location</div>
+                  <div className="text-black dark:text-white">{issue.location}</div>
                 </div>
               </div>
             )}
 
-            <div className="flex items-center gap-3 text-gray-400">
+            <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
               <FiClock className="w-5 h-5" />
               <div>
-                <div className="text-sm text-gray-500">Created</div>
-                <div className="text-white">
+                <div className="text-sm text-gray-500 dark:text-gray-500">Created</div>
+                <div className="text-black dark:text-white">
                   {new Date(issue.created_at).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -162,21 +162,21 @@ export default function IssueDetailPage() {
             </div>
 
             {issue.assigned_to_name && (
-              <div className="flex items-center gap-3 text-gray-400">
+              <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                 <FiUser className="w-5 h-5" />
                 <div>
-                  <div className="text-sm text-gray-500">Assigned to</div>
-                  <div className="text-white">{issue.assigned_to_name}</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-500">Assigned to</div>
+                  <div className="text-black dark:text-white">{issue.assigned_to_name}</div>
                 </div>
               </div>
             )}
 
             {issue.resolved_at && (
-              <div className="flex items-center gap-3 text-gray-400">
+              <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                 <FiClock className="w-5 h-5" />
                 <div>
-                  <div className="text-sm text-gray-500">Resolved</div>
-                  <div className="text-white">
+                  <div className="text-sm text-gray-500 dark:text-gray-500">Resolved</div>
+                  <div className="text-black dark:text-white">
                     {new Date(issue.resolved_at).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -191,7 +191,7 @@ export default function IssueDetailPage() {
           </div>
 
           {issue.updated_at !== issue.created_at && (
-            <div className="text-sm text-gray-500 pt-4 border-t border-white/10">
+            <div className="text-sm text-gray-500 dark:text-gray-500 pt-4 border-t border-gray-200 dark:border-gray-800">
               Last updated: {new Date(issue.updated_at).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -205,19 +205,19 @@ export default function IssueDetailPage() {
 
         {/* Status Update Modal */}
         {showStatusUpdate && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-gray-900 border border-white/10 rounded-2xl max-w-md w-full p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">Update Status</h2>
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+            <div className="card max-w-md w-full p-8 animate-slide-up">
+              <h2 className="text-2xl font-bold text-black dark:text-white mb-6">Update Status</h2>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     New Status
                   </label>
                   <select
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value as IssueStatus)}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="input-field"
                   >
                     <option value="open">Open</option>
                     <option value="in_progress">In Progress</option>
@@ -229,13 +229,13 @@ export default function IssueDetailPage() {
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={() => setShowStatusUpdate(false)}
-                    className="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 rounded-xl transition"
+                    className="btn-secondary flex-1 px-6 py-3"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleStatusUpdate}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white rounded-xl hover:opacity-90 transition"
+                    className="btn-primary flex-1 px-6 py-3"
                   >
                     Update
                   </button>

@@ -1,49 +1,83 @@
-@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --primary: #2F5755;
+    --secondary: #5A9690;
+    --bg-light: #FFFFFF;
+    --text-light: #000000;
+    --card-light: #fafafa;
+    --border-light: #e5e5e5;
+  }
+  
+  .dark {
+    --bg-dark: #000000;
+    --text-dark: #FFFFFF;
+    --card-dark: #0a0a0a;
+    --border-dark: #2a2a2a;
+  }
+  
   * {
-    @apply border-[#303030];
+    @apply border-gray-200 dark:border-gray-800;
   }
   
   body {
-    @apply bg-[#040404] text-white;
-    font-family: 'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    @apply bg-white dark:bg-black text-black dark:text-white transition-colors duration-200;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-light-card dark:bg-dark-card rounded-card border border-gray-200 dark:border-gray-800 
+           shadow-card hover:shadow-card-hover transition-all duration-300;
+  }
+  
+  .card-glow {
+    @apply relative overflow-hidden;
+  }
+  
+  .card-glow::before {
+    content: '';
+    @apply absolute inset-0 rounded-card opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, rgba(47, 87, 85, 0.1), rgba(90, 150, 144, 0.1));
+  }
+  
+  .card-glow:hover::before {
+    @apply opacity-100;
+  }
+  
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-light text-white font-medium px-6 py-3 
+           rounded-button transition-all duration-200 hover:shadow-glow-primary;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary-light text-white font-medium px-6 py-3 
+           rounded-button transition-all duration-200 hover:shadow-glow-secondary;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-input border border-gray-300 dark:border-gray-700
+           bg-white dark:bg-dark-card text-black dark:text-white
+           focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200;
+  }
+  
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300
+           hover:bg-light-hover dark:hover:bg-dark-hover transition-all duration-200;
+  }
+  
+  .sidebar-link-active {
+    @apply bg-primary/10 text-primary dark:bg-primary/20 dark:text-secondary;
   }
 }
 
 @layer utilities {
-  .glass {
-    @apply backdrop-blur-lg bg-white/5 border border-white/10;
-  }
-  
-  .glass-hover {
-    @apply hover:bg-white/10 transition-all duration-200;
-  }
-  
-  .accent-lime {
-    @apply text-[#f4ff0c];
-  }
-  
-  .bg-accent-lime {
-    @apply bg-[#f4ff0c];
-  }
-  
-  .border-accent-lime {
-    @apply border-[#f4ff0c];
-  }
-  
-  .bg-dark {
-    @apply bg-[#040404];
-  }
-  
-  .bg-dark-secondary {
-    @apply bg-[#303030];
-  }
-  
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -51,6 +85,30 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-700 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600;
+  }
+  
+  .animate-glow-border {
+    position: relative;
+    background: linear-gradient(var(--bg-light), var(--bg-light)) padding-box,
+                linear-gradient(135deg, var(--primary), var(--secondary)) border-box;
+    border: 2px solid transparent;
+  }
+  
+  .dark .animate-glow-border {
+    background: linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box,
+                linear-gradient(135deg, var(--primary), var(--secondary)) border-box;
   }
 }
 
