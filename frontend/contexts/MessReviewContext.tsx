@@ -265,7 +265,7 @@ const mockReviews: MessReview[] = [
 ];
 
 export const MessReviewProvider = ({ children }: { children: ReactNode }) => {
-  const [reviews, setReviews] = useState<MessReview[]>(mockReviews);
+  const [reviews, setReviews] = useState<MessReview[]>([]);
   const [dailyAverages] = useState<DailyAverage[]>([]);
 
   const addReview = (newReview: Omit<MessReview, "id" | "user_id" | "user_name" | "created_at">) => {

@@ -93,7 +93,7 @@ class TeamResponse(BaseModel):
     current_members: int
     is_public: bool
     tags: Optional[List[str]]
-    leader_id: UUID
+    created_by: UUID
     leader_name: str
     created_at: datetime
     updated_at: datetime
@@ -112,7 +112,7 @@ class TeamResponse(BaseModel):
                 "current_members": 3,
                 "is_public": True,
                 "tags": ["machine-learning", "research"],
-                "leader_id": "123e4567-e89b-12d3-a456-426614174001",
+                "created_by": "123e4567-e89b-12d3-a456-426614174001",
                 "leader_name": "John Doe",
                 "created_at": "2024-01-01T00:00:00Z",
                 "updated_at": "2024-01-01T00:00:00Z",

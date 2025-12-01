@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { DEV_MODE, mockDelay } from "@/lib/devMode";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+
 // Types
 export interface Announcement {
   id: string;
@@ -121,10 +123,10 @@ export const AnnouncementProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("access_token");
       const url = category
-        ? `http://localhost:8000/api/announcements?category=${category}`
-        : "http://localhost:8000/api/announcements";
+        ? `${API_URL}/announcements?category=${category}`
+        : `${API_URL}/announcements`;
 
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -155,8 +157,8 @@ export const AnnouncementProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:8000/api/announcements/${id}`, {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/announcements/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -204,8 +206,8 @@ export const AnnouncementProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8000/api/announcements/", {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/announcements/`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -255,8 +257,8 @@ export const AnnouncementProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:8000/api/announcements/${id}`, {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/announcements/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -297,8 +299,8 @@ export const AnnouncementProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:8000/api/announcements/${id}`, {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/announcements/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

@@ -22,7 +22,7 @@ class TeamService:
     async def create_team(
         db: AsyncSession,
         team_data: TeamCreate,
-        leader_id: UUID
+        created_by: UUID
     ) -> Team:
         """Create a new team with leader as first member"""
         new_team = Team(
@@ -32,7 +32,7 @@ class TeamService:
             max_members=team_data.max_members,
             is_public=team_data.is_public,
             tags=team_data.tags,
-            leader_id=leader_id,
+            created_by=created_by,
             status="active"
         )
         db.add(new_team)
@@ -41,7 +41,7 @@ class TeamService:
         # Add leader as first member
         leader_member = TeamMember(
             team_id=new_team.id,
-            user_id=leader_id,
+            user_id=created_by,
             role="leader"
         )
         db.add(leader_member)
@@ -67,7 +67,7 @@ class TeamService:
                 User,
                 func.count(TeamMember.user_id).label('member_count')
             )
-            .join(User, Team.leader_id == User.id)
+            .join(User, Team.created_by == User.id)
             .outerjoin(TeamMember, Team.id == TeamMember.team_id)
             .where(Team.is_public == True)
             .group_by(Team.id, User.id)
@@ -105,7 +105,7 @@ class TeamService:
                     current_members=member_count,
                     is_public=team.is_public,
                     tags=team.tags,
-                    leader_id=team.leader_id,
+                    created_by=team.created_by,
                     leader_name=leader.full_name,
                     created_at=team.created_at,
                     updated_at=team.updated_at
@@ -127,7 +127,7 @@ class TeamService:
                 User,
                 func.count(TeamMember.user_id).label('member_count')
             )
-            .join(User, Team.leader_id == User.id)
+            .join(User, Team.created_by == User.id)
             .outerjoin(TeamMember, Team.id == TeamMember.team_id)
             .where(Team.id == team_id)
             .group_by(Team.id, User.id)
@@ -174,7 +174,7 @@ class TeamService:
             current_members=member_count,
             is_public=team.is_public,
             tags=team.tags,
-            leader_id=team.leader_id,
+            created_by=team.created_by,
             leader_name=leader.full_name,
             created_at=team.created_at,
             updated_at=team.updated_at,
@@ -193,7 +193,7 @@ class TeamService:
                 User,
                 func.count(TeamMember.user_id).label('member_count')
             )
-            .join(User, Team.leader_id == User.id)
+            .join(User, Team.created_by == User.id)
             .join(TeamMember, Team.id == TeamMember.team_id)
             .where(TeamMember.user_id == user_id)
             .group_by(Team.id, User.id)
@@ -216,7 +216,7 @@ class TeamService:
                     current_members=member_count,
                     is_public=team.is_public,
                     tags=team.tags,
-                    leader_id=team.leader_id,
+                    created_by=team.created_by,
                     leader_name=leader.full_name,
                     created_at=team.created_at,
                     updated_at=team.updated_at
@@ -238,7 +238,7 @@ class TeamService:
         )
         team = result.scalar_one_or_none()
 
-        if not team or team.leader_id != user_id:
+        if not team or team.created_by != user_id:
             return None
 
         # Update fields
@@ -273,7 +273,7 @@ class TeamService:
         )
         team = result.scalar_one_or_none()
 
-        if not team or team.leader_id != user_id:
+        if not team or team.created_by != user_id:
             return False
 
         # Delete all members first
@@ -357,7 +357,7 @@ class TeamService:
     async def handle_join_request(
         db: AsyncSession,
         request_id: UUID,
-        leader_id: UUID,
+        created_by: UUID,
         approve: bool
     ) -> bool:
         """Approve or reject a join request (leader only)"""
@@ -375,7 +375,7 @@ class TeamService:
 
         join_request, team = data
 
-        if team.leader_id != leader_id:
+        if team.created_by != created_by:
             return False
 
         if approve:
@@ -406,7 +406,7 @@ class TeamService:
         )
         team = team_result.scalar_one_or_none()
 
-        if not team or team.leader_id == user_id:
+        if not team or team.created_by == user_id:
             return False  # Leaders cannot leave, must transfer leadership or delete team
 
         # Remove member
@@ -426,7 +426,7 @@ class TeamService:
     async def get_pending_requests(
         db: AsyncSession,
         team_id: UUID,
-        leader_id: UUID
+        created_by: UUID
     ) -> List[JoinRequestResponse]:
         """Get pending join requests for a team (leader only)"""
         # Verify leader
@@ -435,7 +435,7 @@ class TeamService:
         )
         team = team_result.scalar_one_or_none()
 
-        if not team or team.leader_id != leader_id:
+        if not team or team.created_by != created_by:
             return []
 
         # Get pending requests

@@ -282,8 +282,8 @@ const mockLeaderboard: LeaderboardEntry[] = [
 ];
 
 export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
-  const [challenges, setChallenges] = useState<Challenge[]>(mockChallenges);
-  const [leaderboard] = useState<LeaderboardEntry[]>(mockLeaderboard);
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [leaderboard] = useState<LeaderboardEntry[]>([]);
 
   const addChallenge = (newChallenge: Omit<Challenge, "id" | "creator_id" | "creator_name" | "participant_count" | "participants" | "is_active" | "created_at">) => {
     const challenge: Challenge = {

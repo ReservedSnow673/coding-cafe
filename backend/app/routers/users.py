@@ -14,26 +14,21 @@ router = APIRouter(prefix="/api/users", tags=["Users"])
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_profile(
-    current_user: dict = Depends(get_current_user),
+    current_user = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Get current user's profile"""
-    user = db.query(User).filter(User.id == UUID(current_user["user_id"])).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    return user
+    return current_user
 
 
 @router.put("/me", response_model=UserResponse)
 async def update_profile(
     update_data: UserUpdate,
-    current_user: dict = Depends(get_current_user),
+    current_user = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Update current user's profile"""
-    user = db.query(User).filter(User.id == UUID(current_user["user_id"])).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    user = current_user
     
     # Update fields
     if update_data.full_name is not None:
@@ -57,20 +52,18 @@ async def update_profile(
 @router.post("/me/profile-picture", response_model=UserResponse)
 async def upload_profile_picture(
     file: UploadFile = File(..., description="Profile picture (JPG, PNG, GIF, WebP, max 5MB)"),
-    current_user: dict = Depends(get_current_user),
+    current_user = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Upload or update profile picture"""
-    user = db.query(User).filter(User.id == UUID(current_user["user_id"])).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    user = current_user
     
     # Delete old profile picture if exists
     if user.profile_picture:
         FileUploadService.delete_file(user.profile_picture)
     
     # Save new profile picture
-    file_path = await FileUploadService.save_profile_picture(file, current_user["user_id"])
+    file_path = await FileUploadService.save_profile_picture(file, str(user.id))
     user.profile_picture = file_path
     
     db.commit()
@@ -80,13 +73,11 @@ async def upload_profile_picture(
 
 @router.delete("/me/profile-picture", response_model=UserResponse)
 async def delete_profile_picture(
-    current_user: dict = Depends(get_current_user),
+    current_user = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Delete profile picture"""
-    user = db.query(User).filter(User.id == UUID(current_user["user_id"])).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    user = current_user
     
     if user.profile_picture:
         FileUploadService.delete_file(user.profile_picture)

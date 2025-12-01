@@ -45,19 +45,18 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user_info(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+async def get_current_user_info(current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     """
     Get current authenticated user information
     
     - Requires valid JWT token
     - Returns complete user profile
     """
-    user = AuthService.get_current_user(current_user["user_id"], db)
-    return UserResponse.from_orm(user)
+    return UserResponse.from_orm(current_user)
 
 
 @router.post("/refresh", response_model=Token)
-async def refresh_token(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+async def refresh_token(current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     """
     Refresh access token
     
@@ -65,11 +64,10 @@ async def refresh_token(current_user: dict = Depends(get_current_user), db: Sess
     - Returns new JWT token
     """
     from app.core.security import create_access_token
-    user = AuthService.get_current_user(current_user["user_id"], db)
     
-    access_token = create_access_token(data={"sub": str(user.id), "email": user.email})
+    access_token = create_access_token(data={"sub": str(current_user.id), "email": current_user.email})
     
     return Token(
         access_token=access_token,
-        user=UserResponse.from_orm(user)
+        user=UserResponse.from_orm(current_user)
     )

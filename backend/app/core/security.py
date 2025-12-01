@@ -4,6 +4,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
 from app.core.config import settings
 import secrets
 import string
@@ -56,10 +57,17 @@ def generate_secure_token(length: int = 32) -> str:
     return secrets.token_urlsafe(length)
 
 
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(lambda: next(__import__('app.core.database', fromlist=['get_db']).get_db()))
+):
     """
     Dependency to get current authenticated user from JWT token
+    Returns the actual User model object
     """
+    from app.models.user import User
+    from uuid import UUID
+    
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -73,13 +81,19 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         if payload is None:
             raise credentials_exception
         
-        user_id: str = payload.get("sub")
-        email: str = payload.get("email")
+        user_id_str: str = payload.get("sub")
         
-        if user_id is None:
+        if user_id_str is None:
             raise credentials_exception
         
-        return {"user_id": user_id, "email": email}
+        # Convert string UUID to UUID object and fetch user from database
+        user_id = UUID(user_id_str)
+        user = db.query(User).filter(User.id == user_id).first()
+        
+        if user is None:
+            raise credentials_exception
+        
+        return user
     
-    except JWTError:
+    except (JWTError, ValueError):
         raise credentials_exception

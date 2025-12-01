@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { DEV_MODE, mockDelay } from '@/lib/devMode';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+
 export type IssueCategory = 'infrastructure' | 'academics' | 'hostel' | 'mess' | 'internet' | 'security' | 'sports' | 'other';
 export type IssueStatus = 'open' | 'in_progress' | 'resolved' | 'closed';
 export type IssuePriority = 'low' | 'medium' | 'high' | 'critical';
@@ -174,7 +176,7 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
 
         setIssues(allIssues);
       } else {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("access_token");
         const queryParams = new URLSearchParams();
         if (filters?.category) queryParams.append('category', filters.category);
         if (filters?.status) queryParams.append('status', filters.status);
@@ -182,7 +184,7 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
         if (filters?.myIssues) queryParams.append('my_issues', 'true');
 
         const response = await fetch(
-          `http://localhost:8000/api/issues?${queryParams.toString()}`,
+          `${API_URL}/issues?${queryParams.toString()}`,
           {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -213,8 +215,8 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
         const allIssues = stored ? JSON.parse(stored) : DEV_ISSUES;
         return allIssues.find((issue: Issue) => issue.id === id) || null;
       } else {
-        const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:8000/api/issues/${id}`, {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${API_URL}/issues/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -260,8 +262,8 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
 
         return newIssue;
       } else {
-        const token = localStorage.getItem("token");
-        const response = await fetch('http://localhost:8000/api/issues/', {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch('${API_URL}/issues/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -313,8 +315,8 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
 
         return updatedIssues.find((issue: Issue) => issue.id === id);
       } else {
-        const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:8000/api/issues/${id}`, {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${API_URL}/issues/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -366,8 +368,8 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
 
         return updatedIssues.find((issue: Issue) => issue.id === id);
       } else {
-        const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:8000/api/issues/${id}/status`, {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${API_URL}/issues/${id}/status`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -415,9 +417,9 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('mock_issues', JSON.stringify(updatedIssues));
         setIssues(updatedIssues);
       } else {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("access_token");
         const response = await fetch(
-          `http://localhost:8000/api/issues/${issueId}/assign/${userId}`,
+          `${API_URL}/issues/${issueId}/assign/${userId}`,
           {
             method: 'PATCH',
             headers: {
