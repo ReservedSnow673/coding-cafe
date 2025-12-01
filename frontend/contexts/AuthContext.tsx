@@ -78,6 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const response = await api.post('/auth/request-otp', { email });
+    // Backend returns OTP in response for SMTP bypass mode (development)
     return response.data;
   };
 

@@ -203,7 +203,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
 
         setTeams(allTeams);
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const queryParams = new URLSearchParams();
         if (filters?.category) queryParams.append('category', filters.category);
         if (filters?.status) queryParams.append('status', filters.status);
@@ -250,7 +250,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
 
         setMyTeams(userTeams);
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const response = await fetch('http://localhost:8000/api/teams/my-teams', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -302,7 +302,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         
         return team || null;
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const response = await fetch(`http://localhost:8000/api/teams/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -350,7 +350,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
 
         return newTeam;
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const response = await fetch('http://localhost:8000/api/teams/', {
           method: 'POST',
           headers: {
@@ -400,7 +400,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
 
         return updatedTeams.find((team: Team) => team.id === id);
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const response = await fetch(`http://localhost:8000/api/teams/${id}`, {
           method: 'PUT',
           headers: {
@@ -440,7 +440,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         setTeams(updatedTeams);
         setMyTeams((prev) => prev.filter((team) => team.id !== id));
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const response = await fetch(`http://localhost:8000/api/teams/${id}`, {
           method: 'DELETE',
           headers: {
@@ -481,7 +481,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('mock_teams', JSON.stringify(updatedTeams));
         setTeams(updatedTeams);
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const response = await fetch(`http://localhost:8000/api/teams/${teamId}/join`, {
           method: 'POST',
           headers: {
@@ -523,7 +523,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         setTeams(updatedTeams);
         setMyTeams((prev) => prev.filter((team) => team.id !== teamId));
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const response = await fetch(`http://localhost:8000/api/teams/${teamId}/leave`, {
           method: 'POST',
           headers: {
@@ -551,7 +551,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         // Return empty array in dev mode
         return [];
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const response = await fetch(
           `http://localhost:8000/api/teams/${teamId}/requests`,
           {
@@ -584,7 +584,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         await mockDelay();
         // Nothing to do in dev mode
       } else {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         const endpoint = approve ? 'approve' : 'reject';
         const response = await fetch(
           `http://localhost:8000/api/teams/requests/${requestId}/${endpoint}`,

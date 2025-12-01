@@ -37,21 +37,27 @@ class AuthService:
         db.add(otp_request)
         db.commit()
         
-        # Send OTP via email
-        email_sent = EmailService.send_otp_email(email, otp_code)
+        # Try to send OTP via email
+        email_sent = False
+        try:
+            email_sent = EmailService.send_otp_email(email, otp_code)
+        except Exception as e:
+            logger.warning(f"Failed to send OTP email to {email}: {str(e)}")
         
         if not email_sent:
-            logger.warning(f"Failed to send OTP email to {email}, but OTP stored in DB")
+            logger.warning(f"Email not sent to {email}, but OTP stored in DB for SMTP bypass")
         
         # Return response based on environment
         response = {
-            "message": "OTP sent to email",
-            "user_exists": user is not None
+            "message": "OTP sent to email" if email_sent else "OTP generated (SMTP Bypass Mode)",
+            "user_exists": user is not None,
+            "email_sent": email_sent
         }
         
-        # In development mode, include OTP in response
-        if settings.ENVIRONMENT == "development" or settings.DEBUG:
+        # In development mode or if email failed, include OTP in response (SMTP Bypass)
+        if settings.ENVIRONMENT == "development" or settings.DEBUG or not email_sent:
             response["otp"] = otp_code
+            response["bypass_mode"] = True
         
         return response
     

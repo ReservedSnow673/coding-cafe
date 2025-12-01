@@ -102,7 +102,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   }, [fetchStats]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     if (token) {
       fetchNotifications();
       fetchStats();
