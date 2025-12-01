@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useChat } from "@/contexts";
 import { formatRelativeTime } from "@/lib/utils";
 import { FiMessageCircle, FiUsers, FiPlus, FiClock, FiX } from "react-icons/fi";
+import Navbar from "@/components/Navbar";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -40,8 +41,11 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black animate-fade-in">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen flex bg-white dark:bg-black">
+      <Navbar />
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 overflow-y-auto scrollbar-custom bg-white dark:bg-black">
+          <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8 animate-slide-up">
           <div className="flex items-center gap-4">
@@ -219,6 +223,8 @@ export default function ChatPage() {
             </div>
           </div>
         )}
+          </div>
+        </main>
       </div>
     </div>
   );

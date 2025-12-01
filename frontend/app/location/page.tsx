@@ -15,6 +15,7 @@ import {
   FiCheck,
   FiAlertCircle
 } from 'react-icons/fi';
+import Navbar from '@/components/Navbar';
 
 export default function LocationPage() {
   const router = useRouter();
@@ -132,9 +133,11 @@ export default function LocationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black animate-fade-in">
-      {/* Header */}
-      <header className="bg-light-card dark:bg-dark-card/30 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800">
+    <div className="min-h-screen flex bg-white dark:bg-black">
+      <Navbar />
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <header className="bg-light-card dark:bg-dark-card/30 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -410,6 +413,7 @@ export default function LocationPage() {
           </div>
         </div>
       </main>
+      </div>
     </div>
   );
 }

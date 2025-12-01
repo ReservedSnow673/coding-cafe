@@ -16,6 +16,7 @@ import {
   FiZap,
   FiAward,
 } from 'react-icons/fi';
+import Navbar from '@/components/Navbar';
 
 const CATEGORIES = [
   { value: 'project' as TeamCategory, label: 'Project', icon: FiTrendingUp },
@@ -97,7 +98,10 @@ export default function TeamsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black animate-fade-in">
+    <div className="min-h-screen flex bg-white dark:bg-black">
+      <Navbar />
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 overflow-y-auto scrollbar-custom bg-white dark:bg-black">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -406,6 +410,8 @@ export default function TeamsPage() {
             </div>
           </div>
         )}
+      </div>
+        </main>
       </div>
     </div>
   );

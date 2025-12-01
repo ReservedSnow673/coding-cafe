@@ -130,6 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('mock_user', JSON.stringify(mockUser));
       localStorage.setItem('mock_token', DEV_MODE.mockToken);
       setUser(mockUser);
+      router.push('/');
       return;
     }
 

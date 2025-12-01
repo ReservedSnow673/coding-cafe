@@ -13,6 +13,7 @@ import {
   FiFilter,
   FiX,
 } from "react-icons/fi";
+import Navbar from "@/components/Navbar";
 
 const CATEGORIES = [
   { value: "", label: "All Categories", icon: FiMic },
@@ -84,10 +85,13 @@ export default function AnnouncementsPage() {
   const isAdmin = user?.role === "admin";
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black animate-fade-in">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8 animate-slide-up">
+    <div className="min-h-screen flex bg-white dark:bg-black">
+      <Navbar />
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 overflow-y-auto scrollbar-custom bg-white dark:bg-black">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8 animate-slide-up">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
               <FiMic className="text-2xl text-white" />
@@ -346,6 +350,8 @@ export default function AnnouncementsPage() {
             </div>
           </div>
         )}
+          </div>
+        </main>
       </div>
     </div>
   );

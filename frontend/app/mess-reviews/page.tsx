@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useMessReview, MealType } from "@/contexts/MessReviewContext";
 import Link from "next/link";
 import { FiSun, FiCoffee, FiMoon, FiPlus, FiUser } from "react-icons/fi";
+import Navbar from "@/components/Navbar";
 
 const mealTypes: MealType[] = ["breakfast", "lunch", "snack", "dinner"];
 
@@ -54,8 +55,11 @@ export default function MessReviewsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black animate-fade-in p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen flex bg-white dark:bg-black">
+      <Navbar />
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 overflow-y-auto scrollbar-custom bg-white dark:bg-black animate-fade-in p-6">
+          <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
@@ -259,6 +263,8 @@ export default function MessReviewsPage() {
             })
           )}
         </div>
+          </div>
+        </main>
       </div>
     </div>
   );

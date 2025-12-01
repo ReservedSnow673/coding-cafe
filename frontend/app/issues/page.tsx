@@ -6,6 +6,7 @@ import { useIssues, type IssueCategory, type IssueStatus, type IssuePriority } f
 import { useAuth } from '@/contexts/AuthContext';
 import { getPriorityColor, getStatusColor } from '@/lib/utils';
 import { FiAlertCircle, FiX, FiPlus, FiFilter } from 'react-icons/fi';
+import Navbar from '@/components/Navbar';
 
 export default function IssuesPage() {
   const router = useRouter();
@@ -66,8 +67,11 @@ export default function IssuesPage() {
   const statuses: Array<IssueStatus | 'all'> = ['all', 'open', 'in_progress', 'resolved', 'closed'];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black animate-fade-in">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen flex bg-white dark:bg-black">
+      <Navbar />
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 overflow-y-auto scrollbar-custom bg-white dark:bg-black">
+          <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4 animate-slide-up">
@@ -339,6 +343,8 @@ export default function IssuesPage() {
             </div>
           </div>
         )}
+          </div>
+        </main>
       </div>
     </div>
   );
