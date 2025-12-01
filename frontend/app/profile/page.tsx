@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
-import { FiCamera, FiSave, FiX, FiUser } from 'react-icons/fi';
+import { FiCamera, FiSave, FiX, FiUser, FiMail, FiPhone, FiMapPin, FiCalendar, FiEdit2 } from 'react-icons/fi';
+import Navbar from '@/components/Navbar';
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -106,238 +107,282 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dark">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="animate-pulse text-lg text-gray-600 dark:text-gray-400">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-dark py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-dark-secondary rounded-2xl border border-dark-secondary p-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-white">My Profile</h1>
-            {!editing && (
-              <button
-                onClick={() => setEditing(true)}
-                className="px-4 py-2 bg-accent-lime text-dark rounded-lg font-semibold hover:opacity-90"
-              >
-                Edit Profile
-              </button>
-            )}
-          </div>
+    <div className="min-h-screen flex bg-white dark:bg-black">
+      <Navbar />
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 overflow-y-auto scrollbar-custom bg-white dark:bg-black">
+          <div className="max-w-5xl mx-auto px-6 py-8">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8 animate-slide-up">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                  <FiUser className="text-2xl text-white" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold text-black dark:text-white">My Profile</h1>
+                  <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your account information</p>
+                </div>
+              </div>
+              {!editing && (
+                <button
+                  onClick={() => setEditing(true)}
+                  className="btn-primary px-6 py-3 font-semibold flex items-center gap-2"
+                >
+                  <FiEdit2 className="w-5 h-5" />
+                  Edit Profile
+                </button>
+              )}
+            </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Left Column - Profile Picture */}
-            <div className="md:col-span-1">
-              <div className="text-center">
-                <div className="relative inline-block">
-                  <div className="w-48 h-48 rounded-full overflow-hidden bg-dark-secondary border-4 border-accent-lime mx-auto">
-                    {profilePicturePreview ? (
-                      <img
-                        src={profilePicturePreview}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Left Column - Profile Picture */}
+              <div className="md:col-span-1">
+                <div className="card p-6">
+                  <div className="text-center">
+                    <div className="relative inline-block mb-6">
+                      <div className="w-40 h-40 rounded-full overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 border-4 border-primary dark:border-secondary mx-auto">
+                        {profilePicturePreview ? (
+                          <img
+                            src={profilePicturePreview}
+                            alt="Profile"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-600">
+                            <FiUser size={64} />
+                          </div>
+                        )}
+                      </div>
+                      
+                      {editing && (
+                        <label className="absolute bottom-2 right-2 bg-primary dark:bg-secondary text-white p-3 rounded-full cursor-pointer hover:opacity-90 transition-opacity shadow-lg">
+                          <FiCamera size={18} />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileSelect}
+                            className="hidden"
+                          />
+                        </label>
+                      )}
+                    </div>
+                    
+                    {profilePicture && (
+                      <button
+                        onClick={handleUploadPicture}
+                        disabled={uploading}
+                        className="btn-primary w-full mb-4 py-2.5 font-medium disabled:opacity-50"
+                      >
+                        {uploading ? 'Uploading...' : 'Upload Picture'}
+                      </button>
+                    )}
+                    
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Member since</p>
+                      <p className="text-black dark:text-white font-medium">{new Date(user?.created_at || '').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Profile Info */}
+              <div className="md:col-span-2 space-y-6">
+                {editing ? (
+                  <div className="card p-6 space-y-6">
+                    <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Edit Profile</h2>
+                    
+                    {/* Edit Mode */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="full_name"
+                        value={formData.full_name}
+                        onChange={handleInputChange}
+                        className="input-field"
+                        required
                       />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500">
-                        <FiUser size={64} />
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone_number"
+                          value={formData.phone_number}
+                          onChange={handleInputChange}
+                          className="input-field"
+                          placeholder="+91-1234567890"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Year
+                        </label>
+                        <select
+                          name="year"
+                          value={formData.year}
+                          onChange={handleInputChange}
+                          className="input-field"
+                        >
+                          <option value="">Select Year</option>
+                          <option value="1">1st Year</option>
+                          <option value="2">2nd Year</option>
+                          <option value="3">3rd Year</option>
+                          <option value="4">4th Year</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Branch
+                        </label>
+                        <input
+                          type="text"
+                          name="branch"
+                          value={formData.branch}
+                          onChange={handleInputChange}
+                          className="input-field"
+                          placeholder="e.g., Computer Science"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Hostel
+                        </label>
+                        <input
+                          type="text"
+                          name="hostel"
+                          value={formData.hostel}
+                          onChange={handleInputChange}
+                          className="input-field"
+                          placeholder="e.g., A Block"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Bio
+                      </label>
+                      <textarea
+                        name="bio"
+                        value={formData.bio}
+                        onChange={handleInputChange}
+                        rows={4}
+                        className="input-field resize-none"
+                        placeholder="Tell us about yourself..."
+                      />
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
+                      <button
+                        onClick={handleSaveProfile}
+                        disabled={saving}
+                        className="btn-primary flex-1 py-3 font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+                      >
+                        <FiSave size={20} />
+                        {saving ? 'Saving...' : 'Save Changes'}
+                      </button>
+                      <button
+                        onClick={() => setEditing(false)}
+                        className="px-6 py-3 rounded-button border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-hover transition-colors"
+                      >
+                        <FiX size={20} />
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* View Mode */}
+                    <div className="card p-6">
+                      <div className="flex items-start gap-3 mb-4">
+                        <FiUser className="w-5 h-5 text-primary dark:text-secondary mt-1" />
+                        <div className="flex-1">
+                          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Full Name</label>
+                          <p className="text-xl text-black dark:text-white font-semibold">{user?.full_name}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card p-6">
+                      <div className="flex items-start gap-3 mb-4">
+                        <FiMail className="w-5 h-5 text-primary dark:text-secondary mt-1" />
+                        <div className="flex-1">
+                          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Email</label>
+                          <p className="text-black dark:text-white">{user?.email}</p>
+                        </div>
+                      </div>
+
+                      {user?.phone_number && (
+                        <div className="flex items-start gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
+                          <FiPhone className="w-5 h-5 text-primary dark:text-secondary mt-1" />
+                          <div className="flex-1">
+                            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Phone</label>
+                            <p className="text-black dark:text-white">{user.phone_number}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="card p-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="flex items-start gap-3">
+                          <FiCalendar className="w-5 h-5 text-primary dark:text-secondary mt-1" />
+                          <div className="flex-1">
+                            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Year</label>
+                            <p className="text-black dark:text-white font-medium">
+                              {user?.year ? `${user.year}${['st', 'nd', 'rd', 'th'][Math.min(user.year - 1, 3)]} Year` : 'Not specified'}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-start gap-3">
+                          <FiUser className="w-5 h-5 text-primary dark:text-secondary mt-1" />
+                          <div className="flex-1">
+                            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Branch</label>
+                            <p className="text-black dark:text-white font-medium">{user?.branch || 'Not specified'}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
+                        <FiMapPin className="w-5 h-5 text-primary dark:text-secondary mt-1" />
+                        <div className="flex-1">
+                          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Hostel</label>
+                          <p className="text-black dark:text-white font-medium">{user?.hostel || 'Not specified'}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {user?.bio && (
+                      <div className="card p-6">
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Bio</label>
+                        <p className="text-black dark:text-white whitespace-pre-wrap leading-relaxed">{user.bio}</p>
                       </div>
                     )}
                   </div>
-                  
-                  {editing && (
-                    <label className="absolute bottom-0 right-0 bg-accent-lime text-dark p-3 rounded-full cursor-pointer hover:opacity-90">
-                      <FiCamera size={20} />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                      />
-                    </label>
-                  )}
-                </div>
-                
-                {profilePicture && (
-                  <button
-                    onClick={handleUploadPicture}
-                    disabled={uploading}
-                    className="mt-4 px-4 py-2 bg-accent-lime text-dark rounded-lg font-semibold hover:opacity-90 disabled:opacity-50"
-                  >
-                    {uploading ? 'Uploading...' : 'Upload Picture'}
-                  </button>
                 )}
-                
-                <div className="mt-6">
-                  <p className="text-gray-400 text-sm">Member since</p>
-                  <p className="text-white">{new Date(user?.created_at || '').toLocaleDateString()}</p>
-                </div>
               </div>
             </div>
-
-            {/* Right Column - Profile Info */}
-            <div className="md:col-span-2 space-y-6">
-              {editing ? (
-                <>
-                  {/* Edit Mode */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="full_name"
-                      value={formData.full_name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-lg bg-dark border border-dark-secondary text-white focus:border-accent-lime focus:outline-none"
-                      required
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone_number"
-                        value={formData.phone_number}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-lg bg-dark border border-dark-secondary text-white focus:border-accent-lime focus:outline-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Year
-                      </label>
-                      <select
-                        name="year"
-                        value={formData.year}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-lg bg-dark border border-dark-secondary text-white focus:border-accent-lime focus:outline-none"
-                      >
-                        <option value="">Select Year</option>
-                        <option value="1">1st Year</option>
-                        <option value="2">2nd Year</option>
-                        <option value="3">3rd Year</option>
-                        <option value="4">4th Year</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Branch
-                      </label>
-                      <input
-                        type="text"
-                        name="branch"
-                        value={formData.branch}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-lg bg-dark border border-dark-secondary text-white focus:border-accent-lime focus:outline-none"
-                        placeholder="e.g., Computer Science"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Hostel
-                      </label>
-                      <input
-                        type="text"
-                        name="hostel"
-                        value={formData.hostel}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-lg bg-dark border border-dark-secondary text-white focus:border-accent-lime focus:outline-none"
-                        placeholder="e.g., A Block"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Bio
-                    </label>
-                    <textarea
-                      name="bio"
-                      value={formData.bio}
-                      onChange={handleInputChange}
-                      rows={4}
-                      className="w-full px-4 py-3 rounded-lg bg-dark border border-dark-secondary text-white focus:border-accent-lime focus:outline-none resize-none"
-                      placeholder="Tell us about yourself..."
-                    />
-                  </div>
-
-                  <div className="flex gap-4">
-                    <button
-                      onClick={handleSaveProfile}
-                      disabled={saving}
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-accent-lime text-dark rounded-lg font-semibold hover:opacity-90 disabled:opacity-50"
-                    >
-                      <FiSave size={20} />
-                      {saving ? 'Saving...' : 'Save Changes'}
-                    </button>
-                    <button
-                      onClick={() => setEditing(false)}
-                      className="px-6 py-3 bg-dark-secondary border border-gray-600 text-white rounded-lg hover:bg-dark"
-                    >
-                      <FiX size={20} />
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* View Mode */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-1">Name</label>
-                    <p className="text-xl text-white font-semibold">{user?.full_name}</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-1">Email</label>
-                    <p className="text-white">{user?.email}</p>
-                  </div>
-
-                  {user?.phone_number && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-400 mb-1">Phone</label>
-                      <p className="text-white">{user.phone_number}</p>
-                    </div>
-                  )}
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-400 mb-1">Year</label>
-                      <p className="text-white">{user?.year ? `${user.year}${['st', 'nd', 'rd', 'th'][Math.min(user.year - 1, 3)]} Year` : 'Not specified'}</p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-400 mb-1">Branch</label>
-                      <p className="text-white">{user?.branch || 'Not specified'}</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-1">Hostel</label>
-                    <p className="text-white">{user?.hostel || 'Not specified'}</p>
-                  </div>
-
-                  {user?.bio && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-400 mb-1">Bio</label>
-                      <p className="text-white whitespace-pre-wrap">{user.bio}</p>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
