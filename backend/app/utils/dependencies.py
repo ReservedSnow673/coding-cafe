@@ -15,16 +15,15 @@ def get_db() -> Generator:
     
     Yields a database session and ensures it's closed after use.
     """
-    return core_get_db()
+    yield from core_get_db()
 
 
-async def get_current_user(user_data: dict = Depends(core_get_current_user), db: Session = Depends(get_db)) -> User:
+async def get_current_user(current_user: User = Depends(core_get_current_user)) -> User:
     """
     Get current authenticated user.
     
     Args:
-        user_data: User data from JWT token
-        db: Database session
+        current_user: User object from core security
         
     Returns:
         User model instance
@@ -32,23 +31,15 @@ async def get_current_user(user_data: dict = Depends(core_get_current_user), db:
     Raises:
         HTTPException: If user not found or inactive
     """
-    from uuid import UUID
-    
-    user = db.query(User).filter(User.id == UUID(user_data["user_id"])).first()
-    
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
-        )
-    
-    if not user.is_active:
+    # core_get_current_user already returns a User object and checks if user exists
+    # Just verify the user is active
+    if not current_user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User account is inactive"
         )
     
-    return user
+    return current_user
 
 
 async def get_current_admin_user(current_user: User = Depends(get_current_user)) -> User:

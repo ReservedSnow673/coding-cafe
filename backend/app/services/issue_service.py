@@ -1,5 +1,5 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, or_, desc
+from sqlalchemy.orm import Session
+from sqlalchemy import and_, or_, desc
 from typing import List, Optional
 from uuid import UUID
 from datetime import datetime
@@ -18,8 +18,8 @@ class IssueService:
     """Service for managing issues"""
 
     @staticmethod
-    async def create_issue(
-        db: AsyncSession,
+    def create_issue(
+        db: Session,
         issue_data: IssueCreate,
         reporter_id: UUID
     ) -> Issue:
@@ -27,20 +27,20 @@ class IssueService:
         new_issue = Issue(
             title=issue_data.title,
             description=issue_data.description,
-            category=issue_data.category,
-            priority=issue_data.priority,
+            category=issue_data.category.value if hasattr(issue_data.category, 'value') else issue_data.category,
+            priority=issue_data.priority.value if hasattr(issue_data.priority, 'value') else issue_data.priority,
             location=issue_data.location,
-            reporter_id=reporter_id,
+            reported_by=reporter_id,
             status="open"
         )
         db.add(new_issue)
-        await db.commit()
-        await db.refresh(new_issue)
+        db.commit()
+        db.refresh(new_issue)
         return new_issue
 
     @staticmethod
-    async def get_issues(
-        db: AsyncSession,
+    def get_issues(
+        db: Session,
         category: Optional[str] = None,
         status: Optional[str] = None,
         priority: Optional[str] = None,
@@ -52,24 +52,17 @@ class IssueService:
         Get issues with optional filters.
         """
         # Build query
-        query = (
-            select(Issue, User)
-            .join(User, Issue.reporter_id == User.id)
-        )
+        query = db.query(Issue, User).join(User, Issue.reported_by == User.id)
 
         # Apply filters
-        filters = []
         if category:
-            filters.append(Issue.category == category)
+            query = query.filter(Issue.category == category)
         if status:
-            filters.append(Issue.status == status)
+            query = query.filter(Issue.status == status)
         if priority:
-            filters.append(Issue.priority == priority)
+            query = query.filter(Issue.priority == priority)
         if reporter_id:
-            filters.append(Issue.reporter_id == reporter_id)
-
-        if filters:
-            query = query.where(and_(*filters))
+            query = query.filter(Issue.reported_by == reporter_id)
 
         # Order by priority (critical first) and then by created_at (newest first)
         priority_order = {
@@ -83,8 +76,7 @@ class IssueService:
         # Pagination
         query = query.offset(skip).limit(limit)
 
-        result = await db.execute(query)
-        issues_data = result.all()
+        issues_data = query.all()
 
         # Build responses
         responses = []
@@ -92,10 +84,7 @@ class IssueService:
             # Get assigned user if exists
             assigned_to_name = None
             if issue.assigned_to:
-                assigned_user_result = await db.execute(
-                    select(User).where(User.id == issue.assigned_to)
-                )
-                assigned_user = assigned_user_result.scalar_one_or_none()
+                assigned_user = db.query(User).filter(User.id == issue.assigned_to).first()
                 if assigned_user:
                     assigned_to_name = assigned_user.full_name
 
@@ -108,7 +97,7 @@ class IssueService:
                     priority=issue.priority,
                     status=issue.status,
                     location=issue.location,
-                    reporter_id=issue.reporter_id,
+                    reporter_id=issue.reported_by,
                     reporter_name=reporter.full_name,
                     assigned_to=issue.assigned_to,
                     assigned_to_name=assigned_to_name,
@@ -124,19 +113,12 @@ class IssueService:
         return responses
 
     @staticmethod
-    async def get_issue_by_id(
-        db: AsyncSession,
+    def get_issue_by_id(
+        db: Session,
         issue_id: UUID
     ) -> Optional[IssueResponse]:
         """Get a specific issue by ID"""
-        query = (
-            select(Issue, User)
-            .join(User, Issue.reporter_id == User.id)
-            .where(Issue.id == issue_id)
-        )
-
-        result = await db.execute(query)
-        data = result.one_or_none()
+        data = db.query(Issue, User).join(User, Issue.reported_by == User.id).filter(Issue.id == issue_id).first()
 
         if not data:
             return None
@@ -146,10 +128,7 @@ class IssueService:
         # Get assigned user if exists
         assigned_to_name = None
         if issue.assigned_to:
-            assigned_user_result = await db.execute(
-                select(User).where(User.id == issue.assigned_to)
-            )
-            assigned_user = assigned_user_result.scalar_one_or_none()
+            assigned_user = db.query(User).filter(User.id == issue.assigned_to).first()
             if assigned_user:
                 assigned_to_name = assigned_user.full_name
 
@@ -161,7 +140,7 @@ class IssueService:
             priority=issue.priority,
             status=issue.status,
             location=issue.location,
-            reporter_id=issue.reporter_id,
+            reporter_id=issue.reported_by,
             reporter_name=reporter.full_name,
             assigned_to=issue.assigned_to,
             assigned_to_name=assigned_to_name,
@@ -171,24 +150,21 @@ class IssueService:
         )
 
     @staticmethod
-    async def update_issue(
-        db: AsyncSession,
+    def update_issue(
+        db: Session,
         issue_id: UUID,
         update_data: IssueUpdate,
         user_id: UUID,
         is_admin: bool
     ) -> Optional[Issue]:
         """Update an issue (reporter can update their own, admin can update any)"""
-        result = await db.execute(
-            select(Issue).where(Issue.id == issue_id)
-        )
-        issue = result.scalar_one_or_none()
+        issue = db.query(Issue).filter(Issue.id == issue_id).first()
 
         if not issue:
             return None
 
         # Check permissions
-        if not is_admin and issue.reporter_id != user_id:
+        if not is_admin and issue.reported_by != user_id:
             return None
 
         # Update fields
@@ -209,21 +185,18 @@ class IssueService:
             if update_data.status == "resolved" and issue.resolved_at is None:
                 issue.resolved_at = datetime.utcnow()
 
-        await db.commit()
-        await db.refresh(issue)
+        db.commit()
+        db.refresh(issue)
         return issue
 
     @staticmethod
-    async def update_status(
-        db: AsyncSession,
+    def update_status(
+        db: Session,
         issue_id: UUID,
         status_update: IssueStatusUpdate
     ) -> Optional[Issue]:
         """Update issue status (admin only)"""
-        result = await db.execute(
-            select(Issue).where(Issue.id == issue_id)
-        )
-        issue = result.scalar_one_or_none()
+        issue = db.query(Issue).filter(Issue.id == issue_id).first()
 
         if not issue:
             return None
@@ -232,26 +205,23 @@ class IssueService:
         if status_update.status == "resolved" and issue.resolved_at is None:
             issue.resolved_at = datetime.utcnow()
 
-        await db.commit()
-        await db.refresh(issue)
+        db.commit()
+        db.refresh(issue)
         return issue
 
     @staticmethod
-    async def assign_issue(
-        db: AsyncSession,
+    def assign_issue(
+        db: Session,
         issue_id: UUID,
         assigned_to: UUID
     ) -> Optional[Issue]:
         """Assign issue to a user (admin only)"""
-        result = await db.execute(
-            select(Issue).where(Issue.id == issue_id)
-        )
-        issue = result.scalar_one_or_none()
+        issue = db.query(Issue).filter(Issue.id == issue_id).first()
 
         if not issue:
             return None
 
         issue.assigned_to = assigned_to
-        await db.commit()
-        await db.refresh(issue)
+        db.commit()
+        db.refresh(issue)
         return issue

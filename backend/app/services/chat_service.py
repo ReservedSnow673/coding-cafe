@@ -1,4 +1,4 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from sqlalchemy import select, func, and_, desc
 from typing import List, Optional
 from uuid import UUID
@@ -21,8 +21,8 @@ class ChatService:
     """Service for managing chat groups and messages"""
 
     @staticmethod
-    async def create_group(
-        db: AsyncSession, 
+    def create_group(
+        db: Session, 
         group_data: ChatGroupCreate, 
         creator_id: UUID
     ) -> ChatGroup:
@@ -35,7 +35,7 @@ class ChatService:
             is_active=True
         )
         db.add(new_group)
-        await db.flush()  # Get the group ID
+        db.flush()  # Get the group ID
         
         # Add creator as admin member
         creator_member = ChatMember(
@@ -56,12 +56,12 @@ class ChatService:
                     )
                     db.add(member)
         
-        await db.commit()
-        await db.refresh(new_group)
+        db.commit()
+        db.refresh(new_group)
         return new_group
 
     @staticmethod
-    async def get_user_groups(db: AsyncSession, user_id: UUID) -> List[ChatGroupResponse]:
+    def get_user_groups(db: Session, user_id: UUID) -> List[ChatGroupResponse]:
         """Get all groups that a user is a member of"""
         # Query groups where user is a member
         query = (
@@ -77,7 +77,7 @@ class ChatService:
             .order_by(desc(ChatGroup.updated_at))
         )
         
-        result = await db.execute(query)
+        result = db.execute(query)
         groups_with_counts = result.all()
         
         # Build response with member counts and last message
@@ -90,7 +90,7 @@ class ChatService:
                 .order_by(desc(ChatMessage.created_at))
                 .limit(1)
             )
-            last_msg_result = await db.execute(last_msg_query)
+            last_msg_result = db.execute(last_msg_query)
             last_message = last_msg_result.scalar_one_or_none()
             
             group_response = ChatGroupResponse(
@@ -110,14 +110,14 @@ class ChatService:
         return responses
 
     @staticmethod
-    async def get_group_detail(
-        db: AsyncSession, 
+    def get_group_detail(
+        db: Session, 
         group_id: UUID, 
         user_id: UUID
     ) -> Optional[ChatGroupDetailResponse]:
         """Get detailed group info with members list"""
         # Check if user is member of the group
-        member_check = await db.execute(
+        member_check = db.execute(
             select(ChatMember).where(
                 and_(
                     ChatMember.group_id == group_id,
@@ -129,7 +129,7 @@ class ChatService:
             return None  # User not a member
         
         # Get group
-        group_result = await db.execute(
+        group_result = db.execute(
             select(ChatGroup).where(ChatGroup.id == group_id)
         )
         group = group_result.scalar_one_or_none()
@@ -142,7 +142,7 @@ class ChatService:
             .join(User, ChatMember.user_id == User.id)
             .where(ChatMember.group_id == group_id)
         )
-        members_result = await db.execute(members_query)
+        members_result = db.execute(members_query)
         members_data = members_result.all()
         
         members = [
@@ -168,7 +168,7 @@ class ChatService:
             .order_by(desc(ChatMessage.created_at))
             .limit(1)
         )
-        last_msg_result = await db.execute(last_msg_query)
+        last_msg_result = db.execute(last_msg_query)
         last_message = last_msg_result.scalar_one_or_none()
         
         return ChatGroupDetailResponse(
@@ -186,15 +186,15 @@ class ChatService:
         )
 
     @staticmethod
-    async def add_members(
-        db: AsyncSession, 
+    def add_members(
+        db: Session, 
         group_id: UUID, 
         user_ids: List[UUID],
         requester_id: UUID
     ) -> bool:
         """Add members to a group (only admins can add)"""
         # Check if requester is admin
-        admin_check = await db.execute(
+        admin_check = db.execute(
             select(ChatMember).where(
                 and_(
                     ChatMember.group_id == group_id,
@@ -209,7 +209,7 @@ class ChatService:
         # Add each user
         for user_id in user_ids:
             # Check if already a member
-            existing = await db.execute(
+            existing = db.execute(
                 select(ChatMember).where(
                     and_(
                         ChatMember.group_id == group_id,
@@ -225,19 +225,19 @@ class ChatService:
                 )
                 db.add(new_member)
         
-        await db.commit()
+        db.commit()
         return True
 
     @staticmethod
-    async def send_message(
-        db: AsyncSession,
+    def send_message(
+        db: Session,
         group_id: UUID,
         user_id: UUID,
         message_data: ChatMessageCreate
     ) -> Optional[ChatMessage]:
         """Send a message to a group"""
         # Check if user is member
-        member_check = await db.execute(
+        member_check = db.execute(
             select(ChatMember).where(
                 and_(
                     ChatMember.group_id == group_id,
@@ -257,20 +257,20 @@ class ChatService:
         db.add(new_message)
         
         # Update group's updated_at timestamp
-        group_result = await db.execute(
+        group_result = db.execute(
             select(ChatGroup).where(ChatGroup.id == group_id)
         )
         group = group_result.scalar_one_or_none()
         if group:
             group.updated_at = datetime.utcnow()
         
-        await db.commit()
-        await db.refresh(new_message)
+        db.commit()
+        db.refresh(new_message)
         return new_message
 
     @staticmethod
-    async def get_messages(
-        db: AsyncSession,
+    def get_messages(
+        db: Session,
         group_id: UUID,
         user_id: UUID,
         limit: int = 50,
@@ -278,7 +278,7 @@ class ChatService:
     ) -> List[ChatMessageResponse]:
         """Get messages from a group (paginated)"""
         # Check if user is member
-        member_check = await db.execute(
+        member_check = db.execute(
             select(ChatMember).where(
                 and_(
                     ChatMember.group_id == group_id,
@@ -302,7 +302,7 @@ class ChatService:
         
         query = query.order_by(desc(ChatMessage.created_at)).limit(limit)
         
-        result = await db.execute(query)
+        result = db.execute(query)
         messages_data = result.all()
         
         # Build responses
@@ -324,15 +324,15 @@ class ChatService:
         return list(reversed(messages))
 
     @staticmethod
-    async def update_group(
-        db: AsyncSession,
+    def update_group(
+        db: Session,
         group_id: UUID,
         user_id: UUID,
         update_data: ChatGroupUpdate
     ) -> Optional[ChatGroup]:
         """Update group details (only admins can update)"""
         # Check if user is admin
-        admin_check = await db.execute(
+        admin_check = db.execute(
             select(ChatMember).where(
                 and_(
                     ChatMember.group_id == group_id,
@@ -345,7 +345,7 @@ class ChatService:
             return None
         
         # Get group
-        group_result = await db.execute(
+        group_result = db.execute(
             select(ChatGroup).where(ChatGroup.id == group_id)
         )
         group = group_result.scalar_one_or_none()
@@ -362,19 +362,19 @@ class ChatService:
         
         group.updated_at = datetime.utcnow()
         
-        await db.commit()
-        await db.refresh(group)
+        db.commit()
+        db.refresh(group)
         return group
 
     @staticmethod
-    async def leave_group(
-        db: AsyncSession,
+    def leave_group(
+        db: Session,
         group_id: UUID,
         user_id: UUID
     ) -> bool:
         """Remove user from group"""
         # Get membership
-        member_result = await db.execute(
+        member_result = db.execute(
             select(ChatMember).where(
                 and_(
                     ChatMember.group_id == group_id,
@@ -386,6 +386,6 @@ class ChatService:
         if not member:
             return False
         
-        await db.delete(member)
-        await db.commit()
+        db.delete(member)
+        db.commit()
         return True

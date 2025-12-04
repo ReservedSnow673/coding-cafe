@@ -1,6 +1,5 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, func
 from sqlalchemy.orm import Session
+from sqlalchemy import select, and_, func
 from typing import List, Optional
 from uuid import UUID
 from datetime import datetime
@@ -37,16 +36,13 @@ class LocationService:
 
     @staticmethod
     async def create_or_update_location(
-        db: AsyncSession,
+        db: Session,
         user_id: UUID,
         location_data: LocationCreate
     ) -> Location:
         """Create a new location or update existing one for a user"""
         # Check if user already has a location
-        result = await db.execute(
-            select(Location).where(Location.user_id == user_id)
-        )
-        existing_location = result.scalar_one_or_none()
+        existing_location = db.query(Location).filter(Location.user_id == user_id).first()
 
         if existing_location:
             # Update existing location
@@ -56,8 +52,8 @@ class LocationService:
             existing_location.visibility = location_data.visibility
             existing_location.is_active = True
             existing_location.updated_at = datetime.utcnow()
-            await db.commit()
-            await db.refresh(existing_location)
+            db.commit()
+            db.refresh(existing_location)
             return existing_location
         else:
             # Create new location
@@ -70,27 +66,24 @@ class LocationService:
                 is_active=True
             )
             db.add(new_location)
-            await db.commit()
-            await db.refresh(new_location)
+            db.commit()
+            db.refresh(new_location)
             return new_location
 
     @staticmethod
     async def update_location(
-        db: AsyncSession,
+        db: Session,
         location_id: UUID,
         user_id: UUID,
         location_data: LocationUpdate
     ) -> Optional[Location]:
         """Update an existing location"""
-        result = await db.execute(
-            select(Location).where(
-                and_(
-                    Location.id == location_id,
-                    Location.user_id == user_id
-                )
+        location = db.query(Location).filter(
+            and_(
+                Location.id == location_id,
+                Location.user_id == user_id
             )
-        )
-        location = result.scalar_one_or_none()
+        ).first()
 
         if not location:
             return None
@@ -108,52 +101,43 @@ class LocationService:
             location.is_active = location_data.is_active
 
         location.updated_at = datetime.utcnow()
-        await db.commit()
-        await db.refresh(location)
+        db.commit()
+        db.refresh(location)
         return location
 
     @staticmethod
-    async def get_my_location(db: AsyncSession, user_id: UUID) -> Optional[Location]:
+    async def get_my_location(db: Session, user_id: UUID) -> Optional[Location]:
         """Get the current user's location"""
-        result = await db.execute(
-            select(Location).where(Location.user_id == user_id)
-        )
-        return result.scalar_one_or_none()
+        return db.query(Location).filter(Location.user_id == user_id).first()
 
     @staticmethod
     async def get_nearby_users(
-        db: AsyncSession,
+        db: Session,
         user_id: UUID,
         max_distance_km: float = 5.0
     ) -> List[NearbyUserResponse]:
         """Get nearby users based on location"""
         # Get current user's location
-        result = await db.execute(
-            select(Location).where(
-                and_(
-                    Location.user_id == user_id,
-                    Location.is_active == True
-                )
+        my_location = db.query(Location).filter(
+            and_(
+                Location.user_id == user_id,
+                Location.is_active == True
             )
-        )
-        my_location = result.scalar_one_or_none()
+        ).first()
 
         if not my_location:
             return []
 
         # Get all active locations except the current user's
-        result = await db.execute(
-            select(Location, User).join(
-                User, Location.user_id == User.id
-            ).where(
-                and_(
-                    Location.user_id != user_id,
-                    Location.is_active == True,
-                    User.is_active == True
-                )
+        locations_with_users = db.query(Location, User).join(
+            User, Location.user_id == User.id
+        ).filter(
+            and_(
+                Location.user_id != user_id,
+                Location.is_active == True,
+                User.is_active == True
             )
-        )
-        locations_with_users = result.all()
+        ).all()
 
         nearby_users = []
         for location, user in locations_with_users:
@@ -188,12 +172,9 @@ class LocationService:
         return nearby_users
 
     @staticmethod
-    async def delete_location(db: AsyncSession, user_id: UUID) -> bool:
+    async def delete_location(db: Session, user_id: UUID) -> bool:
         """Delete user's location (or set inactive)"""
-        result = await db.execute(
-            select(Location).where(Location.user_id == user_id)
-        )
-        location = result.scalar_one_or_none()
+        location = db.query(Location).filter(Location.user_id == user_id).first()
 
         if not location:
             return False
@@ -201,26 +182,23 @@ class LocationService:
         # Set inactive instead of deleting
         location.is_active = False
         location.updated_at = datetime.utcnow()
-        await db.commit()
+        db.commit()
         return True
 
     @staticmethod
     async def toggle_location_sharing(
-        db: AsyncSession,
+        db: Session,
         user_id: UUID,
         is_active: bool
     ) -> Optional[Location]:
         """Enable or disable location sharing"""
-        result = await db.execute(
-            select(Location).where(Location.user_id == user_id)
-        )
-        location = result.scalar_one_or_none()
+        location = db.query(Location).filter(Location.user_id == user_id).first()
 
         if not location:
             return None
 
         location.is_active = is_active
         location.updated_at = datetime.utcnow()
-        await db.commit()
-        await db.refresh(location)
+        db.commit()
+        db.refresh(location)
         return location

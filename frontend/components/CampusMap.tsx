@@ -130,11 +130,11 @@ export default function CampusMap() {
       setLoading(true);
       
       // Load buildings
-      const buildingsResponse = await api.get('/api/buildings/');
+      const buildingsResponse = await api.get('/buildings/');
       setBuildings(buildingsResponse.data);
       
       // Load active user locations
-      const locationsResponse = await api.get('/api/locations/nearby?radius=10000&limit=100');
+      const locationsResponse = await api.get('/locations/nearby?radius=10000&limit=100');
       setUserLocations(locationsResponse.data);
       
       // Center map on first building or default location
@@ -165,7 +165,7 @@ export default function CampusMap() {
 
   const loadUserLocations = async () => {
     try {
-      const locationsResponse = await api.get('/api/locations/nearby?radius=10000&limit=100');
+      const locationsResponse = await api.get('/locations/nearby?radius=10000&limit=100');
       setUserLocations(locationsResponse.data);
     } catch (err) {
       console.error('Failed to refresh user locations:', err);

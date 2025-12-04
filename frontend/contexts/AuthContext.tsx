@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
     }
 
-    const response = await api.post('/api/auth/request-otp', { email });
+    const response = await api.post('/auth/request-otp', { email });
     // Backend returns OTP in response for SMTP bypass mode (development)
     return response.data;
   };
@@ -106,10 +106,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    const response = await api.post('/api/auth/verify-otp', {
+    const response = await api.post('/auth/verify-otp', {
       email,
       otp_code: otp,
     });
+    
+    // Handle successful login for existing user
+    if (!response.data.requires_registration && response.data.token) {
+      const { access_token, user } = response.data.token;
+      localStorage.setItem('access_token', access_token);
+      setUser(user);
+    }
+    
     return response.data;
   };
 
@@ -135,7 +143,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const response = await api.post('/api/auth/register', userData);
+    const response = await api.post('/auth/register', userData);
     const { access_token, user } = response.data;
     localStorage.setItem('access_token', access_token);
     setUser(user);

@@ -45,7 +45,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get('/api/notifications/?limit=50');
+      const response = await apiClient.get('/notifications/?limit=50');
       setNotifications(response.data);
       setError(null);
     } catch (err: any) {
@@ -58,7 +58,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const fetchStats = useCallback(async () => {
     try {
-      const response = await apiClient.get('/api/notifications/stats');
+      const response = await apiClient.get('/notifications/stats');
       setStats(response.data);
     } catch (err: any) {
       console.error('Failed to fetch notification stats:', err);
@@ -67,7 +67,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const markAsRead = useCallback(async (id: string) => {
     try {
-      await apiClient.put(`/api/notifications/${id}/read`);
+      await apiClient.put(`/notifications/${id}/read`);
       setNotifications(prev =>
         prev.map(notif =>
           notif.id === id ? { ...notif, is_read: true, read_at: new Date().toISOString() } : notif
@@ -81,7 +81,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const markAllAsRead = useCallback(async () => {
     try {
-      await apiClient.put('/api/notifications/read-all');
+      await apiClient.put('/notifications/read-all');
       setNotifications(prev =>
         prev.map(notif => ({ ...notif, is_read: true, read_at: new Date().toISOString() }))
       );

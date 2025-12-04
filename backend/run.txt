@@ -3,6 +3,7 @@
 ## From project root:
 cd backend && python3 -m uvicorn app.main:app --reload
 
+cd "/Users/tanvirsinghsandhu/Documents/Side projects/CC Uni Social Platform/backend" && python3 -m uvicorn app.main:app --reload --host 0.0.0.0
 
 # Server will run on: http://localhost:8000
 # API Documentation: http://localhost:8000/api/docs

@@ -1,0 +1,265 @@
+-- =====================================================
+-- PLAKSHA UNIVERSITY MOCK DATA SEED SCRIPT
+-- Complete realistic dataset for prototype demo
+-- =====================================================
+
+-- Note: Passwords are hashed for "password123"
+-- Hash: $2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy
+
+BEGIN;
+
+-- =====================================================
+-- 1. USERS (12 mock users)
+-- =====================================================
+
+-- Students (6)
+INSERT INTO users (id, email, hashed_password, full_name, phone_number, role, year, branch, hostel, profile_picture, bio, is_active, is_verified) VALUES
+('11111111-1111-1111-1111-111111111111', 'tanvir.sandhu@plaksha.edu.in', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy', 'Tanvir Singh Sandhu', '+91-9876543210', 'STUDENT', 1, 'CS + AI (ITTM/DSAI)', 'H2', '/images/users/tanvir.jpg', 'Blockchain + AI enthusiast, works on large-scale campus solutions.', true, true),
+
+('22222222-2222-2222-2222-222222222222', 'pranav.sharma@plaksha.edu.in', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy', 'Pranav Sharma', '+91-9876543211', 'STUDENT', 1, 'CS + AI', 'H2', '/images/users/pranav.jpg', 'Blind student passionate about accessibility & audio tech.', true, true),
+
+('33333333-3333-3333-3333-333333333333', 'isha.kapoor@plaksha.edu.in', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy', 'Isha Kapoor', '+91-9876543212', 'STUDENT', 2, 'Robotics', 'H1', '/images/users/isha.jpg', 'Robotics major, loves CAD, drones & hackathons.', true, true),
+
+('44444444-4444-4444-4444-444444444444', 'ananya.bansal@plaksha.edu.in', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy', 'Ananya Bansal', '+91-9876543213', 'STUDENT', 3, 'Bioengineering', 'H1', NULL, 'Works on wet lab projects; loves data viz.', true, true),
+
+('55555555-5555-5555-5555-555555555555', 'arjun.malhotra@plaksha.edu.in', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy', 'Arjun Malhotra', '+91-9876543214', 'STUDENT', 4, 'CS', 'H2', NULL, 'ML researcher; placement season survivor.', true, true),
+
+('66666666-6666-6666-6666-666666666666', 'ria.jain@plaksha.edu.in', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy', 'Ria Jain', '+91-9876543215', 'STUDENT', 1, 'DS', 'H1', NULL, 'Class rep; loves events & community work.', true, true);
+
+-- Admins (2)
+INSERT INTO users (id, email, hashed_password, full_name, phone_number, role, bio, is_active, is_verified) VALUES
+('77777777-7777-7777-7777-777777777777', 'admin1@plaksha.edu.in', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy', 'Sahil Mehra', '+91-9876543216', 'ADMIN', 'Backend admin overseeing campus systems.', true, true),
+
+('88888888-8888-8888-8888-888888888888', 'warden.h2@plaksha.edu.in', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5jtRZL7T4.GQy', 'Jaspreet Singh', '+91-9876543217', 'ADMIN', 'Hostel H2 Warden.', true, true);
+
+-- =====================================================
+-- 2. BUILDINGS (10 campus buildings)
+-- =====================================================
+
+INSERT INTO buildings (id, name, code, building_type, latitude, longitude, description, floor_count, capacity) VALUES
+('bd111111-1111-1111-1111-111111111111', 'Bharti Block', 'BB', 'ACADEMIC', 30.56611, 76.46321, 'Main academic building with classrooms and labs', '3', '500'),
+('bd222222-2222-2222-2222-222222222222', 'Havels Block', 'HB', 'ACADEMIC', 30.56592, 76.46271, 'Maker Lab and AI Lab', '2', '300'),
+('bd333333-3333-3333-3333-333333333333', 'Axis Building', 'AB', 'ACADEMIC', 30.56635, 76.46190, 'Classrooms and TA rooms', '2', '200'),
+('bd444444-4444-4444-4444-444444444444', 'Uncle Tony Café', 'UTC', 'DINING', 30.56655, 76.46230, 'Campus café with indoor and outdoor seating', '1', '100'),
+('bd555555-5555-5555-5555-555555555555', 'HDFC Building', 'HDFC', 'ADMINISTRATIVE', 30.56682, 76.46250, 'Finance office and seminar rooms', '2', '150'),
+('bd666666-6666-6666-6666-666666666666', 'Auditorium', 'AUD', 'RECREATIONAL', 30.56580, 76.46311, 'Main auditorium for events and performances', '1', '400'),
+('bd777777-7777-7777-7777-777777777777', 'Library', 'LIB', 'LIBRARY', 30.56595, 76.46350, 'Campus library with study zones', '2', '200'),
+('bd888888-8888-8888-8888-888888888888', 'Mess', 'MESS', 'DINING', 30.56640, 76.46390, 'Main dining hall', '1', '600'),
+('bd999999-9999-9999-9999-999999999999', 'Hostel H1', 'H1', 'HOSTEL', 30.56560, 76.46422, 'Girls hostel', '4', '300'),
+('bd000000-0000-0000-0000-000000000000', 'Hostel H2', 'H2', 'HOSTEL', 30.56540, 76.46500, 'Boys hostel', '4', '300');
+
+-- =====================================================
+-- 3. LOCATIONS (User location shares)
+-- =====================================================
+
+INSERT INTO locations (id, user_id, building_id, latitude, longitude, address, visibility, is_active) VALUES
+-- Tanvir at Bharti Block
+('10c11111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'bd111111-1111-1111-1111-111111111111', 30.56611, 76.46321, 'Bharti Block - Room 101', 'PUBLIC', true),
+
+-- Pranav at Library
+('10c22222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', 'bd777777-7777-7777-7777-777777777777', 30.56595, 76.46350, 'Library - Reading Hall', 'PUBLIC', true),
+
+-- Isha at Havels Block
+('10c33333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', 'bd222222-2222-2222-2222-222222222222', 30.56592, 76.46271, 'Havels Block - Maker Lab', 'PUBLIC', true),
+
+-- Ananya at Mess
+('10c44444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444', 'bd888888-8888-8888-8888-888888888888', 30.56640, 76.46390, 'Mess - North Side', 'FRIENDS', true),
+
+-- Arjun at Uncle Tony Café
+('10c55555-5555-5555-5555-555555555555', '55555555-5555-5555-5555-555555555555', 'bd444444-4444-4444-4444-444444444444', 30.56655, 76.46230, 'Uncle Tony Café - Outdoor Seating', 'PUBLIC', true),
+
+-- Ria at Auditorium
+('10c66666-6666-6666-6666-666666666666', '66666666-6666-6666-6666-666666666666', 'bd666666-6666-6666-6666-666666666666', 30.56580, 76.46311, 'Auditorium', 'PUBLIC', true);
+
+-- =====================================================
+-- 4. ANNOUNCEMENTS (5 mock)
+-- =====================================================
+
+INSERT INTO announcements (id, title, content, category, posted_by, is_active, is_pinned) VALUES
+('a1111111-1111-1111-1111-111111111111', 'Classroom Shift for DSAI 101', 'Tomorrow''s DSAI 101 lecture will be in Axis A2 due to maintenance in Bharti Block.', 'ACADEMIC', '77777777-7777-7777-7777-777777777777', true, true),
+
+('a1122222-2222-2222-2222-222222222222', 'Open Mic Night at Auditorium', 'Join us for a fun evening of music, poetry & stand-up this Friday at 7 PM!', 'EVENT', '66666666-6666-6666-6666-666666666666', true, false),
+
+('a1133333-3333-3333-3333-333333333333', 'Mess Menu Changes for This Week', 'New menu includes more continental options. Check the mess notice board for details.', 'GENERAL', '88888888-8888-8888-8888-888888888888', true, false),
+
+('a1144444-4444-4444-4444-444444444444', 'Urgent: Water Leakage in H2 3rd Floor', 'Please avoid using bathrooms on 3rd floor H2. Maintenance team is working on it.', 'URGENT', '88888888-8888-8888-8888-888888888888', true, true),
+
+('a1155555-5555-5555-5555-555555555555', 'Hackathon Registrations Open', 'Plaksha''s annual hackathon registrations are now open! Register by this weekend.', 'ACADEMIC', '11111111-1111-1111-1111-111111111111', true, false);
+
+-- =====================================================
+-- 5. ISSUES (6 mock)
+-- =====================================================
+
+INSERT INTO issues (id, title, description, category, status, reported_by, location) VALUES
+('15111111-1111-1111-1111-111111111111', 'AC not working in Axis A1', 'The air conditioning in Axis A1 has been non-functional for 2 days. It''s getting very hot during classes.', 'MAINTENANCE', 'OPEN', '33333333-3333-3333-3333-333333333333', 'Axis Building - Classroom A1'),
+
+('15122222-2222-2222-2222-222222222222', 'Water leakage in H2 Bathroom', 'There is water leaking from the ceiling in the 3rd floor bathroom of H2.', 'MAINTENANCE', 'IN_PROGRESS', '11111111-1111-1111-1111-111111111111', 'Hostel H2 - 3rd Floor'),
+
+('15133333-3333-3333-3333-333333333333', 'Broken chair in Library Quiet Zone', 'One of the chairs in the quiet zone has a broken leg and is unsafe to sit on.', 'INFRASTRUCTURE', 'OPEN', '22222222-2222-2222-2222-222222222222', 'Library - Quiet Zone'),
+
+('15144444-4444-4444-4444-444444444444', 'Dogs entering Mess area', 'Stray dogs are entering the mess during meal times, causing hygiene concerns.', 'SECURITY', 'OPEN', '55555555-5555-5555-5555-555555555555', 'Mess'),
+
+('15155555-5555-5555-5555-555555555555', 'Projector flickering in Auditorium', 'The main projector keeps flickering during presentations.', 'MAINTENANCE', 'OPEN', '66666666-6666-6666-6666-666666666666', 'Auditorium'),
+
+('15166666-6666-6666-6666-666666666666', 'Noise complaints in H1 at night', 'Loud music is being played late at night in H1, disturbing other students.', 'OTHER', 'OPEN', '44444444-4444-4444-4444-444444444444', 'Hostel H1');
+
+-- =====================================================
+-- 5b. ISSUE COMMENTS
+-- =====================================================
+
+INSERT INTO issue_comments (id, issue_id, user_id, content) VALUES
+('c1111111-1111-1111-1111-111111111111', '15111111-1111-1111-1111-111111111111', '77777777-7777-7777-7777-777777777777', 'Maintenance team notified — will check today.'),
+
+('c1122222-2222-2222-2222-222222222222', '15122222-2222-2222-2222-222222222222', '88888888-8888-8888-8888-888888888888', 'Plumber scheduled at 4 PM today.'),
+
+('c1133333-3333-3333-3333-333333333333', '15133333-3333-3333-3333-333333333333', '77777777-7777-7777-7777-777777777777', 'Chair has been replaced with a new one. Issue resolved.');
+
+-- =====================================================
+-- 6. TEAMS / CLUBS (5 mock)
+-- =====================================================
+
+INSERT INTO teams (id, name, description, created_by, is_active) VALUES
+('20111111-1111-1111-1111-111111111111', 'Leap AI Club', 'AI research, workshops, and LLM experiments.', '11111111-1111-1111-1111-111111111111', true),
+
+('20122222-2222-2222-2222-222222222222', 'Robotics Club', 'Drones, bots, ROS workshops.', '33333333-3333-3333-3333-333333333333', true),
+
+('20133333-3333-3333-3333-333333333333', 'BioEngineering Society', 'Collaborative projects in biotech and healthcare innovation.', '44444444-4444-4444-4444-444444444444', true),
+
+('20144444-4444-4444-4444-444444444444', 'Entrepreneurship Cell', 'Building startups, pitch competitions, and networking events.', '55555555-5555-5555-5555-555555555555', true),
+
+('20155555-5555-5555-5555-555555555555', 'Music Club', 'Jam sessions, open mics, and music production workshops.', '66666666-6666-6666-6666-666666666666', true);
+
+-- =====================================================
+-- 6b. TEAM MEMBERS
+-- =====================================================
+
+INSERT INTO team_members (id, team_id, user_id, role) VALUES
+-- Leap AI Club members
+('20111111-1111-1111-1111-111111111111', '20111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'ADMIN'),
+('20111112-1111-1111-1111-111111111111', '20111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', 'MEMBER'),
+('20111113-1111-1111-1111-111111111111', '20111111-1111-1111-1111-111111111111', '66666666-6666-6666-6666-666666666666', 'MEMBER'),
+('20111114-1111-1111-1111-111111111111', '20111111-1111-1111-1111-111111111111', '55555555-5555-5555-5555-555555555555', 'MEMBER'),
+
+-- Robotics Club members
+('20122221-2222-2222-2222-222222222222', '20122222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333', 'ADMIN'),
+('20122222-2222-2222-2222-222222222222', '20122222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111', 'MEMBER'),
+('20122223-2222-2222-2222-222222222222', '20122222-2222-2222-2222-222222222222', '55555555-5555-5555-5555-555555555555', 'MEMBER'),
+
+-- BioEngineering Society members
+('20133331-3333-3333-3333-333333333333', '20133333-3333-3333-3333-333333333333', '44444444-4444-4444-4444-444444444444', 'ADMIN'),
+('20133332-3333-3333-3333-333333333333', '20133333-3333-3333-3333-333333333333', '66666666-6666-6666-6666-666666666666', 'MEMBER'),
+('20133333-3333-3333-3333-333333333333', '20133333-3333-3333-3333-333333333333', '22222222-2222-2222-2222-222222222222', 'MEMBER'),
+
+-- Entrepreneurship Cell members
+('20144441-4444-4444-4444-444444444444', '20144444-4444-4444-4444-444444444444', '55555555-5555-5555-5555-555555555555', 'ADMIN'),
+('20144442-4444-4444-4444-444444444444', '20144444-4444-4444-4444-444444444444', '11111111-1111-1111-1111-111111111111', 'MEMBER'),
+('20144443-4444-4444-4444-444444444444', '20144444-4444-4444-4444-444444444444', '66666666-6666-6666-6666-666666666666', 'MEMBER'),
+
+-- Music Club members
+('20155551-5555-5555-5555-555555555555', '20155555-5555-5555-5555-555555555555', '66666666-6666-6666-6666-666666666666', 'ADMIN'),
+('20155552-5555-5555-5555-555555555555', '20155555-5555-5555-5555-555555555555', '22222222-2222-2222-2222-222222222222', 'MEMBER'),
+('20155553-5555-5555-5555-555555555555', '20155555-5555-5555-5555-555555555555', '33333333-3333-3333-3333-333333333333', 'MEMBER');
+
+-- =====================================================
+-- 7. MESS REVIEWS (8 mock)
+-- =====================================================
+
+INSERT INTO mess_reviews (id, user_id, meal_type, rating, review, meal_date) VALUES
+-- Recent reviews (today and yesterday)
+('4e111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'BREAKFAST', 4, 'Poha was great, chai was fresh.', CURRENT_DATE),
+('4e122222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', 'LUNCH', 3, 'Dal was watery but roti was soft.', CURRENT_DATE),
+('4e133333-3333-3333-3333-333333333333', '66666666-6666-6666-6666-666666666666', 'DINNER', 5, 'Paneer lababdar was 🔥🔥.', CURRENT_DATE - INTERVAL '1 day'),
+('4e144444-4444-4444-4444-444444444444', '33333333-3333-3333-3333-333333333333', 'LUNCH', 2, 'Rice undercooked.', CURRENT_DATE - INTERVAL '1 day'),
+('4e155555-5555-5555-5555-555555555555', '55555555-5555-5555-5555-555555555555', 'BREAKFAST', 5, 'Idli-sambar combo was elite today.', CURRENT_DATE - INTERVAL '2 days'),
+('4e166666-6666-6666-6666-666666666666', '44444444-4444-4444-4444-444444444444', 'DINNER', 4, 'Good quantity and taste.', CURRENT_DATE - INTERVAL '2 days'),
+('4e177777-7777-7777-7777-777777777777', '11111111-1111-1111-1111-111111111111', 'LUNCH', 3, 'Decent sabzi, average rice.', CURRENT_DATE - INTERVAL '3 days'),
+('4e188888-8888-8888-8888-888888888888', '22222222-2222-2222-2222-222222222222', 'DINNER', 1, 'Cold food today.', CURRENT_DATE - INTERVAL '3 days');
+
+-- =====================================================
+-- 8. CHALLENGES (5 gamified campus tasks)
+-- =====================================================
+
+INSERT INTO challenges (id, creator_id, creator_name, title, description, challenge_type, difficulty, points, start_date, end_date, completion_password) VALUES
+('c0011111-1111-1111-1111-111111111111', '77777777-7777-7777-7777-777777777777', 'Sahil Mehra', '10,000 Steps Challenge', 'Walk 10,000 steps in a single day on campus.', 'FITNESS', 'MEDIUM', 20, CURRENT_DATE - INTERVAL '30 days', CURRENT_DATE + INTERVAL '60 days', 'steps10k'),
+
+('c0022222-2222-2222-2222-222222222222', '77777777-7777-7777-7777-777777777777', 'Sahil Mehra', 'Attend 5 Library Study Sessions', 'Spend at least 2 hours in the library for 5 consecutive days.', 'ACADEMIC', 'EASY', 30, CURRENT_DATE - INTERVAL '20 days', CURRENT_DATE + INTERVAL '40 days', 'study5days'),
+
+('c0033333-3333-3333-3333-333333333333', '77777777-7777-7777-7777-777777777777', 'Sahil Mehra', 'Help a junior with assignments', 'Mentor a junior student and help them with their coursework.', 'SOCIAL', 'EASY', 15, CURRENT_DATE - INTERVAL '15 days', CURRENT_DATE + INTERVAL '45 days', 'mentor'),
+
+('c0044444-4444-4444-4444-444444444444', '11111111-1111-1111-1111-111111111111', 'Tanvir Singh Sandhu', 'Build a mini-project in 48 hours', 'Create a working prototype of any tech project within 48 hours.', 'CREATIVE', 'HARD', 50, CURRENT_DATE - INTERVAL '10 days', CURRENT_DATE + INTERVAL '20 days', 'hackathon48'),
+
+('c0055555-5555-5555-5555-555555555555', '77777777-7777-7777-7777-777777777777', 'Sahil Mehra', 'Mess Food Review Streak (7 days)', 'Review every meal you have for 7 consecutive days.', 'SOCIAL', 'EASY', 10, CURRENT_DATE - INTERVAL '5 days', CURRENT_DATE + INTERVAL '25 days', 'review7days');
+
+-- =====================================================
+-- 8b. CHALLENGE COMPLETIONS
+-- =====================================================
+
+INSERT INTO challenge_participants (id, challenge_id, user_id, user_name, completed, completed_at, progress) VALUES
+-- 10,000 Steps Challenge
+('c1211111-1111-1111-1111-111111111111', 'c0011111-1111-1111-1111-111111111111', '66666666-6666-6666-6666-666666666666', 'Ria Jain', true, CURRENT_DATE - INTERVAL '5 days', 100),
+('c1222222-2222-2222-2222-222222222222', 'c0011111-1111-1111-1111-111111111111', '55555555-5555-5555-5555-555555555555', 'Arjun Malhotra', true, CURRENT_DATE - INTERVAL '3 days', 100),
+
+-- Attend 5 Library Study Sessions
+('c1233333-3333-3333-3333-333333333333', 'c0022222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111', 'Tanvir Singh Sandhu', true, CURRENT_DATE - INTERVAL '2 days', 100),
+
+-- Help a junior with assignments
+('c1244444-4444-4444-4444-444444444444', 'c0033333-3333-3333-3333-333333333333', '55555555-5555-5555-5555-555555555555', 'Arjun Malhotra', true, CURRENT_DATE - INTERVAL '4 days', 100),
+
+-- Build a mini-project in 48 hours
+('c1255555-5555-5555-5555-555555555555', 'c0044444-4444-4444-4444-444444444444', '11111111-1111-1111-1111-111111111111', 'Tanvir Singh Sandhu', true, CURRENT_DATE - INTERVAL '1 day', 100),
+('c1266666-6666-6666-6666-666666666666', 'c0044444-4444-4444-4444-444444444444', '33333333-3333-3333-3333-333333333333', 'Isha Kapoor', true, CURRENT_DATE - INTERVAL '1 day', 100),
+
+-- Mess Food Review Streak (7 days)
+('c1277777-7777-7777-7777-777777777777', 'c0055555-5555-5555-5555-555555555555', '44444444-4444-4444-4444-444444444444', 'Ananya Bansal', true, CURRENT_DATE, 100);
+
+-- =====================================================
+-- 9. CHAT GROUPS (3 groups with messages)
+-- =====================================================
+
+INSERT INTO chat_groups (id, name, description, created_by, is_active) VALUES
+('30111111-1111-1111-1111-111111111111', 'H2 Floor 1 Residents', 'Chat group for all residents of H2 Floor 1', '11111111-1111-1111-1111-111111111111', true),
+
+('30122222-2222-2222-2222-222222222222', 'Leap AI Core Team', 'Core team discussions for Leap AI Club', '11111111-1111-1111-1111-111111111111', true),
+
+('30133333-3333-3333-3333-333333333333', 'Robotics Build Week', 'Coordination for robotics project build week', '33333333-3333-3333-3333-333333333333', true);
+
+-- =====================================================
+-- 9b. CHAT MESSAGES
+-- =====================================================
+
+INSERT INTO chat_messages (id, group_id, user_id, content, is_deleted, created_at) VALUES
+-- H2 Floor 1 Residents messages
+('12311111-1111-1111-1111-111111111111', '30111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'Bro did anyone see my charger?', false, CURRENT_TIMESTAMP - INTERVAL '2 hours'),
+('12311112-1111-1111-1111-111111111111', '30111111-1111-1111-1111-111111111111', '55555555-5555-5555-5555-555555555555', 'Check common area drawer.', false, CURRENT_TIMESTAMP - INTERVAL '1 hour 50 minutes'),
+('12311113-1111-1111-1111-111111111111', '30111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'Got it, thanks.', false, CURRENT_TIMESTAMP - INTERVAL '1 hour 45 minutes'),
+
+-- Leap AI Core Team messages
+('12322221-2222-2222-2222-222222222222', '30122222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111', 'Meeting at Axis A2 at 5 PM.', false, CURRENT_TIMESTAMP - INTERVAL '3 hours'),
+('12322222-2222-2222-2222-222222222222', '30122222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', 'I''ll join remotely.', false, CURRENT_TIMESTAMP - INTERVAL '2 hours 45 minutes'),
+('12322223-2222-2222-2222-222222222222', '30122222-2222-2222-2222-222222222222', '66666666-6666-6666-6666-666666666666', 'Cool.', false, CURRENT_TIMESTAMP - INTERVAL '2 hours 30 minutes'),
+
+-- Robotics Build Week messages
+('12333331-3333-3333-3333-333333333333', '30133333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', 'CAD models are ready.', false, CURRENT_TIMESTAMP - INTERVAL '5 hours'),
+('12333332-3333-3333-3333-333333333333', '30133333-3333-3333-3333-333333333333', '55555555-5555-5555-5555-555555555555', 'Testing motors tonight.', false, CURRENT_TIMESTAMP - INTERVAL '4 hours'),
+('12333333-3333-3333-3333-333333333333', '30133333-3333-3333-3333-333333333333', '11111111-1111-1111-1111-111111111111', 'I''ll bring soldering kit.', false, CURRENT_TIMESTAMP - INTERVAL '3 hours 30 minutes');
+
+COMMIT;
+
+-- =====================================================
+-- SEED SCRIPT COMPLETE
+-- =====================================================
+-- All mock data has been successfully inserted!
+-- 
+-- Summary:
+-- - 8 Users (6 students, 2 admins)
+-- - 6 Active locations
+-- - 5 Announcements
+-- - 6 Issues with 3 comments
+-- - 5 Teams with 19 team members
+-- - 8 Mess reviews
+-- - 5 Challenges with 7 completions
+-- - 3 Chat groups with 9 messages
+-- 
+-- Login credentials for all users:
+-- Password: password123
+-- =====================================================

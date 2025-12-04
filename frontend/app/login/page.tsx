@@ -52,7 +52,7 @@ export default function LoginPage() {
       if (response.requires_registration) {
         router.push(`/register?email=${email}&token=${response.verification_token}`);
       } else {
-        localStorage.setItem('access_token', response.token.access_token);
+        // Token and user are already set by login function in AuthContext
         router.push('/');
       }
     } catch (err: any) {

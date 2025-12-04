@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from typing import List, Optional
 from uuid import UUID
 
@@ -17,9 +17,9 @@ router = APIRouter(prefix="/api/announcements", tags=["announcements"])
 
 
 @router.post("/", response_model=AnnouncementResponse, status_code=status.HTTP_201_CREATED)
-async def create_announcement(
+def create_announcement(
     announcement_data: AnnouncementCreate,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
 ):
     """
@@ -34,7 +34,7 @@ async def create_announcement(
     
     If both target_year and target_branch are null, announcement is visible to everyone.
     """
-    announcement = await AnnouncementService.create_announcement(
+    announcement = AnnouncementService.create_announcement(
         db,
         announcement_data,
         current_user.id
@@ -45,23 +45,26 @@ async def create_announcement(
         title=announcement.title,
         content=announcement.content,
         category=announcement.category,
-        priority=announcement.priority,
-        author_id=announcement.author_id,
+        priority="normal",
+        author_id=announcement.posted_by,
         author_name=current_user.full_name,
-        target_year=announcement.target_year,
-        target_branch=announcement.target_branch,
+        target_year=None,
+        target_branch=None,
         is_active=announcement.is_active,
+        is_pinned=announcement.is_pinned,
+        scheduled_at=announcement.scheduled_at,
+        expires_at=announcement.expires_at,
         created_at=announcement.created_at,
         updated_at=announcement.updated_at
     )
 
 
 @router.get("/", response_model=List[AnnouncementResponse])
-async def get_announcements(
+def get_announcements(
     category: Optional[str] = Query(None, description="Filter by category"),
     skip: int = Query(0, ge=0, description="Number of records to skip"),
     limit: int = Query(50, ge=1, le=100, description="Max number of records to return"),
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -75,10 +78,8 @@ async def get_announcements(
     
     Results are sorted by priority (urgent first) and then by date (newest first).
     """
-    announcements = await AnnouncementService.get_announcements(
+    announcements = AnnouncementService.get_announcements(
         db,
-        user_year=current_user.year,
-        user_branch=current_user.branch,
         category=category,
         skip=skip,
         limit=limit
@@ -87,15 +88,15 @@ async def get_announcements(
 
 
 @router.get("/{announcement_id}", response_model=AnnouncementResponse)
-async def get_announcement(
+def get_announcement(
     announcement_id: UUID,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get a specific announcement by ID.
     """
-    announcement = await AnnouncementService.get_announcement_by_id(db, announcement_id)
+    announcement = AnnouncementService.get_announcement_by_id(db, announcement_id)
     
     if not announcement:
         raise HTTPException(
@@ -107,16 +108,16 @@ async def get_announcement(
 
 
 @router.put("/{announcement_id}", response_model=AnnouncementResponse)
-async def update_announcement(
+def update_announcement(
     announcement_id: UUID,
     update_data: AnnouncementUpdate,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
 ):
     """
     Update an announcement (admin only).
     """
-    announcement = await AnnouncementService.update_announcement(
+    announcement = AnnouncementService.update_announcement(
         db,
         announcement_id,
         update_data
@@ -133,27 +134,30 @@ async def update_announcement(
         title=announcement.title,
         content=announcement.content,
         category=announcement.category,
-        priority=announcement.priority,
-        author_id=announcement.author_id,
+        priority="normal",
+        author_id=announcement.posted_by,
         author_name=current_user.full_name,
-        target_year=announcement.target_year,
-        target_branch=announcement.target_branch,
+        target_year=None,
+        target_branch=None,
         is_active=announcement.is_active,
+        is_pinned=announcement.is_pinned,
+        scheduled_at=announcement.scheduled_at,
+        expires_at=announcement.expires_at,
         created_at=announcement.created_at,
         updated_at=announcement.updated_at
     )
 
 
 @router.delete("/{announcement_id}", status_code=status.HTTP_200_OK)
-async def delete_announcement(
+def delete_announcement(
     announcement_id: UUID,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
 ):
     """
     Delete (deactivate) an announcement (admin only).
     """
-    success = await AnnouncementService.delete_announcement(db, announcement_id)
+    success = AnnouncementService.delete_announcement(db, announcement_id)
     
     if not success:
         raise HTTPException(

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from typing import List, Optional
 from uuid import UUID
 
@@ -18,9 +18,9 @@ router = APIRouter(prefix="/api/issues", tags=["issues"])
 
 
 @router.post("/", response_model=IssueResponse, status_code=status.HTTP_201_CREATED)
-async def create_issue(
+def create_issue(
     issue_data: IssueCreate,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -32,7 +32,7 @@ async def create_issue(
     - **priority**: Priority level (low, medium, high, critical)
     - **location**: Optional location of the issue
     """
-    issue = await IssueService.create_issue(db, issue_data, current_user.id)
+    issue = IssueService.create_issue(db, issue_data, current_user.id)
     
     return IssueResponse(
         id=issue.id,
@@ -42,7 +42,7 @@ async def create_issue(
         priority=issue.priority,
         status=issue.status,
         location=issue.location,
-        reporter_id=issue.reporter_id,
+        reporter_id=issue.reported_by,
         reporter_name=current_user.full_name,
         assigned_to=issue.assigned_to,
         assigned_to_name=None,
@@ -53,14 +53,14 @@ async def create_issue(
 
 
 @router.get("/", response_model=List[IssueResponse])
-async def get_issues(
+def get_issues(
     category: Optional[str] = Query(None, description="Filter by category"),
     status: Optional[str] = Query(None, description="Filter by status"),
     priority: Optional[str] = Query(None, description="Filter by priority"),
     my_issues: bool = Query(False, description="Show only my reported issues"),
     skip: int = Query(0, ge=0, description="Number of records to skip"),
     limit: int = Query(50, ge=1, le=100, description="Max number of records to return"),
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -75,7 +75,7 @@ async def get_issues(
     """
     reporter_id = current_user.id if my_issues else None
     
-    issues = await IssueService.get_issues(
+    issues = IssueService.get_issues(
         db,
         category=category,
         status=status,
@@ -88,15 +88,15 @@ async def get_issues(
 
 
 @router.get("/{issue_id}", response_model=IssueResponse)
-async def get_issue(
+def get_issue(
     issue_id: UUID,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get a specific issue by ID.
     """
-    issue = await IssueService.get_issue_by_id(db, issue_id)
+    issue = IssueService.get_issue_by_id(db, issue_id)
     
     if not issue:
         raise HTTPException(
@@ -108,10 +108,10 @@ async def get_issue(
 
 
 @router.put("/{issue_id}", response_model=IssueResponse)
-async def update_issue(
+def update_issue(
     issue_id: UUID,
     update_data: IssueUpdate,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -121,7 +121,7 @@ async def update_issue(
     - Admins can update any issue and change status
     """
     is_admin = current_user.role == "admin"
-    issue = await IssueService.update_issue(
+    issue = IssueService.update_issue(
         db,
         issue_id,
         update_data,
@@ -136,15 +136,15 @@ async def update_issue(
         )
     
     # Fetch full response with reporter info
-    issue_response = await IssueService.get_issue_by_id(db, issue_id)
+    issue_response = IssueService.get_issue_by_id(db, issue_id)
     return issue_response
 
 
 @router.patch("/{issue_id}/status", response_model=IssueResponse)
-async def update_issue_status(
+def update_issue_status(
     issue_id: UUID,
     status_update: IssueStatusUpdate,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -156,7 +156,7 @@ async def update_issue_status(
             detail="Only admins can update issue status"
         )
     
-    issue = await IssueService.update_status(db, issue_id, status_update)
+    issue = IssueService.update_status(db, issue_id, status_update)
     
     if not issue:
         raise HTTPException(
@@ -165,15 +165,15 @@ async def update_issue_status(
         )
     
     # Fetch full response
-    issue_response = await IssueService.get_issue_by_id(db, issue_id)
+    issue_response = IssueService.get_issue_by_id(db, issue_id)
     return issue_response
 
 
 @router.patch("/{issue_id}/assign/{user_id}")
-async def assign_issue(
+def assign_issue(
     issue_id: UUID,
     user_id: UUID,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -185,7 +185,7 @@ async def assign_issue(
             detail="Only admins can assign issues"
         )
     
-    issue = await IssueService.assign_issue(db, issue_id, user_id)
+    issue = IssueService.assign_issue(db, issue_id, user_id)
     
     if not issue:
         raise HTTPException(

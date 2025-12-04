@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query, WebSocket, WebSocketDisconnect
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
@@ -28,10 +28,10 @@ router = APIRouter(prefix="/api/chat", tags=["chat"])
 
 
 @router.post("/groups", response_model=ChatGroupResponse, status_code=status.HTTP_201_CREATED)
-async def create_group(
+def create_group(
     group_data: ChatGroupCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Create a new chat group.
@@ -42,7 +42,7 @@ async def create_group(
     
     The creator is automatically added as an admin.
     """
-    group = await ChatService.create_group(db, group_data, current_user.id)
+    group = ChatService.create_group(db, group_data, current_user.id)
     
     # Get member count for response
     return ChatGroupResponse(
@@ -60,31 +60,31 @@ async def create_group(
 
 
 @router.get("/groups", response_model=List[ChatGroupResponse])
-async def get_my_groups(
+def get_my_groups(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Get all chat groups that the current user is a member of.
     
     Returns groups ordered by most recently updated, with member counts and last message preview.
     """
-    groups = await ChatService.get_user_groups(db, current_user.id)
+    groups = ChatService.get_user_groups(db, current_user.id)
     return groups
 
 
 @router.get("/groups/{group_id}", response_model=ChatGroupDetailResponse)
-async def get_group_detail(
+def get_group_detail(
     group_id: UUID,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Get detailed information about a specific group, including members list.
     
     Only members of the group can access this endpoint.
     """
-    group = await ChatService.get_group_detail(db, group_id, current_user.id)
+    group = ChatService.get_group_detail(db, group_id, current_user.id)
     
     if not group:
         raise HTTPException(
@@ -96,18 +96,18 @@ async def get_group_detail(
 
 
 @router.put("/groups/{group_id}", response_model=ChatGroupResponse)
-async def update_group(
+def update_group(
     group_id: UUID,
     update_data: ChatGroupUpdate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Update group details (name, description, or active status).
     
     Only group admins can update group details.
     """
-    group = await ChatService.update_group(db, group_id, current_user.id, update_data)
+    group = ChatService.update_group(db, group_id, current_user.id, update_data)
     
     if not group:
         raise HTTPException(
@@ -130,18 +130,18 @@ async def update_group(
 
 
 @router.post("/groups/{group_id}/members", status_code=status.HTTP_200_OK)
-async def add_members(
+def add_members(
     group_id: UUID,
     member_data: ChatMemberAdd,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Add new members to a group.
     
     Only group admins can add members.
     """
-    success = await ChatService.add_members(
+    success = ChatService.add_members(
         db, 
         group_id, 
         member_data.user_ids, 
@@ -158,17 +158,17 @@ async def add_members(
 
 
 @router.delete("/groups/{group_id}/leave", status_code=status.HTTP_200_OK)
-async def leave_group(
+def leave_group(
     group_id: UUID,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Leave a chat group.
     
     Any member can leave a group they're part of.
     """
-    success = await ChatService.leave_group(db, group_id, current_user.id)
+    success = ChatService.leave_group(db, group_id, current_user.id)
     
     if not success:
         raise HTTPException(
@@ -180,11 +180,11 @@ async def leave_group(
 
 
 @router.post("/groups/{group_id}/messages", response_model=ChatMessageResponse, status_code=status.HTTP_201_CREATED)
-async def send_message(
+def send_message(
     group_id: UUID,
     message_data: ChatMessageCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Send a message to a chat group.
@@ -192,7 +192,7 @@ async def send_message(
     Only members of the group can send messages.
     - **content**: Message content (1-5000 characters)
     """
-    message = await ChatService.send_message(db, group_id, current_user.id, message_data)
+    message = ChatService.send_message(db, group_id, current_user.id, message_data)
     
     if not message:
         raise HTTPException(
@@ -213,12 +213,12 @@ async def send_message(
 
 
 @router.get("/groups/{group_id}/messages", response_model=List[ChatMessageResponse])
-async def get_messages(
+def get_messages(
     group_id: UUID,
     limit: int = Query(50, ge=1, le=100, description="Number of messages to fetch"),
     before: Optional[datetime] = Query(None, description="Fetch messages before this timestamp (for pagination)"),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Get messages from a chat group.
@@ -229,7 +229,7 @@ async def get_messages(
     
     Only members of the group can view messages.
     """
-    messages = await ChatService.get_messages(
+    messages = ChatService.get_messages(
         db, 
         group_id, 
         current_user.id, 

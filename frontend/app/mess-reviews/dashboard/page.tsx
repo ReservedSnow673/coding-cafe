@@ -37,8 +37,8 @@ export default function MessReviewDashboard() {
     try {
       setLoading(true);
       const [analyticsRes, dishesRes] = await Promise.all([
-        apiClient.get(`/api/mess-reviews/analytics/overview?days=${period}`),
-        apiClient.get(`/api/mess-reviews/analytics/popular-dishes?days=${period}`),
+        apiClient.get(`/mess-reviews/analytics/overview?days=${period}`),
+        apiClient.get(`/mess-reviews/analytics/popular-dishes?days=${period}`),
       ]);
       setAnalytics(analyticsRes.data);
       setPopularDishes(dishesRes.data);

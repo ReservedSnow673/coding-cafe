@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select
 from typing import List
 
@@ -25,7 +24,7 @@ router = APIRouter(prefix="/locations", tags=["locations"])
 async def share_location(
     location_data: LocationCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Share or update your current location.
@@ -45,7 +44,7 @@ async def share_location(
 @router.get("/me", response_model=LocationResponse)
 async def get_my_location(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Get your current shared location.
@@ -68,7 +67,7 @@ async def update_location(
     location_id: str,
     location_data: LocationUpdate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Update your location details.
@@ -96,7 +95,7 @@ async def update_location(
 async def get_nearby_users(
     max_distance: float = Query(default=5.0, ge=0.1, le=50.0, description="Maximum distance in kilometers"),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Get list of nearby users within specified distance.
@@ -118,7 +117,7 @@ async def get_nearby_users(
 @router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
 async def stop_sharing_location(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Stop sharing your location.
@@ -141,7 +140,7 @@ async def stop_sharing_location(
 async def toggle_location_sharing(
     request: LocationShareRequest,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Enable or disable location sharing.
@@ -168,7 +167,7 @@ async def toggle_location_sharing(
 async def get_all_active_locations(
     radius: float = Query(10000, description="Maximum distance in meters"),
     limit: int = Query(100, description="Maximum number of results"),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Get all active user locations for map display.
@@ -177,12 +176,9 @@ async def get_all_active_locations(
     - Includes profile pictures for map markers
     - Default radius is 10km (covers entire campus)
     """
-    result = await db.execute(
-        select(Location)
-        .options(joinedload(Location.user), joinedload(Location.building))
-        .where(Location.is_active == True)
-        .limit(limit)
-    )
-    locations = result.unique().scalars().all()
+    locations = db.query(Location).options(
+        joinedload(Location.user),
+        joinedload(Location.building)
+    ).filter(Location.is_active == True).limit(limit).all()
     
     return locations
