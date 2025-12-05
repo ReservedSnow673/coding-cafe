@@ -114,7 +114,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem("access_token");
-      const response = await fetch("${API_URL}/chat/groups", {
+      const response = await fetch(`${API_URL}/chat/groups`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -296,7 +296,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem("access_token");
-      const response = await fetch("${API_URL}/chat/groups", {
+      const response = await fetch(`${API_URL}/chat/groups`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

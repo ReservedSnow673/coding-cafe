@@ -70,10 +70,11 @@ class TeamService:
         )
 
         # Apply filters
-        if category:
-            query = query.filter(Team.category == category)
-        if status:
-            query = query.filter(Team.status == status)
+        # Note: category and status fields don't exist in Team model
+        # if category:
+        #     query = query.filter(Team.category == category)
+        # if status:
+        #     query = query.filter(Team.status == status)
         if search:
             query = query.filter(
                 or_(
@@ -160,12 +161,12 @@ class TeamService:
             id=team.id,
             name=team.name,
             description=team.description,
-            category=team.category,
-            status=team.status,
-            max_members=team.max_members,
+            category=None,  # Field doesn't exist in Team model
+            status=None,  # Field doesn't exist in Team model
+            max_members=None,  # Field doesn't exist in Team model
             current_members=member_count,
-            is_public=team.is_public,
-            tags=team.tags,
+            is_public=None,  # Field doesn't exist in Team model
+            tags=None,  # Field doesn't exist in Team model
             created_by=team.created_by,
             leader_name=leader.full_name,
             created_at=team.created_at,
@@ -200,12 +201,12 @@ class TeamService:
                     id=team.id,
                     name=team.name,
                     description=team.description,
-                    category=team.category,
-                    status=team.status,
-                    max_members=team.max_members,
+                    category=None,  # Field doesn't exist in Team model
+                    status=None,  # Field doesn't exist in Team model
+                    max_members=None,  # Field doesn't exist in Team model
                     current_members=member_count,
-                    is_public=team.is_public,
-                    tags=team.tags,
+                    is_public=None,  # Field doesn't exist in Team model
+                    tags=None,  # Field doesn't exist in Team model
                     created_by=team.created_by,
                     leader_name=leader.full_name,
                     created_at=team.created_at,
@@ -233,16 +234,17 @@ class TeamService:
             team.name = update_data.name
         if update_data.description is not None:
             team.description = update_data.description
-        if update_data.category is not None:
-            team.category = update_data.category
-        if update_data.max_members is not None:
-            team.max_members = update_data.max_members
-        if update_data.is_public is not None:
-            team.is_public = update_data.is_public
-        if update_data.status is not None:
-            team.status = update_data.status
-        if update_data.tags is not None:
-            team.tags = update_data.tags
+        # Note: category, max_members, is_public, status, tags don't exist in Team model
+        # if update_data.category is not None:
+        #     team.category = update_data.category
+        # if update_data.max_members is not None:
+        #     team.max_members = update_data.max_members
+        # if update_data.is_public is not None:
+        #     team.is_public = update_data.is_public
+        # if update_data.status is not None:
+        #     team.status = update_data.status
+        # if update_data.tags is not None:
+        #     team.tags = update_data.tags
 
         db.commit()
         db.refresh(team)
@@ -292,8 +294,9 @@ class TeamService:
             raise ValueError("Team not found")
 
         team, member_count = data
-        if member_count >= team.max_members:
-            raise ValueError("Team is full")
+        # Note: max_members field doesn't exist in Team model, skipping full check
+        # if member_count >= team.max_members:
+        #     raise ValueError("Team is full")
 
         # Check if already a member
         existing_member = db.query(TeamMember).filter(

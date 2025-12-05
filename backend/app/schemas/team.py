@@ -87,12 +87,12 @@ class TeamResponse(BaseModel):
     id: UUID
     name: str
     description: str
-    category: str
+    category: Optional[str] = None
     status: str
-    max_members: int
+    max_members: Optional[int] = None
     current_members: int
     is_public: bool
-    tags: Optional[List[str]]
+    tags: Optional[List[str]] = None
     created_by: UUID
     leader_name: str
     created_at: datetime

@@ -16,7 +16,7 @@ class AnnouncementService:
     """Service for managing announcements"""
 
     @staticmethod
-    async def create_announcement(
+    def create_announcement(
         db: Session,
         announcement_data: AnnouncementCreate,
         author_id: UUID
@@ -38,7 +38,7 @@ class AnnouncementService:
         return new_announcement
 
     @staticmethod
-    async def get_announcements(
+    def get_announcements(
         db: Session,
         user_year: Optional[int] = None,
         user_branch: Optional[str] = None,
@@ -87,7 +87,7 @@ class AnnouncementService:
         return responses
 
     @staticmethod
-    async def get_announcement_by_id(
+    def get_announcement_by_id(
         db: Session,
         announcement_id: UUID
     ) -> Optional[AnnouncementResponse]:
@@ -115,7 +115,7 @@ class AnnouncementService:
         )
 
     @staticmethod
-    async def update_announcement(
+    def update_announcement(
         db: Session,
         announcement_id: UUID,
         update_data: AnnouncementUpdate
@@ -141,7 +141,7 @@ class AnnouncementService:
         return announcement
 
     @staticmethod
-    async def delete_announcement(
+    def delete_announcement(
         db: Session,
         announcement_id: UUID
     ) -> bool:
