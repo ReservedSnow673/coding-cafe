@@ -8,12 +8,9 @@ from enum import Enum
 class IssueCategory(str, Enum):
     """Categories for issues"""
     INFRASTRUCTURE = "infrastructure"
-    ACADEMICS = "academics"
-    HOSTEL = "hostel"
-    MESS = "mess"
-    INTERNET = "internet"
+    FOOD = "food"
+    MAINTENANCE = "maintenance"
     SECURITY = "security"
-    SPORTS = "sports"
     OTHER = "other"
 
 

@@ -88,10 +88,10 @@ class TeamResponse(BaseModel):
     name: str
     description: str
     category: Optional[str] = None
-    status: str
+    status: Optional[str] = None
     max_members: Optional[int] = None
     current_members: int
-    is_public: bool
+    is_public: Optional[bool] = None
     tags: Optional[List[str]] = None
     created_by: UUID
     leader_name: str

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useChallenges, ChallengeType, DifficultyLevel } from "@/contexts/ChallengesContext";
 import Link from "next/link";
 import {
@@ -40,9 +40,14 @@ const difficultyBorders = {
 };
 
 export default function ChallengesPage() {
-  const { challenges, leaderboard, getActiveChallenges } = useChallenges();
+  const { challenges, leaderboard, getActiveChallenges, fetchChallenges } = useChallenges();
   const [selectedType, setSelectedType] = useState<ChallengeType | "all">("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyLevel | "all">("all");
+
+  // Fetch challenges when component mounts
+  useEffect(() => {
+    fetchChallenges();
+  }, []);
 
   const activeChallenges = getActiveChallenges();
 

@@ -55,12 +55,9 @@ export default function IssuesPage() {
   const categories: Array<IssueCategory | 'all'> = [
     'all',
     'infrastructure',
-    'academics',
-    'hostel',
-    'mess',
-    'internet',
+    'food',
+    'maintenance',
     'security',
-    'sports',
     'other',
   ];
 
@@ -282,12 +279,9 @@ export default function IssuesPage() {
                       className="input-field"
                     >
                       <option value="infrastructure">Infrastructure</option>
-                      <option value="academics">Academics</option>
-                      <option value="hostel">Hostel</option>
-                      <option value="mess">Mess</option>
-                      <option value="internet">Internet</option>
+                      <option value="food">Food</option>
+                      <option value="maintenance">Maintenance</option>
                       <option value="security">Security</option>
-                      <option value="sports">Sports</option>
                       <option value="other">Other</option>
                     </select>
                   </div>

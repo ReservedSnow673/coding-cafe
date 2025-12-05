@@ -80,15 +80,15 @@ class AnnouncementResponse(BaseModel):
     title: str
     content: str
     category: str
-    priority: str
+    priority: Optional[str] = None
     author_id: UUID
     author_name: str
-    target_year: Optional[int]
-    target_branch: Optional[str]
+    target_year: Optional[int] = None
+    target_branch: Optional[str] = None
     is_active: bool
-    is_pinned: bool
-    scheduled_at: Optional[datetime]
-    expires_at: Optional[datetime]
+    is_pinned: Optional[bool] = None
+    scheduled_at: Optional[datetime] = None
+    expires_at: Optional[datetime] = None
     created_at: datetime
     updated_at: datetime
 

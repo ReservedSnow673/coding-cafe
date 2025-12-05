@@ -5,7 +5,7 @@ import { DEV_MODE, mockDelay } from '@/lib/devMode';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
-export type IssueCategory = 'infrastructure' | 'academics' | 'hostel' | 'mess' | 'internet' | 'security' | 'sports' | 'other';
+export type IssueCategory = 'infrastructure' | 'food' | 'maintenance' | 'security' | 'other';
 export type IssueStatus = 'open' | 'in_progress' | 'resolved' | 'closed';
 export type IssuePriority = 'low' | 'medium' | 'high' | 'critical';
 
@@ -263,7 +263,7 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
         return newIssue;
       } else {
         const token = localStorage.getItem("access_token");
-        const response = await fetch('${API_URL}/issues/', {
+        const response = await fetch(`${API_URL}/issues/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -253,7 +253,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         setMyTeams(userTeams);
       } else {
         const token = localStorage.getItem('access_token');
-        const response = await fetch('${API_URL}/teams/my-teams', {
+        const response = await fetch(`${API_URL}/teams/my-teams`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -353,7 +353,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         return newTeam;
       } else {
         const token = localStorage.getItem('access_token');
-        const response = await fetch('${API_URL}/teams/', {
+        const response = await fetch(`${API_URL}/teams/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

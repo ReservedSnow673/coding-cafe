@@ -30,7 +30,7 @@ def create_challenge(
         current_user.full_name,
         challenge_data
     )
-    return challenge
+    return ChallengeResponse.model_validate(challenge)
 
 
 @router.get("/", response_model=List[ChallengeResponse])
@@ -52,7 +52,7 @@ def get_challenges(
         skip=skip,
         limit=limit,
     )
-    return challenges
+    return [ChallengeResponse.model_validate(c) for c in challenges]
 
 
 @router.get("/active", response_model=List[ChallengeResponse])
@@ -65,7 +65,7 @@ def get_active_challenges(
     """Get only active challenges"""
     service = ChallengeService(db)
     challenges = service.get_active_challenges(skip, limit)
-    return challenges
+    return [ChallengeResponse.model_validate(c) for c in challenges]
 
 
 @router.get("/my-challenges", response_model=List[ChallengeResponse])
@@ -78,7 +78,7 @@ def get_my_challenges(
     """Get challenges created by current user"""
     service = ChallengeService(db)
     challenges = service.get_user_challenges(str(current_user.id), skip, limit)
-    return challenges
+    return [ChallengeResponse.model_validate(c) for c in challenges]
 
 
 @router.get("/leaderboard", response_model=List[LeaderboardEntry])
@@ -109,7 +109,7 @@ def get_challenge(
             detail="Challenge not found",
         )
     
-    return challenge
+    return ChallengeResponse.model_validate(challenge)
 
 
 @router.put("/{challenge_id}", response_model=ChallengeResponse)
@@ -129,7 +129,7 @@ def update_challenge(
             detail="Challenge not found or you don't have permission to update it",
         )
     
-    return challenge
+    return ChallengeResponse.model_validate(challenge)
 
 
 @router.delete("/{challenge_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -171,7 +171,7 @@ def join_challenge(
             detail="Cannot join challenge (not found, inactive, or full)",
         )
     
-    return participant
+    return ParticipantResponse.model_validate(participant)
 
 
 @router.post("/{challenge_id}/leave", status_code=status.HTTP_204_NO_CONTENT)
@@ -210,7 +210,7 @@ def complete_challenge(
             detail="Invalid password or you are not a participant of this challenge",
         )
     
-    return participant
+    return ParticipantResponse.model_validate(participant)
 
 
 @router.put("/{challenge_id}/progress", response_model=ParticipantResponse)
@@ -230,7 +230,7 @@ def update_progress(
             detail="You are not a participant of this challenge",
         )
     
-    return participant
+    return ParticipantResponse.model_validate(participant)
 
 
 @router.get("/{challenge_id}/participants", response_model=List[ParticipantResponse])

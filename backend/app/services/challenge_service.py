@@ -53,7 +53,8 @@ class ChallengeService:
             query = query.filter(Challenge.difficulty == difficulty)
         
         if is_active is not None:
-            now = datetime.utcnow()
+            from datetime import timezone
+            now = datetime.now(timezone.utc)
             if is_active:
                 query = query.filter(
                     and_(
@@ -125,7 +126,8 @@ class ChallengeService:
         if not challenge:
             return None
 
-        now = datetime.utcnow()
+        from datetime import timezone
+        now = datetime.now(timezone.utc)
         if challenge.start_date > now or challenge.end_date < now:
             return None  # Challenge is not active
 
@@ -186,8 +188,9 @@ class ChallengeService:
         if not participant:
             return None
 
+        from datetime import timezone
         participant.completed = True
-        participant.completed_at = datetime.utcnow()
+        participant.completed_at = datetime.now(timezone.utc)
         participant.progress = 100
 
         self.db.commit()
@@ -255,7 +258,7 @@ class ChallengeService:
 
         return [
             LeaderboardEntry(
-                user_id=result.user_id,
+                user_id=str(result.user_id),
                 user_name=result.user_name,
                 total_points=result.total_points or 0,
                 challenges_completed=result.completed_count or 0,

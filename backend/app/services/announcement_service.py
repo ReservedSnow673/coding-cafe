@@ -71,13 +71,16 @@ class AnnouncementService:
                 id=announcement.id,
                 title=announcement.title,
                 content=announcement.content,
-                category=announcement.category,
+                category=announcement.category.value if hasattr(announcement.category, 'value') else announcement.category,
                 priority=None,  # Field doesn't exist in model
                 author_id=announcement.posted_by,
                 author_name=user.full_name,
                 target_year=None,  # Field doesn't exist in model
                 target_branch=None,  # Field doesn't exist in model
                 is_active=announcement.is_active,
+                is_pinned=announcement.is_pinned,
+                scheduled_at=announcement.scheduled_at,
+                expires_at=announcement.expires_at,
                 created_at=announcement.created_at,
                 updated_at=announcement.updated_at
             )
@@ -103,13 +106,16 @@ class AnnouncementService:
             id=announcement.id,
             title=announcement.title,
             content=announcement.content,
-            category=announcement.category,
-            priority=announcement.priority,
-            author_id=announcement.author_id,
+            category=announcement.category.value if hasattr(announcement.category, 'value') else announcement.category,
+            priority=None,  # Field doesn't exist in model
+            author_id=announcement.posted_by,
             author_name=user.full_name,
-            target_year=announcement.target_year,
-            target_branch=announcement.target_branch,
+            target_year=None,  # Field doesn't exist in model
+            target_branch=None,  # Field doesn't exist in model
             is_active=announcement.is_active,
+            is_pinned=announcement.is_pinned,
+            scheduled_at=announcement.scheduled_at,
+            expires_at=announcement.expires_at,
             created_at=announcement.created_at,
             updated_at=announcement.updated_at
         )

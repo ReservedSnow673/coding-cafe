@@ -1,6 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { DEV_MODE, mockDelay } from "@/lib/devMode";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
 export type ChallengeType = "fitness" | "academic" | "social" | "creative" | "environmental" | "wellness";
 export type DifficultyLevel = "easy" | "medium" | "hard";
@@ -44,12 +47,15 @@ export interface LeaderboardEntry {
 interface ChallengesContextType {
   challenges: Challenge[];
   leaderboard: LeaderboardEntry[];
-  addChallenge: (challenge: Omit<Challenge, "id" | "creator_id" | "creator_name" | "participant_count" | "participants" | "is_active" | "created_at">) => void;
-  updateChallenge: (id: string, updates: Partial<Challenge>) => void;
-  deleteChallenge: (id: string) => void;
-  joinChallenge: (challengeId: string) => boolean;
-  leaveChallenge: (challengeId: string) => void;
-  completeChallenge: (challengeId: string, password: string) => boolean;
+  loading: boolean;
+  error: string | null;
+  fetchChallenges: () => Promise<void>;
+  addChallenge: (challenge: Omit<Challenge, "id" | "creator_id" | "creator_name" | "participant_count" | "participants" | "is_active" | "created_at">) => Promise<void>;
+  updateChallenge: (id: string, updates: Partial<Challenge>) => Promise<void>;
+  deleteChallenge: (id: string) => Promise<void>;
+  joinChallenge: (challengeId: string) => Promise<boolean>;
+  leaveChallenge: (challengeId: string) => Promise<void>;
+  completeChallenge: (challengeId: string, password: string) => Promise<boolean>;
   updateProgress: (challengeId: string, progress: number) => void;
   getChallengesByType: (type: ChallengeType) => Challenge[];
   getChallengesByDifficulty: (difficulty: DifficultyLevel) => Challenge[];
@@ -283,87 +289,294 @@ const mockLeaderboard: LeaderboardEntry[] = [
 
 export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [leaderboard] = useState<LeaderboardEntry[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const addChallenge = (newChallenge: Omit<Challenge, "id" | "creator_id" | "creator_name" | "participant_count" | "participants" | "is_active" | "created_at">) => {
-    const challenge: Challenge = {
-      ...newChallenge,
-      id: `challenge-${Date.now()}`,
-      creator_id: "current-user",
-      creator_name: "You",
-      participant_count: 0,
-      participants: [],
-      is_active: true,
-      created_at: new Date().toISOString(),
-    };
-    setChallenges([challenge, ...challenges]);
-  };
-
-  const updateChallenge = (id: string, updates: Partial<Challenge>) => {
-    setChallenges(
-      challenges.map((challenge) =>
-        challenge.id === id ? { ...challenge, ...updates, updated_at: new Date().toISOString() } : challenge
-      )
-    );
-  };
-
-  const deleteChallenge = (id: string) => {
-    setChallenges(challenges.filter((challenge) => challenge.id !== id));
-  };
-
-  const joinChallenge = (challengeId: string): boolean => {
-    const challenge = challenges.find((c) => c.id === challengeId);
-    if (!challenge) return false;
-
-    // Check if already joined
-    if (challenge.participants.some((p) => p.user_id === "current-user")) return false;
-
-    // Check if full
-    if (challenge.max_participants && challenge.participant_count >= challenge.max_participants) return false;
-
-    const newParticipant: ChallengeParticipant = {
-      user_id: "current-user",
-      user_name: "You",
-      joined_at: new Date().toISOString(),
-      completed: false,
-      progress: 0,
-    };
-
-    updateChallenge(challengeId, {
-      participants: [...challenge.participants, newParticipant],
-      participant_count: challenge.participant_count + 1,
-    });
-
-    return true;
-  };
-
-  const leaveChallenge = (challengeId: string) => {
-    const challenge = challenges.find((c) => c.id === challengeId);
-    if (!challenge) return;
-
-    updateChallenge(challengeId, {
-      participants: challenge.participants.filter((p) => p.user_id !== "current-user"),
-      participant_count: challenge.participant_count - 1,
-    });
-  };
-
-  const completeChallenge = (challengeId: string, password: string): boolean => {
-    const challenge = challenges.find((c) => c.id === challengeId);
-    if (!challenge) return false;
-
-    // Verify password
-    if (challenge.completion_password !== password) {
-      return false;
+  // Fetch challenges from API
+  const fetchChallenges = async () => {
+    if (DEV_MODE.useMockData) {
+      await mockDelay();
+      setChallenges(mockChallenges);
+      setLeaderboard(mockLeaderboard);
+      return;
     }
 
-    const updatedParticipants = challenge.participants.map((p) =>
-      p.user_id === "current-user"
-        ? { ...p, completed: true, completed_at: new Date().toISOString(), progress: 100 }
-        : p
-    );
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/challenges/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    updateChallenge(challengeId, { participants: updatedParticipants });
-    return true;
+      if (!response.ok) throw new Error("Failed to fetch challenges");
+
+      const data = await response.json();
+      setChallenges(data);
+
+      // Fetch leaderboard
+      const leaderboardResponse = await fetch(`${API_URL}/challenges/leaderboard`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      if (leaderboardResponse.ok) {
+        const leaderboardData = await leaderboardResponse.json();
+        setLeaderboard(leaderboardData);
+      }
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error fetching challenges:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Check if user is authenticated before fetching
+    const token = localStorage.getItem("access_token");
+    if (token || DEV_MODE.useMockData) {
+      fetchChallenges();
+    }
+  }, []);
+
+  const addChallenge = async (newChallenge: Omit<Challenge, "id" | "creator_id" | "creator_name" | "participant_count" | "participants" | "is_active" | "created_at">) => {
+    if (DEV_MODE.useMockData) {
+      await mockDelay();
+      const challenge: Challenge = {
+        ...newChallenge,
+        id: `challenge-${Date.now()}`,
+        creator_id: "current-user",
+        creator_name: "You",
+        participant_count: 0,
+        participants: [],
+        is_active: true,
+        created_at: new Date().toISOString(),
+      };
+      setChallenges([challenge, ...challenges]);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/challenges/`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newChallenge),
+      });
+
+      if (!response.ok) throw new Error("Failed to create challenge");
+
+      const data = await response.json();
+      setChallenges([data, ...challenges]);
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error creating challenge:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateChallenge = async (id: string, updates: Partial<Challenge>) => {
+    if (DEV_MODE.useMockData) {
+      await mockDelay();
+      setChallenges(
+        challenges.map((challenge) =>
+          challenge.id === id ? { ...challenge, ...updates, updated_at: new Date().toISOString() } : challenge
+        )
+      );
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/challenges/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) throw new Error("Failed to update challenge");
+
+      const data = await response.json();
+      setChallenges(challenges.map((c) => (c.id === id ? data : c)));
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error updating challenge:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteChallenge = async (id: string) => {
+    if (DEV_MODE.useMockData) {
+      await mockDelay();
+      setChallenges(challenges.filter((challenge) => challenge.id !== id));
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/challenges/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error("Failed to delete challenge");
+
+      setChallenges(challenges.filter((c) => c.id !== id));
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error deleting challenge:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const joinChallenge = async (challengeId: string): Promise<boolean> => {
+    if (DEV_MODE.useMockData) {
+      await mockDelay();
+      const challenge = challenges.find((c) => c.id === challengeId);
+      if (!challenge) return false;
+
+      if (challenge.participants.some((p) => p.user_id === "current-user")) return false;
+      if (challenge.max_participants && challenge.participant_count >= challenge.max_participants) return false;
+
+      const newParticipant: ChallengeParticipant = {
+        user_id: "current-user",
+        user_name: "You",
+        joined_at: new Date().toISOString(),
+        completed: false,
+        progress: 0,
+      };
+
+      await updateChallenge(challengeId, {
+        participants: [...challenge.participants, newParticipant],
+        participant_count: challenge.participant_count + 1,
+      });
+
+      return true;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/challenges/${challengeId}/join`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to join challenge");
+      }
+
+      await fetchChallenges();
+      return true;
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error joining challenge:", err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const leaveChallenge = async (challengeId: string) => {
+    if (DEV_MODE.useMockData) {
+      await mockDelay();
+      const challenge = challenges.find((c) => c.id === challengeId);
+      if (!challenge) return;
+
+      await updateChallenge(challengeId, {
+        participants: challenge.participants.filter((p) => p.user_id !== "current-user"),
+        participant_count: challenge.participant_count - 1,
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/challenges/${challengeId}/leave`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error("Failed to leave challenge");
+
+      await fetchChallenges();
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error leaving challenge:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const completeChallenge = async (challengeId: string, password: string): Promise<boolean> => {
+    if (DEV_MODE.useMockData) {
+      await mockDelay();
+      const challenge = challenges.find((c) => c.id === challengeId);
+      if (!challenge) return false;
+
+      if (challenge.completion_password !== password) {
+        return false;
+      }
+
+      const updatedParticipants = challenge.participants.map((p) =>
+        p.user_id === "current-user"
+          ? { ...p, completed: true, completed_at: new Date().toISOString(), progress: 100 }
+          : p
+      );
+
+      await updateChallenge(challengeId, { participants: updatedParticipants });
+      return true;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${API_URL}/challenges/${challengeId}/complete?password=${encodeURIComponent(password)}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to complete challenge");
+      }
+
+      await fetchChallenges();
+      return true;
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error completing challenge:", err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateProgress = (challengeId: string, progress: number) => {
@@ -403,6 +616,9 @@ export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
       value={{
         challenges,
         leaderboard,
+        loading,
+        error,
+        fetchChallenges,
         addChallenge,
         updateChallenge,
         deleteChallenge,
