@@ -442,6 +442,14 @@ export function IssueProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Fetch issues on mount
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token || DEV_MODE.useMockData) {
+      fetchIssues();
+    }
+  }, []);
+
   return (
     <IssueContext.Provider
       value={{

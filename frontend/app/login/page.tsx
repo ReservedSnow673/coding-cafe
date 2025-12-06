@@ -25,6 +25,14 @@ export default function LoginPage() {
   const handleRequestOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    
+    // Validate @plaksha.edu.in email
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@plaksha\.edu\.in$/;
+    if (!emailRegex.test(email)) {
+      setError('Please use a valid @plaksha.edu.in email address');
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -99,6 +107,8 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your.email@plaksha.edu.in"
+                    pattern="[a-zA-Z0-9._%+-]+@plaksha\.edu\.in"
+                    title="Please use a valid @plaksha.edu.in email address"
                     required
                     className="input-field pl-10"
                     suppressHydrationWarning
@@ -115,7 +125,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full"
+                className="btn-primary w-full flex items-center justify-center gap-2"
               >
                 {loading ? 'Sending...' : 'Continue'}
                 <FiArrowRight />
@@ -145,7 +155,7 @@ export default function LoginPage() {
                 <div className="p-4 bg-secondary/10 dark:bg-secondary/20 border-2 border-secondary/30 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
-                    <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">🚀 SMTP Bypass Mode Active</p>
+                    <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">SMTP Bypass Mode Active</p>
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Your OTP (no email server needed):</p>
                   <div className="flex items-center justify-between bg-white dark:bg-black/30 rounded-lg p-3 border border-secondary/20">
@@ -189,7 +199,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || otp.length !== 6}
-                className="btn-primary w-full"
+                className="btn-primary w-full flex items-center justify-center gap-2"
               >
                 {loading ? 'Verifying...' : 'Verify OTP'}
                 <FiCheck />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { DEV_MODE, mockDelay } from "@/lib/devMode";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
@@ -317,6 +317,14 @@ export const AnnouncementProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
+
+  // Fetch announcements on mount
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token || DEV_MODE.useMockData) {
+      fetchAnnouncements();
+    }
+  }, []);
 
   return (
     <AnnouncementContext.Provider
