@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useChallenges } from "@/contexts/ChallengesContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -41,6 +42,7 @@ export default function ChallengeDetailPage() {
   const router = useRouter();
   const challengeId = params.challengeId as string;
   
+  const { user } = useAuth();
   const { challenges, joinChallenge, leaveChallenge, completeChallenge, updateProgress, isParticipant } = useChallenges();
   const [localProgress, setLocalProgress] = useState(0);
   const [completionPassword, setCompletionPassword] = useState("");
@@ -62,8 +64,9 @@ export default function ChallengeDetailPage() {
   }
 
   const TypeIcon = challengeTypeIcons[challenge.challenge_type];
-  const isJoined = isParticipant(challenge.id, "current-user");
-  const currentUserParticipation = challenge.participants.find((p) => p.user_id === "current-user");
+  const userId = user?.id || "";
+  const isJoined = isParticipant(challenge.id, userId);
+  const currentUserParticipation = challenge.participants.find((p) => p.user_id === userId);
   const isCompleted = currentUserParticipation?.completed || false;
   const currentProgress = currentUserParticipation?.progress || 0;
 
@@ -72,8 +75,8 @@ export default function ChallengeDetailPage() {
   const daysLeft = Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   const isFull = challenge.max_participants ? challenge.participant_count >= challenge.max_participants : false;
 
-  const handleJoin = () => {
-    const success = joinChallenge(challenge.id);
+  const handleJoin = async () => {
+    const success = await joinChallenge(challenge.id);
     if (!success) {
       alert("Unable to join challenge. It may be full or you may already be a participant.");
     }
@@ -85,8 +88,8 @@ export default function ChallengeDetailPage() {
     }
   };
 
-  const handleComplete = () => {
-    const success = completeChallenge(challenge.id, completionPassword);
+  const handleComplete = async () => {
+    const success = await completeChallenge(challenge.id, completionPassword);
     if (success) {
       alert(`Congratulations! Challenge completed! You earned ${challenge.points} points! 🎉`);
       setShowPasswordInput(false);

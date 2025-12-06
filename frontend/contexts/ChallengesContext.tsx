@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { DEV_MODE, mockDelay } from "@/lib/devMode";
+import { useAuth } from "@/contexts/AuthContext";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
@@ -288,6 +289,7 @@ const mockLeaderboard: LeaderboardEntry[] = [
 ];
 
 export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -346,8 +348,8 @@ export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
       const challenge: Challenge = {
         ...newChallenge,
         id: `challenge-${Date.now()}`,
-        creator_id: "current-user",
-        creator_name: "You",
+        creator_id: user?.id || "unknown",
+        creator_name: user?.full_name || "You",
         participant_count: 0,
         participants: [],
         is_active: true,
@@ -454,12 +456,12 @@ export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
       const challenge = challenges.find((c) => c.id === challengeId);
       if (!challenge) return false;
 
-      if (challenge.participants.some((p) => p.user_id === "current-user")) return false;
+      if (challenge.participants.some((p) => p.user_id === (user?.id || ""))) return false;
       if (challenge.max_participants && challenge.participant_count >= challenge.max_participants) return false;
 
       const newParticipant: ChallengeParticipant = {
-        user_id: "current-user",
-        user_name: "You",
+        user_id: user?.id || "unknown",
+        user_name: user?.full_name || "You",
         joined_at: new Date().toISOString(),
         completed: false,
         progress: 0,
@@ -505,7 +507,7 @@ export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
       if (!challenge) return;
 
       await updateChallenge(challengeId, {
-        participants: challenge.participants.filter((p) => p.user_id !== "current-user"),
+        participants: challenge.participants.filter((p) => p.user_id !== (user?.id || "")),
         participant_count: challenge.participant_count - 1,
       });
       return;
@@ -543,7 +545,7 @@ export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const updatedParticipants = challenge.participants.map((p) =>
-        p.user_id === "current-user"
+        p.user_id === (user?.id || "")
           ? { ...p, completed: true, completed_at: new Date().toISOString(), progress: 100 }
           : p
       );
@@ -584,7 +586,7 @@ export const ChallengesProvider = ({ children }: { children: ReactNode }) => {
     if (!challenge) return;
 
     const updatedParticipants = challenge.participants.map((p) =>
-      p.user_id === "current-user" ? { ...p, progress: Math.max(0, Math.min(100, progress)) } : p
+      p.user_id === (user?.id || "") ? { ...p, progress: Math.max(0, Math.min(100, progress)) } : p
     );
 
     updateChallenge(challengeId, { participants: updatedParticipants });
