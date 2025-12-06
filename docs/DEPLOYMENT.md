@@ -1,106 +1,31 @@
 # Deployment Guide
 
-This guide covers deploying PlakshaConnect to various platforms and configuring production environments.
+Production deployment options for PlakshaConnect.
+
+## Local Development
+
+For local setup, see [SETUP.md](./SETUP.md).
 
 ---
 
-## Deployment Overview
+## Cloud Deployment
 
-PlakshaConnect can be deployed using several strategies:
+### Vercel + Railway
 
-1. **Local Deployment** - For development and testing
-2. **Cloud Deployment** - For production use
-3. **Containerized Deployment** - Using Docker
+**Frontend (Vercel)**:
 
-Currently, the application is configured for **local deployment**.
+1. Connect GitHub repo to Vercel
+2. Set environment variables:
+   - `NEXT_PUBLIC_API_URL`
+   - `NEXT_PUBLIC_WS_URL`
+3. Deploy
 
----
+**Backend (Railway)**:
 
-## Local Deployment
-
-### Prerequisites
-
-- PostgreSQL installed and running
-- Node.js (v18+) installed
-- Python (v3.10+) installed
-- Sufficient disk space (~500MB)
-
-### Steps
-
-Follow the instructions in [SETUP.md](./SETUP.md) for complete local setup.
-
-**Quick Start:**
-
-1. Clone repository
-2. Set up PostgreSQL database
-3. Configure environment variables
-4. Install dependencies (frontend + backend)
-5. Run database migrations
-6. Start backend server
-7. Start frontend development server
-
----
-
-## Production Deployment (Cloud)
-
-### Option 1: Vercel (Frontend) + Railway (Backend)
-
-#### Frontend Deployment (Vercel)
-
-**Step 1: Prepare for Deployment**
-
-Update `next.config.js`:
-```javascript
-module.exports = {
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
-  },
-}
-```
-
-**Step 2: Deploy to Vercel**
-
-1. Push code to GitHub
-2. Connect repository to Vercel
-3. Configure environment variables:
-   - `NEXT_PUBLIC_API_URL`: Your backend API URL
-   - `NEXT_PUBLIC_WS_URL`: Your WebSocket URL
-4. Deploy
-
-**Vercel CLI Alternative:**
-```bash
-npm install -g vercel
-cd frontend
-vercel
-```
-
----
-
-#### Backend Deployment (Railway)
-
-**Step 1: Prepare Backend**
-
-Create `Procfile`:
-```
-web: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-```
-
-Create `runtime.txt`:
-```
-python-3.10.12
-```
-
-**Step 2: Deploy to Railway**
-
-1. Create Railway account
-2. Create new project
-3. Connect GitHub repository
-4. Add PostgreSQL database service
-5. Configure environment variables (see below)
-6. Deploy
-
-**Environment Variables for Railway:**
+1. Create Railway project
+2. Connect GitHub repo
+3. Add PostgreSQL database
+4. Set environment variables:
 ```
 DATABASE_URL=<provided_by_railway>
 SECRET_KEY=<generate_secure_key>
@@ -116,64 +41,13 @@ CORS_ORIGINS=https://your-frontend-domain.vercel.app
 ENVIRONMENT=production
 ```
 
-**Step 3: Run Migrations**
-
-After deployment, run migrations via Railway CLI:
-```bash
-railway run alembic upgrade head
-```
-
----
-
-### Option 2: Render (Full Stack)
-
-#### Backend Deployment
-
-1. Create Render account
-2. Create new Web Service
-3. Connect GitHub repository
-4. Configure:
-   - **Build Command:** `pip install -r requirements.txt`
-   - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. Add PostgreSQL database
-6. Set environment variables
-7. Deploy
-
-#### Frontend Deployment
-
-1. Create new Static Site on Render
-2. Configure:
-   - **Build Command:** `cd frontend && npm install && npm run build`
-   - **Publish Directory:** `frontend/out`
-3. Set environment variables
-4. Deploy
-
----
-
-### Option 3: DigitalOcean App Platform
-
-**Frontend:**
-1. Create App
-2. Connect repository
-3. Select frontend directory
-4. Build settings: `npm run build`
-5. Deploy
-
-**Backend:**
-1. Create App
-2. Connect repository
-3. Select backend directory
-4. Add PostgreSQL database
-5. Configure environment variables
-6. Deploy
+5. Run migrations: `railway run alembic upgrade head`
 
 ---
 
 ## Docker Deployment
 
-### Docker Compose Setup
-
-**Create `docker-compose.yml`:**
+`docker-compose.yml`:
 ```yaml
 version: '3.8'
 
@@ -218,7 +92,7 @@ volumes:
   postgres_data:
 ```
 
-**Backend Dockerfile:**
+`backend/Dockerfile`:
 ```dockerfile
 FROM python:3.10-slim
 
@@ -232,7 +106,7 @@ COPY . .
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-**Frontend Dockerfile:**
+`frontend/Dockerfile`:
 ```dockerfile
 FROM node:18-alpine
 
@@ -248,24 +122,22 @@ RUN npm run build
 CMD ["npm", "start"]
 ```
 
-**Run with Docker Compose:**
+Run:
 ```bash
 docker-compose up --build
 ```
 
 ---
 
-## Environment Configuration
+## Environment Variables
 
-### Production Environment Variables
-
-#### Frontend (.env.production)
+**Frontend** `.env.production`:
 ```env
 NEXT_PUBLIC_API_URL=https://api.plakshaconnect.com
 NEXT_PUBLIC_WS_URL=wss://api.plakshaconnect.com
 ```
 
-#### Backend (.env.production)
+**Backend** `.env.production`:
 ```env
 DATABASE_URL=postgresql://user:password@host:5432/plakshaconnect
 SECRET_KEY=<64_char_random_string>
@@ -293,67 +165,35 @@ SENTRY_DSN=https://...
 
 ---
 
-## Database Migration in Production
+## Database Migrations
 
-### Initial Setup
+On production server:
 
 ```bash
-# Connect to production server
 ssh user@server
-
-# Navigate to backend directory
 cd /path/to/backend
-
-# Activate virtual environment
 source venv/bin/activate
-
-# Run migrations
 alembic upgrade head
 ```
 
-### Applying New Migrations
+Rollback if needed:
 
 ```bash
-# After deploying new code with migrations
-alembic upgrade head
-
-# Check current version
-alembic current
-
-# View migration history
-alembic history
-```
-
-### Rollback Strategy
-
-```bash
-# Rollback one version
 alembic downgrade -1
-
-# Rollback to specific version
-alembic downgrade <revision_id>
 ```
 
 ---
 
-## SSL/HTTPS Configuration
+## SSL Configuration
 
-### Using Let's Encrypt (Certbot)
+Install Let's Encrypt certificate:
 
-**For Nginx:**
 ```bash
 sudo apt-get install certbot python3-certbot-nginx
-sudo certbot --nginx -d plakshaconnect.com -d www.plakshaconnect.com
+sudo certbot --nginx -d plakshaconnect.com
 ```
 
-**Auto-renewal:**
-```bash
-sudo certbot renew --dry-run
-```
-
-### Nginx Configuration
-
-**`/etc/nginx/sites-available/plakshaconnect`:**
+Nginx config:
 ```nginx
 server {
     listen 80;
@@ -393,252 +233,124 @@ server {
 }
 ```
 
-Enable site:
+Enable:
 ```bash
 sudo ln -s /etc/nginx/sites-available/plakshaconnect /etc/nginx/sites-enabled/
-sudo nginx -t
 sudo systemctl reload nginx
 ```
 
 ---
 
-## Monitoring and Logging
+## Monitoring
 
-### Application Logs
-
-**Backend Logging:**
-
-Update `app/main.py`:
-```python
-import logging
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('app.log'),
-        logging.StreamHandler()
-    ]
-)
-```
-
-**View Logs:**
+View application logs:
 ```bash
 tail -f app.log
 ```
 
-### Error Tracking with Sentry
-
-**Install:**
+Optional error tracking with Sentry:
 ```bash
 pip install sentry-sdk[fastapi]
 ```
 
-**Configure in `app/main.py`:**
-```python
-import sentry_sdk
-
-sentry_sdk.init(
-    dsn="your-sentry-dsn",
-    environment="production",
-    traces_sample_rate=1.0
-)
-```
-
-### Performance Monitoring
-
-**Using New Relic:**
-```bash
-pip install newrelic
-newrelic-admin run-program uvicorn app.main:app
-```
-
 ---
 
-## Backup Strategy
+## Database Backups
 
-### Database Backups
-
-**Automated Daily Backup:**
-
-Create `backup.sh`:
+Daily backup script:
 ```bash
 #!/bin/bash
-DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="/backups"
-DB_NAME="plakshaconnect"
-
-pg_dump $DB_NAME > $BACKUP_DIR/backup_$DATE.sql
-
-# Keep only last 7 days
-find $BACKUP_DIR -name "backup_*.sql" -mtime +7 -delete
+pg_dump plakshaconnect > /backups/backup_$(date +%Y%m%d).sql
 ```
 
-**Cron Job:**
-```bash
-crontab -e
-# Add: 0 2 * * * /path/to/backup.sh
-```
+Add to crontab: `0 2 * * * /path/to/backup.sh`
 
-**Restore:**
+Restore:
 ```bash
-psql plakshaconnect < backup_20251104_020000.sql
+psql plakshaconnect < backup_20251206.sql
 ```
 
 ---
 
-## Scaling Considerations
+## Scaling
 
-### Horizontal Scaling
+Horizontal scaling:
+- Load balancer (Nginx)
+- Multiple backend instances
+- Redis for caching
+- Database read replicas
 
-**Load Balancer Configuration:**
-- Use Nginx or cloud load balancer
-- Distribute traffic across multiple backend instances
-- Sticky sessions for WebSocket connections
-
-**Database:**
-- Use connection pooling (SQLAlchemy pool settings)
-- Consider read replicas for read-heavy operations
-- Implement caching (Redis) for frequently accessed data
-
-### Vertical Scaling
-
-**Backend:**
-- Increase worker processes: `--workers 4`
-- Adjust database connection pool size
-- Increase server resources (CPU, RAM)
+Vertical scaling:
+- Increase uvicorn workers: `--workers 4`
+- Adjust DB connection pool
+- Upgrade server resources
 
 ---
 
 ## Security Checklist
 
-- [ ] Use HTTPS/SSL for all connections
-- [ ] Set secure, random SECRET_KEY and JWT_SECRET
-- [ ] Enable CORS only for trusted origins
-- [ ] Use environment variables for sensitive data
-- [ ] Implement rate limiting
-- [ ] Regular security updates for dependencies
-- [ ] Database access restricted to backend only
-- [ ] Use prepared statements (SQLAlchemy ORM)
-- [ ] Implement input validation and sanitization
-- [ ] Set up firewall rules
-- [ ] Regular database backups
-- [ ] Monitor application logs for suspicious activity
+- HTTPS/SSL enabled
+- Random SECRET_KEY and JWT_SECRET (64+ chars)
+- CORS limited to trusted origins
+- Environment variables for secrets
+- Rate limiting enabled
+- Regular dependency updates
+- Database firewall rules
+- Input validation on all endpoints
+- Regular backups
+- Log monitoring
 
 ---
 
-## Performance Optimization
+## Performance Tips
 
-### Backend
+Backend:
+- Redis caching
+- Database indexes
+- Connection pooling
+- Async endpoints
 
-1. **Enable Caching:**
-   - Redis for session storage
-   - Cache frequently accessed data
-
-2. **Database Optimization:**
-   - Add indexes on frequently queried columns
-   - Use connection pooling
-   - Optimize complex queries
-
-3. **Async Operations:**
-   - Use FastAPI async endpoints where possible
-   - Background tasks for email sending
-
-### Frontend
-
-1. **Code Splitting:**
-   - Next.js automatic code splitting
-   - Dynamic imports for heavy components
-
-2. **Image Optimization:**
-   - Use Next.js Image component
-   - Compress images
-
-3. **Caching:**
-   - Browser caching headers
-   - CDN for static assets
+Frontend:
+- Next.js Image component
+- Dynamic imports
+- CDN for static assets
 
 ---
 
 ## Troubleshooting
 
-### Common Issues
+Database issues: Check DATABASE_URL and PostgreSQL status
 
-**Database Connection Errors:**
-- Check DATABASE_URL format
-- Verify PostgreSQL is running
-- Check firewall rules
+CORS errors: Verify CORS_ORIGINS includes your frontend URL
 
-**CORS Errors:**
-- Verify CORS_ORIGINS includes frontend URL
-- Check protocol (http vs https)
+WebSocket fails: Use wss:// for HTTPS, check proxy config
 
-**WebSocket Connection Fails:**
-- Use wss:// for HTTPS sites
-- Check proxy configuration
-- Verify WebSocket route is accessible
-
-**Migration Failures:**
-- Check database permissions
-- Review migration file for errors
-- Ensure database is accessible
+Migrations fail: Check database permissions and connectivity
 
 ---
 
 ## Maintenance
 
-### Regular Tasks
+Weekly: Review logs, check database performance
 
-**Weekly:**
-- Review application logs
-- Check database size and performance
-- Monitor error rates
+Monthly: Update dependencies, database optimization
 
-**Monthly:**
-- Update dependencies
-- Review and clean up old data
-- Database optimization (VACUUM, ANALYZE)
-- Security audit
-
-**Quarterly:**
-- Full backup test (restore and verify)
-- Performance load testing
-- Security penetration testing
+Quarterly: Test backups, load testing, security audit
 
 ---
 
-## Rollback Procedure
+## Rollback
 
-In case of deployment issues:
+Code rollback:
+```bash
+git revert HEAD && git push
+```
 
-1. **Code Rollback:**
-   ```bash
-   git revert HEAD
-   git push
-   # Redeploy
-   ```
-
-2. **Database Rollback:**
-   ```bash
-   alembic downgrade -1
-   ```
-
-3. **Full Rollback:**
-   - Restore previous code version
-   - Restore database backup
-   - Clear cache
-   - Restart services
+Database rollback:
+```bash
+alembic downgrade -1
+```
 
 ---
 
-## Support
-
-For deployment issues:
-1. Check application logs
-2. Review error messages
-3. Consult documentation
-4. Create issue in repository with details
-
----
-
-**Note:** For local development, continue using the setup described in [SETUP.md](./SETUP.md). Cloud deployment is for production use only.
+For local development, see [SETUP.md](./SETUP.md).

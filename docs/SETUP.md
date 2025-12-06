@@ -1,91 +1,65 @@
 # Setup Guide
 
-This guide will help you set up PlakshaConnect for local development.
-
----
+Local development setup for PlakshaConnect.
 
 ## Prerequisites
 
-Before starting, ensure you have the following installed:
+Install these before starting:
 
-- **Node.js** (v18 or higher)
-- **Python** (v3.10 or higher)
-- **PostgreSQL** (v14 or higher)
-- **Git**
-- **npm** or **yarn**
+- Node.js 18+
+- Python 3.10+
+- PostgreSQL 14+
+- Git
 
----
+## Getting Started
 
-## Clone the Repository
+Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd plaksha-connect
+git clone https://github.com/ReservedSnow673/coding-cafe.git
+cd coding-cafe
 ```
 
 ---
 
 ## Frontend Setup
 
-### 1. Navigate to Frontend Directory
+Navigate to frontend and install dependencies:
 
 ```bash
 cd frontend
-```
-
-### 2. Install Dependencies
-
-```bash
 npm install
-# or
-yarn install
 ```
 
-### 3. Configure Environment Variables
-
-Create a `.env.local` file in the `frontend` directory:
+Create `.env.local`:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 NEXT_PUBLIC_WS_URL=ws://localhost:8000
 ```
 
-### 4. Run Development Server
+Start the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-The frontend will be available at `http://localhost:3000`
+Frontend runs at `http://localhost:3000`
 
 ---
 
 ## Backend Setup
 
-### 1. Navigate to Backend Directory
+Navigate to backend and set up Python environment:
 
 ```bash
 cd backend
-```
-
-### 2. Create Virtual Environment
-
-```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-### 3. Install Dependencies
-
-```bash
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 4. Configure Environment Variables
-
-Create a `.env` file in the `backend` directory:
+Create `.env` file:
 
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/plakshaconnect
@@ -108,226 +82,134 @@ CORS_ORIGINS=http://localhost:3000
 ENVIRONMENT=development
 ```
 
-### 5. Database Setup
+### Database Setup
 
-#### Create Database
+Create the database:
 
 ```bash
 createdb plakshaconnect
 ```
 
-Or using PostgreSQL CLI:
-
-```sql
-CREATE DATABASE plakshaconnect;
-```
-
-#### Run Migrations
+Run migrations:
 
 ```bash
-# Initialize Alembic (first time only)
-alembic init migrations
-
-# Create initial migration
-alembic revision --autogenerate -m "Initial migration"
-
-# Apply migrations
 alembic upgrade head
 ```
 
-### 6. Run Development Server
+### Start Backend Server
 
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-The backend API will be available at `http://localhost:8000`
+Backend runs at `http://localhost:8000`
 
-API documentation will be available at:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
+API docs available at:
+- Swagger: `http://localhost:8000/api/docs`
+- ReDoc: `http://localhost:8000/api/redoc`
 
 ---
 
 ## Database Migrations
 
-### Creating a New Migration
-
-After modifying database models:
+Create new migration after model changes:
 
 ```bash
-alembic revision --autogenerate -m "Description of changes"
-```
-
-### Applying Migrations
-
-```bash
+alembic revision --autogenerate -m "Add new field"
 alembic upgrade head
 ```
 
-### Reverting Migrations
+Rollback if needed:
 
 ```bash
-# Downgrade one version
 alembic downgrade -1
-
-# Downgrade to specific version
-alembic downgrade <revision_id>
 ```
 
-### Viewing Migration History
+View migration history:
 
 ```bash
 alembic history
-alembic current
 ```
 
 ---
 
-## Testing the Setup
+## Verify Setup
 
-### 1. Test Backend Health
+Check backend health:
 
 ```bash
 curl http://localhost:8000/health
 ```
 
-Expected response:
+Should return:
 ```json
-{
-  "status": "healthy",
-  "database": "connected"
-}
+{"status": "healthy", "database": "connected", "version": "2.0.0"}
 ```
 
-### 2. Test Frontend
-
-Open `http://localhost:3000` in your browser. You should see the PlakshaConnect homepage.
-
-### 3. Test WebSocket Connection
-
-The WebSocket server runs on the same port as the backend API. Test connection at `ws://localhost:8000/ws/test`
+Open `http://localhost:3000` to see the frontend.
 
 ---
 
 ## Development Workflow
 
-### Running Both Frontend and Backend
+Run both servers in separate terminals:
 
-**Option 1: Two separate terminals**
-
-Terminal 1 (Backend):
+Terminal 1 - Backend:
 ```bash
 cd backend
 source venv/bin/activate
 uvicorn app.main:app --reload
 ```
 
-Terminal 2 (Frontend):
+Terminal 2 - Frontend:
 ```bash
 cd frontend
 npm run dev
 ```
 
-**Option 2: Using a process manager**
-
-Install `concurrently`:
-```bash
-npm install -g concurrently
-```
-
-Add to root `package.json`:
-```json
-{
-  "scripts": {
-    "dev": "concurrently \"cd backend && uvicorn app.main:app --reload\" \"cd frontend && npm run dev\""
-  }
-}
-```
-
-Run:
-```bash
-npm run dev
-```
-
 ---
 
-## Common Issues
+## Troubleshooting
 
-### Port Already in Use
-
-If port 3000 or 8000 is already in use:
-
-**Frontend:**
+**Port conflict**: Change port in command
 ```bash
-PORT=3001 npm run dev
+PORT=3001 npm run dev  # Frontend
+uvicorn app.main:app --reload --port 8001  # Backend
 ```
 
-**Backend:**
+**Database connection fails**: Check PostgreSQL is running
 ```bash
-uvicorn app.main:app --reload --port 8001
+brew services list  # macOS
+sudo systemctl status postgresql  # Linux
 ```
 
-### Database Connection Error
-
-Verify PostgreSQL is running:
-```bash
-# macOS
-brew services list
-
-# Linux
-sudo systemctl status postgresql
-```
-
-Check database credentials in `.env` file.
-
-### Python Package Installation Error
-
-Upgrade pip:
+**Python package errors**: Upgrade pip
 ```bash
 pip install --upgrade pip
 ```
 
-### Node Modules Error
-
-Clear cache and reinstall:
+**Node modules issues**: Clean install
 ```bash
-rm -rf node_modules package-lock.json
-npm install
+rm -rf node_modules package-lock.json && npm install
 ```
 
 ---
 
 ## Next Steps
 
-- Review the [STRUCTURE.md](./STRUCTURE.md) to understand the codebase organization
-- Check [API_DOCS.md](./API_DOCS.md) for detailed API documentation
-- Read [DEPLOYMENT.md](./DEPLOYMENT.md) for deployment instructions
+- Check [API.md](./API.md) for complete API documentation
+- See [DEPLOYMENT.md](./DEPLOYMENT.md) for production deployment
 
----
+## Code Formatting
 
-## Development Tools
-
-### Recommended VS Code Extensions
-
-- **Python** (Microsoft)
-- **Pylance** (Microsoft)
-- **ESLint** (Microsoft)
-- **Prettier** (Prettier)
-- **TypeScript and JavaScript Language Features**
-- **Tailwind CSS IntelliSense**
-- **PostgreSQL** (Chris Kolkman)
-
-### Code Formatting
-
-**Backend (Python):**
+Backend:
 ```bash
 pip install black isort
 black .
 isort .
 ```
 
-**Frontend (TypeScript/JavaScript):**
+Frontend:
 ```bash
 npm run format
 npm run lint
@@ -335,32 +217,24 @@ npm run lint
 
 ---
 
-## Environment Variables Reference
+## Environment Variables
 
-### Frontend (.env.local)
+**Frontend** `.env.local`:
+- `NEXT_PUBLIC_API_URL` - Backend URL (default: `http://localhost:8000`)
+- `NEXT_PUBLIC_WS_URL` - WebSocket URL (default: `ws://localhost:8000`)
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `NEXT_PUBLIC_API_URL` | Backend API URL | `http://localhost:8000` |
-| `NEXT_PUBLIC_WS_URL` | WebSocket URL | `ws://localhost:8000` |
+**Backend** `.env`:
+- `DATABASE_URL` - PostgreSQL connection string
+- `SECRET_KEY` - App secret (generate random 64+ chars)
+- `JWT_SECRET` - JWT signing key (generate random 64+ chars)
+- `JWT_ALGORITHM` - `HS256`
+- `ACCESS_TOKEN_EXPIRE_MINUTES` - Token validity (default: `30`)
+- `SMTP_HOST` - Email server (e.g., `smtp.gmail.com`)
+- `SMTP_PORT` - Email port (usually `587`)
+- `SMTP_USER` - Your @plaksha.edu.in email
+- `SMTP_PASSWORD` - App-specific password
+- `SMTP_FROM` - Sender email (e.g., `noreply@plaksha.edu.in`)
+- `CORS_ORIGINS` - Allowed origins (e.g., `http://localhost:3000`)
+- `ENVIRONMENT` - `development` or `production`
 
-### Backend (.env)
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@localhost:5432/db` |
-| `SECRET_KEY` | Application secret key | Random string (64+ chars) |
-| `JWT_SECRET` | JWT signing secret | Random string (64+ chars) |
-| `JWT_ALGORITHM` | JWT algorithm | `HS256` |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiration time | `30` |
-| `SMTP_HOST` | Email server host | `smtp.gmail.com` |
-| `SMTP_PORT` | Email server port | `587` |
-| `SMTP_USER` | Email username | `your-email@plaksha.edu.in` |
-| `SMTP_PASSWORD` | Email password | App-specific password |
-| `SMTP_FROM` | From email address | `noreply@plaksha.edu.in` |
-| `CORS_ORIGINS` | Allowed CORS origins | `http://localhost:3000` |
-| `ENVIRONMENT` | Environment mode | `development` |
-
----
-
-For additional help, refer to the documentation or create an issue in the repository.
+For deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).

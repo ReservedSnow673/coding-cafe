@@ -2,7 +2,11 @@
 
 > Connecting Plaksha together
 
-**PlakshaConnect** is a modular campus networking and collaboration platform built for Plaksha University students. It provides a centralized space to connect with peers, manage campus life, collaborate on projects, and stay informed about campus activities—all without the noise of traditional social media.
+**PlakshaConnect** is a comprehensive campus networking and collaboration platform built for Plaksha University students. It provides a centralized space to connect with peers, manage campus life, collaborate on projects, and stay informed about campus activities—all without the noise of traditional social media.
+
+**Version:** 2.0.0  
+**Status:** Active Development  
+**API Documentation:** [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
 
 ---
 
@@ -547,19 +551,114 @@ plaksha-connect/
 
 ## Documentation
 
-Comprehensive documentation is available in the `/docs` directory:
+### API Documentation
 
-- **[SETUP.md](docs/SETUP.md)** – Installation and local development setup
-- **[STRUCTURE.md](docs/STRUCTURE.md)** – Detailed project structure and module explanations
-- **[API_DOCS.md](docs/API_DOCS.md)** – Complete API reference with request/response examples
-- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** – Deployment instructions and configuration
-- **[LICENSE.md](docs/LICENSE.md)** – Project license information
+The PlakshaConnect API provides comprehensive interactive documentation:
+
+- **Swagger UI**: [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
+  - Interactive API explorer with "Try it out" functionality
+  - Complete request/response schemas
+  - Authentication testing support
+
+- **ReDoc**: [http://localhost:8000/api/redoc](http://localhost:8000/api/redoc)
+  - Clean, readable API documentation
+  - Organized by feature modules
+  - Searchable endpoint reference
+
+- **OpenAPI Schema**: [http://localhost:8000/api/openapi.json](http://localhost:8000/api/openapi.json)
+  - Machine-readable API specification
+  - For code generation and tooling
+
+### Additional Documentation
+
+Complete documentation in the `/docs` directory:
+
+- **[SETUP.md](docs/SETUP.md)** – Local development setup
+- **[API.md](docs/API.md)** – Complete API reference
+- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** – Production deployment guide
+- **[LICENSE.md](docs/LICENSE.md)** – MIT License
 
 ---
 
-## Getting Started
+## Quick Start
 
-For local development setup and installation instructions, please refer to [docs/SETUP.md](docs/SETUP.md).
+### Prerequisites
+- Node.js 18+ and npm/yarn
+- Python 3.11+
+- PostgreSQL 14+
+
+### Backend Setup
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Access Points
+- Frontend: http://localhost:3000
+- API Docs: http://localhost:8000/api/docs
+- Backend API: http://localhost:8000
+
+For detailed setup instructions, see [docs/SETUP.md](docs/SETUP.md).
+
+---
+
+## API Features & Authentication
+
+### Authentication Flow
+1. **Request OTP**: `POST /api/auth/request-otp` with email
+2. **Verify OTP**: `POST /api/auth/verify-otp` with OTP code
+3. **Get Token**: Receive JWT access token
+4. **Use Token**: Include in Authorization header: `Bearer <token>`
+
+### Key Features
+- ✅ Email validation (@plaksha.edu.in required)
+- ✅ OTP-based passwordless authentication
+- ✅ JWT token with 7-day expiry
+- ✅ Automatic user registration on first login
+- ✅ Profile completion during registration
+
+---
+
+## Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](docs/LICENSE.md) file for details.
+
+---
+
+## Support
+
+For issues, questions, or contributions:
+- **Email**: support@plaksha.edu.in
+- **Issues**: [GitHub Issues](https://github.com/ReservedSnow673/coding-cafe/issues)
+- **API Docs**: http://localhost:8000/api/docs
+
+---
+
+## Credits
+
+**Developer**: Tanvir Singh Sandhu ([ReservedSnow](https://github.com/ReservedSnow673))
 
 ---
 
