@@ -650,7 +650,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](docs/LICEN
 ## Support
 
 For issues, questions, or contributions:
-- **Email**: support@plaksha.edu.in
+- **Email**: sandhu.tanvirsingh@yahoo.com
 - **Issues**: [GitHub Issues](https://github.com/ReservedSnow673/coding-cafe/issues)
 - **API Docs**: http://localhost:8000/api/docs
 
